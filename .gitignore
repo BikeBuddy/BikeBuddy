@@ -59,6 +59,7 @@ captures/
 
 # Google Services (e.g. APIs or Firebase)
 # google-services.json
+app/src/debug/res/values/google_maps_api.xml
 
 # Freeline
 freeline.py
@@ -81,4 +82,4 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
-app/src/debug/res/values/google_maps_api.xml
+

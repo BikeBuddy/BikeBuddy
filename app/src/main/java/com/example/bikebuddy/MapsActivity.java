@@ -25,8 +25,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        // Make Toast
-        Toast.makeText(this, "What a stick did you see that", Toast.LENGTH_LONG).show();
+
 
     }
 

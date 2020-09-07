@@ -2,17 +2,24 @@ package com.example.bikebuddy;
 
 import androidx.fragment.app.FragmentActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+import java.util.ArrayList;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+
 
     private GoogleMap mMap;
     //push test PK
@@ -24,7 +31,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
+        GoogleMapOptions options = new GoogleMapOptions();
+        mapFragment.newInstance(options);
+        options.mapToolbarEnabled(true);
         // Make Toast
         Toast.makeText(this, "Hello?", Toast.LENGTH_LONG).show();
 
@@ -44,7 +53,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(-34, 151);
+        final ArrayList<LatLng> locations = new ArrayList<LatLng>();
+
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                locations.add(latLng);
+                mMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .title("Your marker title")
+                        .snippet("Your marker snippet"));
+                if(locations.size()>1){
+                    PolylineOptions places = new PolylineOptions();
+                    places.add(locations.get(0)).add(locations.get(1)).width(2f).color(Color.RED);
+                    mMap.addPolyline(places);
+                }
+            }
+        });
+
     }
 }

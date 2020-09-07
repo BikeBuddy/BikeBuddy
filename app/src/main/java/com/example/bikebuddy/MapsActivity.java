@@ -22,12 +22,16 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback{
 
     private GoogleMap mMap;
     private boolean showLogo = true;
     private Marker marker;
     private Marker marker1;
+    private ArrayList<City> city = new ArrayList<City>();
+    private ArrayList<Marker> markerArray = new ArrayList<Marker>();
 
     //push test PK
     @Override
@@ -41,18 +45,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Make Toast
         Toast.makeText(this, "What a stick did you see that", Toast.LENGTH_LONG).show();
 
+        city.add(new City(-37.78333,175.28333, "Halminton"));
+        city.add(new City(-36.848461, 174.763336, "Auckland"));
+        System.out.println(city.get(0).getLat());
         final Button button = (Button) findViewById(R.id.button1);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 System.out.println("button clicked");
+                System.out.println(showLogo);
+                System.out.println(city.get(0).getLat());
                 if(showLogo == false){
                     showLogo = true;
-                    marker.setVisible(showLogo);
-                    marker1.setVisible(showLogo);
+                    for(Marker m : markerArray){
+                        m.setVisible((showLogo));
+                    }
+//                    marker.setVisible(showLogo);
+//                    marker1.setVisible(showLogo);
+//                    System.out.println(city.get(0).getName());
                 }else{
                     showLogo = false;
-                    marker.setVisible(showLogo);
-                    marker1.setVisible(showLogo);
+                    for(Marker m : markerArray){
+                        m.setVisible((showLogo));
+                    }
+//                    marker.setVisible(showLogo);
+//                    marker1.setVisible(showLogo);
                 }
             }
 
@@ -73,14 +89,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap = googleMap;
 
-//        final Button button = (Button) findViewById(R.id.button1);
-//        button.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                System.out.println("button clicked");
-//                System.out.println(showLogo);
-//            }
-//        });
-
+        // custom the size of the weather icon
         int height = 100;
         int width = 100;
         BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.lighting);
@@ -88,23 +97,40 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
 
         // Add a marker in Sydney and move the camera
-        LatLng hamilton = new LatLng(-37.78333 ,175.28333);
-        marker = mMap.addMarker(new MarkerOptions().position(hamilton).title("Marker in Auckland").snippet("Population: 1,500,000")
-                .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
+        for(City c : city){
+            LatLng cityLatLng = new LatLng(c.getLat(),c.getLng());
+            System.out.println("debug");
+            System.out.println(c.getLat());
+            System.out.println(c.getLng());
+            marker = mMap.addMarker(new MarkerOptions().position(cityLatLng).title("Marker in Halminton").snippet("Population: 300,000")
+                    .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(cityLatLng));
+            markerArray.add(marker);
+            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+                    System.out.println("marker clicked");
+                    return false;
+                }
+            });
+        }
+//        LatLng hamilton = new LatLng(-37.78333 ,175.28333);
+//        marker = mMap.addMarker(new MarkerOptions().position(hamilton).title("Marker in Auckland").snippet("Population: 1,500,000")
+//                .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
 //                marker.setVisible(showLogo);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(hamilton));
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(hamilton));
 
-        LatLng auckland = new LatLng(-36.848461, 174.763336);
-        marker1 = mMap.addMarker(new MarkerOptions().position(auckland).title("Marker in Hamilton").snippet("Population: 400,000")
-                .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
+//        LatLng auckland = new LatLng(-36.848461, 174.763336);
+//        marker1 = mMap.addMarker(new MarkerOptions().position(auckland).title("Marker in Hamilton").snippet("Population: 400,000")
+//                .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
 //                marker.setVisible(showLogo);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(auckland));
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                System.out.println("marker clicked");
-                return false;
-            }
-        });
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(auckland));
+//        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+//            @Override
+//            public boolean onMarkerClick(Marker marker) {
+//                System.out.println("marker clicked");
+//                return false;
+//            }
+//        });
     }
 }

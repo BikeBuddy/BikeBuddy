@@ -1,5 +1,6 @@
 package com.example.bikebuddy;
 
+import androidx.core.view.MotionEventCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.Context;
@@ -9,11 +10,15 @@ import android.os.Bundle;
 import android.renderscript.ScriptGroup;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +28,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.AutocompletePrediction;
+import com.google.android.libraries.places.api.model.TypeFilter;
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
+import com.google.android.libraries.places.api.net.PlacesClient;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,11 +53,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
 
-
     }
 
     // search bar text
     private EditText mSearchText;
+
+    private void initPlaces() {
+        // Initialize Places.
+        Places.initialize(getApplicationContext(), getResources().getString(R.string.google_maps_key));
+
+        // Create a new Places client instance.
+        PlacesClient placesClient = Places.createClient(this);
+    }
+
+
 
     // initialise search bar
     private void initSearchBar() {
@@ -63,7 +82,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 {
                     geoLocateBySearch();
                 }
-
                 return false;
             }
         });
@@ -91,11 +109,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if(addressList.size() > 0) {
             // grab address
             Address address = addressList.get(0);
-
-            // output address to log and toast
-            Toast.makeText(this, address.toString(), Toast.LENGTH_LONG).show();
+            // output address to log
             Log.d(TAG, "geoLocateBySearch: found address: " + address.toString());
-
             // store latitude and longitude
             LatLng foundLocation = new LatLng(address.getLatitude(), address.getLongitude());
             // go to found location
@@ -115,6 +130,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
+
+    @Override
+    public void onUserInteraction() {
+        hideKeyboard();
+        super.onUserInteraction();
+    }
+
 
     /**
      * Manipulates the map once available.

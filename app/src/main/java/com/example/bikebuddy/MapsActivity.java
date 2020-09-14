@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import android.content.Context;
 
 
+import android.location.Address;
 import android.view.inputmethod.InputMethodManager;
 
 
@@ -43,6 +44,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 
@@ -56,7 +58,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private GoogleMap mMap;
-
+    private JSONRoutes jsonRoutes;// send requests and show routes on map with this object
     private CameraPosition cameraPosition;
     private FusedLocationProviderClient fusedLocationProviderClient;
 
@@ -163,7 +165,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
 
         this.mMap = googleMap;
-
+        this.jsonRoutes = new JSONRoutes(getResources().getString(R.string.google_maps_key), mMap); //jsonRoutes needs reference to mMap
         // stock google maps UI buttons
         mMap.getUiSettings().setZoomControlsEnabled(true);
 
@@ -210,6 +212,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Get the current location of the device and set the position of the map.
         getDeviceLocation();
+
+        //ActionListener for long press
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                //Function();
+            }
+        });
     }
 
     /**

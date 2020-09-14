@@ -43,7 +43,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private  MarkerQueue mapMarkers;// the markers present on map via long press
     private GoogleMap mMap;
     Geocoder gc;
-
+    private JSONRoutes jsonRoutes;
 
    // @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -58,39 +58,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         options.mapToolbarEnabled(true);
         // Make Toast
         gc = new Geocoder(this);
+        System.out.println("-----------------------------------------------------------------------------------------------------------------------------------");
         mapMarkers = new MarkerQueue(false); //
+
     }
 
-    private class MarkerQueue{
-        private  Queue<Marker>  markers;
-        private  int markerLimit;  //the limit of markers which are generated from long press
-        public MarkerQueue(boolean flag){
-            markers = new LinkedList<Marker>();
-            if(flag){
-                markerLimit=1;
-            }else{
-                markerLimit =2;
-            }
-        }
-        public void addMarker(Marker marker){
-            if(markerLimit<= markers.size()){
-                Marker oldMarker = markers.remove();//.poll();
-                oldMarker.setVisible(false);
-            }markers.add(marker);
-        }
-        public void setMarkerLimit(int limit){
-            this.markerLimit = limit;
-        }
-        public Marker getMarker(){
-            return markers.poll();
-        }
-        public Queue<Marker>  getMarkers(){
-            return markers;
-        }
-    }
+
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(GoogleMap googleMap){
         mMap = googleMap;
+        jsonRoutes = new JSONRoutes(getResources().getString(R.string.google_maps_key), mMap);
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(-34, 151);
         final ArrayList<LatLng> locations = new ArrayList<LatLng>();
@@ -101,7 +78,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onMapLongClick(LatLng latLng) {
                 mapMarkers.addMarker(mMap.addMarker(new MarkerOptions().position(latLng).title("Your marker title").snippet("Your marker snippet")));
                 if(mapMarkers.getMarkers().size()>1){
-                    // places.add().add(locations.get(1)).width(2f).color(Color.RED);
                     LatLng one = mapMarkers.getMarker().getPosition();
                     LatLng two = mapMarkers.getMarker().getPosition();
                     Address location1 = null;
@@ -112,125 +88,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    getDirections(one, two);
+
                 }
             }
         });
     }
-
-
-
-    public Trip parseJsonToDirections(String s, LatLng locOne, LatLng locTwo) throws JSONException {
-        JSONObject recievedJsonDirections = new JSONObject(s);
-        JSONArray jsonRoutes =recievedJsonDirections.getJSONArray("routes");
-        JSONObject jsonRoute = jsonRoutes.getJSONObject(0);
-        JSONObject jsonPolyline = jsonRoute.getJSONObject("overview_polyline");
-        JSONArray jsonLegs = jsonRoute.getJSONArray("legs");
-        JSONObject jsonLeg = jsonLegs.getJSONObject(0);
-        JSONObject jsonDistance = jsonLeg.getJSONObject("distance");
-        JSONObject jsonDuration = jsonLeg.getJSONObject("duration");
-        Trip newTrip = new Trip();
-        newTrip.distance =  jsonDistance.getInt("value");
-        newTrip.duration =  jsonDuration.getInt("value");
-        newTrip.startLocation = locOne;
-        newTrip.endLocation = locTwo;
-        newTrip.start = jsonLeg.getString("start_address");
-        newTrip.end = jsonLeg.getString("end_address");
-        newTrip.encodedPolyLine = jsonPolyline.getString("points");
-        newTrip.decodePolyLine();
-        return newTrip;
-    }
-
-    public void showTrip(Trip aTrip){
-        PolylineOptions places = new PolylineOptions();
-        for(LatLng point : aTrip.points)
-            places.add(point).width(20f).color(Color.RED);
-        mMap.addPolyline(places);
-        LatLng midPoint = aTrip.points.get(aTrip.points.size()/2);
-        mMap.addMarker(new MarkerOptions().position(midPoint)
-                .snippet("duration :" + (aTrip.duration/60) +" minutes")
-                .title("duration :" +  (aTrip.duration/60) +" minutes")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-
-    //    setContentDescription("Duration: " + (aTrip.duration));
-    }
-
-    //this method is actually fetching the json string
-    private void getDirections(final LatLng one, final LatLng two) {
-        String apiUrl1 = "https://maps.googleapis.com/maps/api/directions/json?origin=";
-
-        String apiUrl2 = "&key=" + R.string.google_maps_key;// add the key here
-        String startAndEnd =  one.latitude + "," + one.longitude + "&destination=" + two.latitude +  "," + two.longitude;
-        final String  jsonRequestURL =  apiUrl1 + startAndEnd + apiUrl2;
-
-
-        class GetJSON extends AsyncTask<Void, Void, String> {
-            String returnThisString;
-            //this method will be called before execution
-            //you can display a progress bar or something
-            //so that user can understand that he should wait
-            //as network operation may take some time
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                Toast.makeText(getApplicationContext(), "onPreExecute is working", Toast.LENGTH_LONG).show();
-            }
-
-            //this method will be called after execution
-            //so here we are displaying a toast with the json string
-            @Override
-            protected  void onPostExecute(String s) {
-                returnThisString =s;
-                jsonString = new String(s);
-                try {
-                    Trip newTrip = parseJsonToDirections(s,one, two);
-                    showTrip(newTrip);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            //in this method we are fetching the json string
-            @Override
-            protected String doInBackground(Void... voids) {
-
-                try {
-                    //creating a URL
-                    URL url = new URL(jsonRequestURL);
-
-                    //Opening the URL using HttpURLConnection
-                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
-
-                    //StringBuilder object to read the string from the service
-                    StringBuilder sb = new StringBuilder();
-
-                    //We will use a buffered reader to read the string from service
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-
-                    //A simple string to read values from each line
-                    String json;
-
-                    //reading until we don't find null
-                    while ((json = bufferedReader.readLine()) != null) {
-
-                        //appending it to string builder
-                        sb.append(json + "\n");
-                    }
-
-                    //finally returning the read string
-                    jsonString =sb.toString().trim();
-                    return sb.toString().trim();
-                } catch (Exception e) {
-                    return null;
-                }
-
-            }
-        }
-        GetJSON getJSON = new GetJSON();
-        getJSON.execute();
-      //  return getJSON.returnThisString;
-    }
-
-
 }

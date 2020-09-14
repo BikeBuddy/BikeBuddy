@@ -50,17 +50,23 @@ public class FetchWeather {
                     System.out.println(obj);
                     // obtain city name
                     JSONArray weather = obj.getJSONArray("weather");
-                    JSONObject coord = obj.getJSONObject("coord");
-                    System.out.println(coord);
                     System.out.println("city name: ");
                     String cityName = obj.getString("name");
                     System.out.println(cityName);
 
                     //obtain lon and lat
                     JSONObject weatherArray0 = weather.getJSONObject(0);
+                    JSONObject coord = obj.getJSONObject("coord");
+                    System.out.println(coord);
                     String lon = coord.getString("lon");
                     String lat = coord.getString("lat");
 
+                    // update static variable "lon" in MapsActivity -- FAILED
+                    System.out.println("debug");
+
+                    System.out.println(MapsActivity.lon);
+                    MapsActivity.lon = Double.parseDouble(lon);
+                    System.out.println(MapsActivity.lon);
                     //print lon and lat
                     System.out.println("lon");
                     System.out.println(lon);

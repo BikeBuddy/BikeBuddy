@@ -32,7 +32,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-
+import android.os.Handler;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback{
 
     private GoogleMap mMap;
@@ -43,7 +43,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ArrayList<Marker> markerArray = new ArrayList<Marker>();
     private static String sky = "Raining";
     private static String cityName = "Hong Kong";
-    private static double lon =0;
+    public static double lon =0;
     private static double lat =0;
 
 
@@ -88,8 +88,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //        System.out.println(MapsActivity.sky);
 //        System.out.println("MapsActivity cityName: ");
 //        System.out.println(MapsActivity.cityName);
-//        System.out.println("MapsActivity lon: ");
-//        System.out.println(MapsActivity.lon);
+//        try {
+//            Thread.sleep(20000);
+//            System.out.println("MapsActivity lon: ");
+//            System.out.println(lon);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("MapsActivity lon: ");
+                System.out.println(lon);
+            }
+        }, 5000);
+
 //        System.out.println("MapsActivity lat: ");
 //        System.out.println(MapsActivity.lat);
     }

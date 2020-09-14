@@ -40,14 +40,13 @@ import java.util.Queue;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private  MarkerQueue mapMarkers;
+    private  MarkerQueue mapMarkers;// the markers present on map via long press
     private GoogleMap mMap;
-    private String jsonString;
     Geocoder gc;
-    JSONObject mapsJson;
+
 
    // @Override
-    protected void onCreate(Bundle savedInstanceState)  {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -119,6 +118,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
+    //Route object
     public class Trip {
         Integer distance;
         Integer duration;
@@ -127,8 +127,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String end;
         LatLng endLocation;
         String encodedPolyLine;
-        Polyline tripPolyline;
-        ArrayList<LatLng> points;
+        ArrayList<LatLng> points;// the LatLng coordinates throughout the route
         private void decodePolyLine() {
             int len = encodedPolyLine.length();
             int index = 0;
@@ -199,7 +198,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //this method is actually fetching the json string
     private void getDirections(final LatLng one, final LatLng two) {
         String apiUrl1 = "https://maps.googleapis.com/maps/api/directions/json?origin=";
-        String apiUrl2 = "&key=";// add the key here
+
+        String apiUrl2 = "&key=" + R.string.google_maps_key;// add the key here
         String startAndEnd =  one.latitude + "," + one.longitude + "&destination=" + two.latitude +  "," + two.longitude;
         final String  jsonRequestURL =  apiUrl1 + startAndEnd + apiUrl2;
 

@@ -45,9 +45,7 @@ import com.google.android.libraries.places.widget.listener.PlaceSelectionListene
 
 import java.util.Arrays;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private static final String TAG = "";
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

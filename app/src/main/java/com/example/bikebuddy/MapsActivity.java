@@ -162,7 +162,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-  
+        this.mMap = googleMap;
 
         // stock google maps UI buttons
         mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -175,7 +175,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
        // mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(-42, 172)));
        // mMap.moveCamera(CameraUpdateFactory.zoomTo(5));
 
-        this.mMap = googleMap;
+
 
         // Use a custom info window adapter to handle multiple lines of text in the
         // info window contents.

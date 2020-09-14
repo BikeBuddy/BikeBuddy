@@ -57,35 +57,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         // Make Toast
-        Toast.makeText(this, "What a stick did you see that", Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, "What a stick did you see that", Toast.LENGTH_LONG).show();
 
-        city.add(new City(-37.78333,175.28333, "Halminton"));
-        city.add(new City(-36.848461, 174.763336, "Auckland"));
-        System.out.println(city.get(0).getLat());
+        generateCities();
+
+        // set onClick listener for "Show Weather" button to show/hide markers on the map when pressed
         final Button button = (Button) findViewById(R.id.button1);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                System.out.println("button clicked");
-                System.out.println(showLogo);
-                System.out.println(city.get(0).getLat());
-                if(showLogo == false){
-                    showLogo = true;
-                    for(Marker m : markerArray){
-                        m.setVisible((showLogo));
-                    }
-                }else{
-                    showLogo = false;
-                    for(Marker m : markerArray){
-                        m.setVisible((showLogo));
-                    }
-                }
+//                System.out.println("button clicked");
+//                System.out.println(showLogo);
+//                System.out.println(city.get(0).getLat());
+                toggleWeather();
             }
         });
 
+        // fetch data from openWeatherMap
         getJSON("http://api.openweathermap.org/data/2.5/weather?q=rome,italy&APPID=d2222fc373d644fa109aea09a4046a3c");
         getJSON("http://api.openweathermap.org/data/2.5/weather?q=auckland,newzealand&APPID=d2222fc373d644fa109aea09a4046a3c");
-        System.out.println("mainActivity sky");
-        System.out.println(sky);
+//        System.out.println("mainActivity sky");
+//        System.out.println(sky);
     }
 
     /**
@@ -103,13 +94,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         // custom the size of the weather icon
-        int height = 100;
-        int width = 100;
-        BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.lighting);
-        Bitmap b=bitmapdraw.getBitmap();
-        Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+        Bitmap smallMarker = generateIcons();
 
-        // Add a marker in Sydney and move the camera
+        // Add a marker on map
+        displayCities(smallMarker);
+    }
+
+    //toggle the "showLogo" variable to show or hide the markers on the map
+    public void toggleWeather() {
+
+        if(showLogo == false){
+            showLogo = true;
+        }else{
+            showLogo = false;
+        }
+        checkWeatherIconDisplay();
+    }
+
+    // set the markers visible or invisible
+    public void checkWeatherIconDisplay() {
+        for(Marker m : markerArray){
+            m.setVisible((showLogo));
+        }
+    }
+
+    private void displayCities(Bitmap smallMarker){
         for(City c : city){
             LatLng cityLatLng = new LatLng(c.getLat(),c.getLng());
             marker = mMap.addMarker(new MarkerOptions().position(cityLatLng).title("Marker in Halminton").snippet("Population: 300,000")
@@ -125,7 +134,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             });
         }
     }
+    public void generateCities() {
+        // city.add(new City(-36.848461, 174.763336, "Auckland"));
+        city.add(new City(-37.78333,175.28333, "Halminton"));
+    }
+    public Bitmap generateIcons() {
+        // custom the size of the weather icon
+        int height = 100;
+        int width = 100;
+        BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.lighting);
+        Bitmap b=bitmapdraw.getBitmap();
+        Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
 
+        return smallMarker;
+    }
     //this method is actually fetching the json string
     private void getJSON(final String urlWebService) {
         /*
@@ -153,33 +175,44 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
+
+                //display the fetched data from openWeatherMap as a toast
                 Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
                 try {
+                    // covert and extract from Json string from openWeatherMap and obtain
+                    // city, lon, lat, weather and icon id
                     JSONObject obj = new JSONObject(s);
-                    System.out.println("debug");
                     System.out.println(obj);
+                    // obtain city name
                     JSONArray weather = obj.getJSONArray("weather");
                     JSONObject coord = obj.getJSONObject("coord");
                     System.out.println(coord);
-                    System.out.println("Rome or Auckland?");
+                    System.out.println("city name: ");
                     String cityName = obj.getString("name");
                     System.out.println(cityName);
+
+                    //obtain lon and lat
                     JSONObject weatherArray0 = weather.getJSONObject(0);
                     String lon = coord.getString("lon");
                     String lat = coord.getString("lat");
-                    String sky = weatherArray0.getString("description");
-                    String icon = weatherArray0.getString("icon");
-                    System.out.println(obj);
-                    System.out.println(weather);
-                    System.out.println(weatherArray0);
-                    System.out.println("sky");
-                    System.out.println(sky);
-                    System.out.println("icon");
-                    System.out.println(icon);
+
+                    //print lon and lat
                     System.out.println("lon");
                     System.out.println(lon);
                     System.out.println("lat");
                     System.out.println(lat);
+
+                    //obtain weather and icon id (ie. clear sky, sunny etc.)
+                    String sky = weatherArray0.getString("description");
+                    String icon = weatherArray0.getString("icon");
+                    System.out.println("sky");
+                    System.out.println(sky);
+
+                    // print icon id
+                    System.out.println("icon");
+                    System.out.println(icon);
+
+                    // check if static variable cityName, lon, lat, sky changed after fetching
                     MapsActivity.sky = sky;
                     MapsActivity.cityName = cityName;
                     MapsActivity.lon = Double.parseDouble(lon);
@@ -192,6 +225,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     System.out.println(MapsActivity.lon);
                     System.out.println("MapsActivity lat: ");
                     System.out.println(MapsActivity.lat);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

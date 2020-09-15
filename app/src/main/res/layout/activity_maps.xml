@@ -37,8 +37,9 @@
 
     <Button
         android:id="@+id/route_button"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="60dp"
+        android:background="@drawable/white_border"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"

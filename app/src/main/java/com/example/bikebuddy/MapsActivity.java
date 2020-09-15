@@ -75,6 +75,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
 
+    // Locations for route planning
+    private LatLng startingLocation = null;
+    private LatLng destination = null;
+    private LatLng autoCompleteLatLng = null;
+
+    // Boolean for telling route initialization the user has no location
+    Boolean startingLocationNeeded = false;
+
+    // Markers for route locations
+    MarkerOptions startMarker = null;
+    MarkerOptions destMarker = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,8 +121,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onSaveInstanceState(outState);
     }
 
-    // init data for autocomplete to store
-    private LatLng autoCompleteLatLng;
+
     // initialise places API
     private void initPlaces() {
         // Initialize Places.
@@ -140,13 +151,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // display found lat long (for debugging)
                 //Toast.makeText(MapsActivity.this, "LAT"+autoCompleteLatLng.latitude+"\nLONG"+autoCompleteLatLng.longitude, Toast.LENGTH_LONG).show();
 
-                // remove existing markers (get rid of this in final so markers added by other things aren't removed)
-                mMap.clear();
                 // go to found location
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(autoCompleteLatLng));
                 // make marker
                 MarkerOptions searchedLocationMarker = new MarkerOptions().position(autoCompleteLatLng).title(place.getAddress());
                 mMap.addMarker(searchedLocationMarker);
+
+               toggleRouteButton();
             }
 
             @Override
@@ -155,6 +166,96 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }));
 
+    }
+
+    private void toggleRouteButton() {
+        // make route button visible
+        View routeButt = findViewById(R.id.route_button);
+        if(routeButt.getVisibility() == View.INVISIBLE)
+        {
+            routeButt.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            routeButt.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public void initRoute(View view) {
+        if(view.getId() == R.id.route_button) {
+
+            // if need to set starting locale
+            if(startingLocationNeeded)
+            {
+                // replace selected location marker with destination marker
+                mMap.clear();
+                mMap.addMarker(destMarker);
+
+                // set searched location as start
+                /** allow for using directly selected locations too **/
+                if (autoCompleteLatLng != null) {
+                    startingLocation = autoCompleteLatLng;
+                    // place marker
+                    startMarker = new MarkerOptions().position(startingLocation).title("Start");
+                    mMap.addMarker(startMarker);
+                    // debug toast
+                    Toast.makeText(this, "Start: " + startingLocation + "\nDestination: " + destination, Toast.LENGTH_LONG).show();
+                }
+                startingLocationNeeded = false;
+            }
+            // standard init / location setting
+            else {
+
+                // clear markers
+                startMarker = null;
+                destMarker = null;
+                mMap.clear();
+
+                // set searched location as destination
+                /** allow for using directly selected locations too **/
+                if (autoCompleteLatLng != null) {
+                    destination = autoCompleteLatLng;
+                    // place marker
+                    destMarker = new MarkerOptions().position(destination).title("Destination");
+                    mMap.addMarker(destMarker);
+                }
+
+                // set user's location as start if known
+                if (lastKnownLocation != null) {
+                    startingLocation = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+                    // place marker
+                    startMarker = new MarkerOptions().position(startingLocation).title("Start");
+                    mMap.addMarker(startMarker);
+                    // debug toast
+                    Toast.makeText(this, "Start: " + startingLocation + "\nDestination: " + destination, Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    // if a starting location already selected
+                    if(startingLocation != null)
+                    {
+                        startMarker = new MarkerOptions().position(startingLocation).title("Start");
+                        mMap.addMarker(startMarker);
+                        // debug toast
+                        Toast.makeText(this, "Start: " + startingLocation + "\nDestination: " + destination, Toast.LENGTH_LONG).show();
+                    }
+                    else
+                    {
+                        Toast.makeText(this, "User Location not found.\nPlease select starting location.", Toast.LENGTH_LONG).show();
+                        startingLocationNeeded = true;
+                    }
+
+                }
+            }
+
+            // locations set, show route
+            if(destination != null && startingLocation != null)
+            {
+                /** start route **/
+            }
+            // hide button
+            toggleRouteButton();
+        }
     }
 
 
@@ -170,12 +271,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // call initialisations
         initPlaces();
         initAutoComplete();
-
-        // start the camera above nz
-       // mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(-42, 172)));
-       // mMap.moveCamera(CameraUpdateFactory.zoomTo(5));
-
-
 
         // Use a custom info window adapter to handle multiple lines of text in the
         // info window contents.

@@ -130,6 +130,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         displayCities(smallMarker);
     }
 
+    //get method for showLogo
+    public boolean getShowLogo() {
+        return showLogo;
+    }
+
     //toggle the "showLogo" variable to show or hide the markers on the map
     public void toggleWeather() {
 

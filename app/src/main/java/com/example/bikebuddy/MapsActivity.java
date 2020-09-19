@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
@@ -28,6 +29,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private static final String TAG = "";
     private GoogleMap mMap;
+
     //push test PK
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     // init data for autocomplete to store
     private LatLng autoCompleteLatLng;
+
     // initialise places API
     private void initPlaces() {
         // Initialize Places.
@@ -51,6 +54,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Create a new Places client instance.
         PlacesClient placesClient = Places.createClient(this);
     }
+
+    // Gets the code of the country where the device is located. This will only get a location on devices with a SIM card currently.
+    private String getCountryCode() {
+        TelephonyManager tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+        String countryCodeValue = tm.getNetworkCountryIso();
+        //check if country code is provided, otherwise return null to enable a global search.
+        //        if(countryCodeValue != null)
+        //            return countryCodeValue.toLowerCase();
+        //        else
+        //            return null;
+        return "nz";  //FIXME Hard coded to return "nz" currently for testing and development purposes
+    }
+
     // initialise autocomplete search bar
     private void initAutoComplete() {
         final AutocompleteSupportFragment autocompleteSupportFragment =
@@ -59,8 +75,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // restrict place field results to ID, Address, LatLng, and Name (basic data, no extra fees)
         autocompleteSupportFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.ADDRESS, Place.Field.LAT_LNG, Place.Field.NAME));
 
-        // restrict results to nz --- could be changed to grab the user's geolocated country.
-        autocompleteSupportFragment.setCountry("nz");
+        // Restricts search results to the user's geo-located country.
+        autocompleteSupportFragment.setCountry(getCountryCode());
 
         autocompleteSupportFragment.setOnPlaceSelectedListener((new PlaceSelectionListener() {
             @Override
@@ -88,7 +104,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }));
 
     }
-
 
 
     @Override

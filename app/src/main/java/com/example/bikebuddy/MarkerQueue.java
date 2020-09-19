@@ -19,6 +19,7 @@ public class MarkerQueue{
         }
     }
 
+    //sets old markers invisible if limit is reached
     public void addMarker(Marker marker){
         if(markerLimit<= markers.size()){
             Marker oldMarker = markers.remove();//.poll();

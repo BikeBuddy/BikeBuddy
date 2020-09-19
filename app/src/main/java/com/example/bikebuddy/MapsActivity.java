@@ -60,10 +60,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private Geocoder gc;
     private GoogleMap mMap;
-    private JSONRoutes jsonRoutes;// send requests and show routes on map with this object
+    private JSONRoutes jsonRoutes;// send requests and show routes on map with this object--PK
     private CameraPosition cameraPosition;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Address addressFromLongPress;  //The long click listener will set the location pressed to this variable --PK
+    private MarkerQueue markerFromLongPress; //the marker from long press
+
     // A default location (Auckland, New Zealand) and default zoom to use when location permission is
     // not granted.
     private final LatLng defaultLocation = new LatLng(-36.8483, 174.7625);
@@ -110,6 +112,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         gc = new Geocoder(this);
+
     }
 
 
@@ -187,6 +190,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+
     public void initRoute(View view) {
         if(view.getId() == R.id.route_button) {
 
@@ -256,10 +260,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // locations set, show route
             if(destination != null && startingLocation != null)
             {
-               jsonRoutes.getDirections(startingLocation,destination);
+                jsonRoutes.getDirections(startingLocation,destination);
             }
             // hide button
-            toggleRouteButton();
+          //  toggleRouteButton();
         }
     }
 
@@ -276,7 +280,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // call initialisations
         initPlaces();
         initAutoComplete();
-
 
         // Use a custom info window adapter to handle multiple lines of text in the
         // info window contents.
@@ -312,17 +315,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Get the current location of the device and set the position of the map.
         getDeviceLocation();
 
+        markerFromLongPress = new MarkerQueue(startingLocationNeeded);//allows 1 marker on map if start location isnt needed, allows 2 if its needed
         //ActionListener for long press
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             public void onMapLongClick(LatLng latLng) {
                 try {
-                    addressFromLongPress = gc.getFromLocation(latLng.latitude,latLng.longitude,1).get(i);
+                    if(startingLocation==null)
+                        startingLocation =latLng;
+                    else if(destination== null)
+                        destination=latLng;
+                    mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+                    addressFromLongPress = gc.getFromLocation(latLng.latitude,latLng.longitude,1).get(0);
+                    Marker aMarker = mMap.addMarker(new MarkerOptions().position(latLng).title(addressFromLongPress.getLocality()));
+                    markerFromLongPress.addMarker(aMarker);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         });
     }
+
 
     /**
      * Gets the current location of the device, and positions the map's camera.

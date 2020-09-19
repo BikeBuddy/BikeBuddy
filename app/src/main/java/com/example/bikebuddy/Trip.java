@@ -5,6 +5,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 
 //Route object
+//@author PK
 public class Trip {
     Integer distance;
     Integer duration;

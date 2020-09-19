@@ -17,17 +17,21 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+//@Author PK
 public class JSONRoutes {
     String key;
-    GoogleMap mMap;//class has reference to the map
+    GoogleMap mMap;//class has reference to the main map fragment
 
     public JSONRoutes(String key, GoogleMap mMap){
         this.key = key;
         this.mMap = mMap;
     }
 
-    public Trip parseJsonToDirections(String s, LatLng locOne, LatLng locTwo) throws JSONException {
-        JSONObject recievedJsonDirections = new JSONObject(s);
+
+    //parses a Json response into a Trip object and returns it
+    //@Author PK
+    public Trip parseJsonToDirections(String jsonString, LatLng start, LatLng Destination) throws JSONException {
+        JSONObject recievedJsonDirections = new JSONObject(jsonString);
         JSONArray jsonRoutes =recievedJsonDirections.getJSONArray("routes");
         JSONObject jsonRoute = jsonRoutes.getJSONObject(0);
         JSONObject jsonPolyline = jsonRoute.getJSONObject("overview_polyline");
@@ -35,19 +39,21 @@ public class JSONRoutes {
         JSONObject jsonLeg = jsonLegs.getJSONObject(0);
         JSONObject jsonDistance = jsonLeg.getJSONObject("distance");
         JSONObject jsonDuration = jsonLeg.getJSONObject("duration");
+
         Trip newTrip = new Trip();
         newTrip.distance =  jsonDistance.getInt("value");
         newTrip.duration =  jsonDuration.getInt("value");
-        newTrip.startLocation = locOne;
-        newTrip.endLocation = locTwo;
+        newTrip.startLocation = start;
+        newTrip.endLocation = Destination;
         newTrip.start = jsonLeg.getString("start_address");
         newTrip.end = jsonLeg.getString("end_address");
         newTrip.encodedPolyLine = jsonPolyline.getString("points");
         newTrip.decodePolyLine();
-        System.out.println("99999423423423999999999999999999999943534534523999999999999999999999999999999999999999999999999999999999"+ newTrip.distance.toString());
         return newTrip;
     }
 
+    //shows the polyline(route) of a trip onto the map
+    //@param: Trip, the trip to be shown on the map
     public void showTrip(Trip aTrip){
         PolylineOptions places = new PolylineOptions();
         for(LatLng point : aTrip.points)
@@ -60,17 +66,16 @@ public class JSONRoutes {
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
     }
 
-    //this method is actually fetching the json string
-    public void getDirections(final LatLng one, final LatLng two) {
-
+    //takes in two LatLong locations, sends a request to google maps, parses the repsonse to a Trip and shows it on the map
+    public void getDirections(final LatLng start, final LatLng destination) {
         String apiUrl1 = "https://maps.googleapis.com/maps/api/directions/json?origin=";
         String apiUrl2 = "&key=" +   key;// add the key here
-        String startAndEnd =  one.latitude + "," + one.longitude + "&destination=" + two.latitude +  "," + two.longitude;
-
+        String startAndEnd =  start.latitude + "," + start.longitude + "&start=" + destination.latitude +  "," + destination.longitude;
         final String  jsonRequestURL =  apiUrl1 + startAndEnd + apiUrl2;
         System.out.println("0000000000000000000000000000000000000000000000000000000000" + jsonRequestURL);
         class GetJSON extends AsyncTask<Void, Void, String> {
             String returnThisString;
+
             //this method will be called before execution
             //you can display a progress bar or something
             //so that user can understand that he should wait
@@ -86,7 +91,7 @@ public class JSONRoutes {
             @Override
             protected void onPostExecute(String s) {
                 try {
-                    showTrip(parseJsonToDirections(s,one,two));
+                    showTrip(parseJsonToDirections(s,start,destination));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

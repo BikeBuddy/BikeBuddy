@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 //manages markers added by long press
+//@author PK
 public class MarkerQueue{
     private Queue<Marker> markers;
     private  int markerLimit;  //the limit of markers which are generated from long press

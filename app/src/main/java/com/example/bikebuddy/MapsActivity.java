@@ -8,6 +8,7 @@ import android.content.Context;
 
 
 import android.location.Address;
+import android.location.Geocoder;
 import android.view.inputmethod.InputMethodManager;
 
 
@@ -45,8 +46,9 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
-
+import java.util.Locale;
 
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -56,12 +58,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private static final String TAG = MapsActivity.class.getSimpleName();
 
-
+    private Geocoder gc;
     private GoogleMap mMap;
     private JSONRoutes jsonRoutes;// send requests and show routes on map with this object
     private CameraPosition cameraPosition;
     private FusedLocationProviderClient fusedLocationProviderClient;
-
+    private Address addressFromLongPress;  //The long click listener will set the location pressed to this variable --PK
     // A default location (Auckland, New Zealand) and default zoom to use when location permission is
     // not granted.
     private final LatLng defaultLocation = new LatLng(-36.8483, 174.7625);
@@ -100,7 +102,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         setContentView(R.layout.activity_maps);
-
         // Construct a FusedLocationProviderClient.
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -108,6 +109,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        gc = new Geocoder(this);
     }
 
 
@@ -132,6 +134,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Create a new Places client instance.
         PlacesClient placesClient = Places.createClient(this);
     }
+
+
     // initialise autocomplete search bar
     private void initAutoComplete() {
         final AutocompleteSupportFragment autocompleteSupportFragment =
@@ -249,11 +253,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 }
             }
-
             // locations set, show route
             if(destination != null && startingLocation != null)
             {
-                /** start route **/
+               jsonRoutes.getDirections(startingLocation,destination);
             }
             // hide button
             toggleRouteButton();
@@ -273,6 +276,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // call initialisations
         initPlaces();
         initAutoComplete();
+
 
         // Use a custom info window adapter to handle multiple lines of text in the
         // info window contents.
@@ -310,9 +314,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //ActionListener for long press
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-            @Override
             public void onMapLongClick(LatLng latLng) {
-                //Function();
+                try {
+                    addressFromLongPress = gc.getFromLocation(latLng.latitude,latLng.longitude,1).get(i);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

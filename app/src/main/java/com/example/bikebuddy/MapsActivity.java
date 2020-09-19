@@ -1,9 +1,15 @@
 package com.example.bikebuddy;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.view.View;
@@ -56,15 +62,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     // Gets the code of the country where the device is located. This will only get a location on devices with a SIM card currently.
-    private String getCountryCode() {
+    //FIXME This may cause problems if we have users in Europe, doing rides from country to country.
+    public String getCountryCode() {
         TelephonyManager tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
         String countryCodeValue = tm.getNetworkCountryIso();
         //check if country code is provided, otherwise return null to enable a global search.
-        //        if(countryCodeValue != null)
-        //            return countryCodeValue.toLowerCase();
-        //        else
-        //            return null;
-        return "nz";  //FIXME Hard coded to return "nz" currently for testing and development purposes
+        if (countryCodeValue != null) {
+            return countryCodeValue.toLowerCase();
+        } else
+            return null;
+//        return "nz";  //FIXME Hard coded to return "nz" currently for testing and development purposes
     }
 
     // initialise autocomplete search bar
@@ -106,6 +113,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;

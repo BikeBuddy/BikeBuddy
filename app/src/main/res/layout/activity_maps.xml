@@ -35,7 +35,21 @@
     </RelativeLayout>
 
 
-
+    <Button
+        android:id="@+id/route_button"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:background="@drawable/white_border"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="150dp"
+        android:layout_marginLeft="150dp"
+        android:layout_marginBottom="30dp"
+        android:layout_weight="1"
+        android:visibility="invisible"
+        android:onClick="initRoute"
+        android:text="Start Route" />
 
 
 

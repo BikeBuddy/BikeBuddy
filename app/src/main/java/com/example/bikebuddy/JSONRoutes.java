@@ -31,8 +31,7 @@ public class JSONRoutes {
     }
 
 
-    //parses a Json response into a Trip object and returns it
-    //@Author PK
+    //parses a Json response into a Trip object and returns it-PK
     public Trip parseJsonToDirections(String jsonString, LatLng start, LatLng Destination) throws JSONException {
         JSONObject recievedJsonDirections = new JSONObject(jsonString);
         JSONArray jsonRoutes =recievedJsonDirections.getJSONArray("routes");
@@ -42,7 +41,6 @@ public class JSONRoutes {
         JSONObject jsonLeg = jsonLegs.getJSONObject(0);
         JSONObject jsonDistance = jsonLeg.getJSONObject("distance");
         JSONObject jsonDuration = jsonLeg.getJSONObject("duration");
-
         Trip newTrip = new Trip();
         newTrip.distance =  jsonDistance.getInt("value");
         newTrip.duration =  jsonDuration.getInt("value");
@@ -78,14 +76,9 @@ public class JSONRoutes {
 
         class GetJSON extends AsyncTask<Void, Void, String> {
             String returnThisString;
-            //this method will be called before execution
-            //you can display a progress bar or something
-            //so that user can understand that he should wait
-            //as network operation may take some time
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-               //          Toast.makeText(getApplicationContext(), "onPreExecute is working", Toast.LENGTH_LONG).show();
             }
 
             //this method will be called after execution
@@ -93,7 +86,6 @@ public class JSONRoutes {
             @Override
             protected void onPostExecute(String jsonString) {
                 try {
-                //    Toast.makeText(getApplicationContext(), "JSON RESPONSE"+ jsonString, Toast.LENGTH_LONG).show();
                     showTrip(parseJsonToDirections(jsonString,start,destination));
                 } catch (JSONException e) {
                     e.printStackTrace();

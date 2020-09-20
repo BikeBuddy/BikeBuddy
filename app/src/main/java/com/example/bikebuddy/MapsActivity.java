@@ -39,6 +39,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import com.google.android.gms.maps.model.Polyline;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
@@ -62,8 +63,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private JSONRoutes jsonRoutes;// send requests and show routes on map with this object--PK
     private CameraPosition cameraPosition;
     private FusedLocationProviderClient fusedLocationProviderClient;
-    private Address addressFromLongPress;  //The long click listener will set the location pressed to this variable --PK
-    private MarkerQueue markerFromLongPress; //the marker from long press
+
 
     // A default location (Auckland, New Zealand) and default zoom to use when location permission is
     // not granted.
@@ -81,19 +81,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String KEY_LOCATION = "location";
 
     // Locations for route planning
-    private LatLng startingLocation = null;
-    private LatLng destination = null;
+    private BikeBuddyLocation startingOrigin;//BikeBuddyLocation contained location , address & marker data.
+    private BikeBuddyLocation theDestination;
     private LatLng autoCompleteLatLng = null;
 
     // Boolean for telling route initialization the user has no location
     Boolean startingLocationNeeded = false;
 
-    // Markers for route locations
-//    MarkerOptions startMarker = null;
-//    MarkerOptions destMarker = null;
 
-    BikeBuddyLocation startingOrigin;
-    BikeBuddyLocation theDestination;
+
+
+    boolean routeStarted = false;//flag determined if a poly line between start and destination markers is drawn or not after map has been cleared
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +112,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         gc = new Geocoder(this);
-
     }
 
 
@@ -130,7 +127,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onSaveInstanceState(outState);
     }
 
-
     // initialise places API
     private void initPlaces() {
         // Initialize Places.
@@ -139,7 +135,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Create a new Places client instance.
         PlacesClient placesClient = Places.createClient(this);
     }
-
 
     // initialise autocomplete search bar
     private void initAutoComplete() {
@@ -158,19 +153,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // grab found location data from 'place'
                 // currently just grabbing LatLng for marker making
                 autoCompleteLatLng = place.getLatLng();
-
+                setAutoCompleteLatLang(autoCompleteLatLng);
                 // display found lat long (for debugging)
                 //Toast.makeText(MapsActivity.this, "LAT"+autoCompleteLatLng.latitude+"\nLONG"+autoCompleteLatLng.longitude, Toast.LENGTH_LONG).show();
 
                 // go to found location
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(autoCompleteLatLng));
                 // make marker
-                MarkerOptions searchedLocationMarker = new MarkerOptions().position(autoCompleteLatLng).title(place.getAddress());
-                mMap.addMarker(searchedLocationMarker);
-
-               toggleRouteButton();
+                // MarkerOptions searchedLocationMarker = new MarkerOptions().position(autoCompleteLatLng).title(place.getAddress());
+                //mMap.addMarker(searchedLocationMarker);
             }
-
             @Override
             public void onError(@NonNull Status status) {
 
@@ -178,20 +170,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }));
 
     }
-
+    //for the input latLang, sets the origin if not already set, if it set it changes the destination
     private void setAutoCompleteLatLang(LatLng latLang){
         autoCompleteLatLng = latLang;
-        if(startingLocation==null){
-            startingLocation = latLang;
-        }else if(destination==null){
-            destination= latLang;
+        if(startingOrigin==null){
+            startingOrigin = new BikeBuddyLocation(true,gc,latLang, mMap);
+            startingLocationNeeded = false;
+        }else if(theDestination==null){
+            theDestination = new BikeBuddyLocation(false,gc,latLang, mMap);
         }else{
-            startingLocation=null;
-            destination=null;
-            startingLocation = latLang;
+            theDestination.setCoordinate(latLang);
         }
     }
 
+    //instead of making the button invisible should we change the text to instructions, eg "please select destination"
     private void toggleRouteButton() {
         // make route button visible
         View routeButt = findViewById(R.id.route_button);
@@ -205,95 +197,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-
     public void initRoute(View view) {
-
-        if(view.getId() == R.id.route_button) {
-            // if need to set starting locale
-            if(startingLocationNeeded)
-            {
-                // replace selected location marker with destination marker
+        // locations set, show route
+        if(startingOrigin !=null || theDestination!=null){
+            try {
+                routeStarted = true; //sets flag so that the polyline for the route will be redrawn if map is cleared
+                Toast.makeText(this, "start is : "+ startingOrigin.coordinate.toString()+" DEST IS"+theDestination.coordinate.toString(), Toast.LENGTH_LONG).show();
                 mMap.clear();
-                mMap.addMarker(destMarker);
-
-                // set searched location as start
-                /** allow for using directly selected locations too **/
-                if (autoCompleteLatLng != null) {
-                    startingLocation = autoCompleteLatLng;
-                    // place marker
-
-                   // startMarker = new MarkerOptions().position(startingLocation).title("Start");
-                 //   mMap.addMarker(startMarker);
-                    // debug toast
-                    startingOrigin = new BikeBuddyLocation(true, gc, startingLocation, mMap);
-                    Toast.makeText(this, "Start: " + startingLocation + "\nDestination: " + destination, Toast.LENGTH_LONG).show();
-                }
-                startingLocationNeeded = false;
+                updateMap();//adds polyline and markers onto map
+            }catch (Exception e){
+                System.err.println(e);
             }
-            // standard init / location setting
-            else {
-                // clear markers
-                startMarker = null;
-                destMarker = null;
-                mMap.clear();
-
-                // set searched location as destination
-                /** allow for using directly selected locations too **/
-                if (autoCompleteLatLng != null) {
-                    destination = autoCompleteLatLng;
-                    // place marker
-                 //   destMarker = new MarkerOptions().position(destination).title("Destination");
-                //    mMap.addMarker(destMarker);
-                    theDestination = new BikeBuddyLocation(false, gc, destination, mMap);
-                }
-                // set user's location as start if known
-                if (lastKnownLocation != null) {
-                    startingLocation = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
-                    // place marker
-                 //   startMarker = new MarkerOptions().position(startingLocation).title("Start");
-                //    mMap.addMarker(startMarker);
-                    // debug toast
-                    startingOrigin = new BikeBuddyLocation(true, gc, startingLocation, mMap);
-                    Toast.makeText(this, "Start: " + startingLocation + "\nDestination: " + destination, Toast.LENGTH_LONG).show();
-                }
-                else
-                {
-                    // if a starting location already selected
-                    if(startingLocation != null)
-                    {
-                    //  startMarker = new MarkerOptions().position(startingLocation).title("Start");
-                   //   mMap.addMarker(startMarker);
-                        startingOrigin = new BikeBuddyLocation(true, gc, startingLocation, mMap);
-                        // debug toast
-                        Toast.makeText(this, "Start: " + startingLocation + "\nDestination: " + destination, Toast.LENGTH_LONG).show();
-                    }
-                    else
-                    {
-                        Toast.makeText(this, "User Location not found.\nPlease select starting location.", Toast.LENGTH_LONG).show();
-                        startingLocationNeeded = true;
-                    }
-                }
-            }
-            // locations set, show route
-            if(startingOrigin !=null || theDestination!=null)
-            {
-                try {
-                    Toast.makeText(this, "start is : "+ startingLocation.toString()+" DEST IS"+destination.toString(), Toast.LENGTH_LONG).show();
-                    jsonRoutes.getDirections(startingOrigin.coordinate, theDestination.coordinate);
-                }catch (Exception e){
-                    System.err.println(e);
-                }
-            }
-            // hide button
-          //  toggleRouteButton();
+        }else if(theDestination == null){
+            Toast.makeText(this, "Please Select Destination", Toast.LENGTH_LONG).show();
+        }else{
+            Toast.makeText(this, "Please Select Origin", Toast.LENGTH_LONG).show();
         }
-    }
 
+    }
 
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
         this.mMap = googleMap;
         this.jsonRoutes = new JSONRoutes(getResources().getString(R.string.google_maps_key), mMap); //jsonRoutes needs reference to mMap
         // stock google maps UI buttons
@@ -302,7 +227,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // call initialisations
         initPlaces();
         initAutoComplete();
-
+        toggleRouteButton();
         // Use a custom info window adapter to handle multiple lines of text in the
         // info window contents.
         this.mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
@@ -311,7 +236,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public View getInfoWindow(Marker arg0) {
                 return null;
             }
-
             @Override
             public View getInfoContents(Marker marker) {
                 // Inflate the layouts for the info window, title and snippet.
@@ -337,48 +261,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Get the current location of the device and set the position of the map.
         getDeviceLocation();
 
+        //sets origin to gps location
+        setUpOriginFromLocation();
+
+        //action listener for draggable markers
         mMap.setOnMarkerDragListener(this);
 
-        markerFromLongPress = new MarkerQueue(startingLocationNeeded);//allows 1 marker on map if start location isnt needed, allows 2 if its needed
         //ActionListener for long press
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             public void onMapLongClick(LatLng latLng) {
-                try {
-                    BikeBuddyLocation aPlace;
-                    if(startingOrigin==null) {
-                        startingOrigin = new BikeBuddyLocation(true, gc, latLng, mMap);
-                        startingLocationNeeded = false;
-                    }
-                    else if(theDestination== null) {
-                        theDestination = new BikeBuddyLocation(false, gc, latLng, mMap);
-                        aPlace = theDestination;
-                    }else{
-                        theDestination.setCoordinate(latLng);
-                    }
-                    mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-               //     addressFromLongPress = gc.getFromLocation(latLng.latitude,latLng.longitude,1).get(0);
-               //     Marker aMarker = mMap.addMarker(new MarkerOptions().position(latLng).title(addressFromLongPress.getLocality()));
-               //     markerFromLongPress.addMarker(aMarker);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if(startingOrigin==null) {
+                    startingOrigin = new BikeBuddyLocation(true, gc, latLng, mMap);
+                    startingLocationNeeded = false;
                 }
+                else if(theDestination== null) {
+                    theDestination = new BikeBuddyLocation(false, gc, latLng, mMap);
+                }else{
+                    theDestination.setCoordinate(latLng);
+                }
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
             }
         });
     }
-
-    public void onMarkerDragStart(Marker marker) {
-    }
-    @Override
-    public void onMarkerDrag(Marker marker) {
-    }
-
-    public void onMarkerDragEnd(Marker marker) {
-       startingOrigin.update();
-       theDestination.update();
-    }
-
-
-
 
 
     /**
@@ -486,4 +390,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.e("Exception: %s", e.getMessage());
         }
     }
+
+    //sets the starting location to gps location, otherwise sets startingLocationNeeded flag to true
+    private void setUpOriginFromLocation(){
+        if(lastKnownLocation==null){
+            startingLocationNeeded =true;
+        }else{
+            LatLng startLatLong = new LatLng(lastKnownLocation.getLatitude(),lastKnownLocation.getLongitude());
+            Toast.makeText(this, lastKnownLocation.toString(), Toast.LENGTH_LONG).show();
+            //  startingOrigin = new BikeBuddyLocation(true,gc, startLatLong, mMap);
+            //    startingLocationNeeded = false;
+        }
+    }
+
+    //updates the snippet, Address etc when start and destination markers are dragged
+    public void onMarkerDragEnd(Marker marker) {
+        mMap.clear();//clears the old poly line if there was one
+        startingOrigin.update();
+        theDestination.update();
+    }
+
+    //redraws all the markers and polyline onto map
+    public void updateMap(){
+        if(startingOrigin!=null)
+            startingOrigin.update();
+        if(theDestination!=null)
+            theDestination.update();
+        if(routeStarted)
+            jsonRoutes.getDirections(startingOrigin.coordinate, theDestination.coordinate);
+    }
+    public void onMarkerDragStart(Marker marker) {    }
+    public void onMarkerDrag(Marker marker) {    }
 }

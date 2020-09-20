@@ -192,6 +192,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     public void initRoute(View view) {
+        // locations set, show route
+        if(destination != null && startingLocation != null)
+        {
+            try {
+                Toast.makeText(this, "start is : "+ startingLocation.toString()+" DEST IS"+destination.toString(), Toast.LENGTH_LONG).show();
+                jsonRoutes.getDirections(startingLocation, destination);
+            }catch (Exception e){
+                System.err.println(e);
+            }
+        }
         if(view.getId() == R.id.route_button) {
 
             // if need to set starting locale
@@ -257,11 +267,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 }
             }
-            // locations set, show route
-            if(destination != null && startingLocation != null)
-            {
-                jsonRoutes.getDirections(startingLocation,destination);
-            }
+
             // hide button
           //  toggleRouteButton();
         }

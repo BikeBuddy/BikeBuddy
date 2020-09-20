@@ -4,6 +4,9 @@ package com.example.bikebuddy;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.widget.Toast;
+
+import androidx.fragment.app.FragmentActivity;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -31,7 +34,6 @@ public class JSONRoutes {
     //parses a Json response into a Trip object and returns it
     //@Author PK
     public Trip parseJsonToDirections(String jsonString, LatLng start, LatLng Destination) throws JSONException {
-        System.out.println(jsonString +"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
         JSONObject recievedJsonDirections = new JSONObject(jsonString);
         JSONArray jsonRoutes =recievedJsonDirections.getJSONArray("routes");
         JSONObject jsonRoute = jsonRoutes.getJSONObject(0);
@@ -71,86 +73,62 @@ public class JSONRoutes {
     public void getDirections(final LatLng start, final LatLng destination) {
         String apiUrl1 = "https://maps.googleapis.com/maps/api/directions/json?origin=";
         String apiUrl2 = "&key=" +   key;
-        String startAndEnd =  start.latitude + "," + start.longitude + "&start=" + destination.latitude +  "," + destination.longitude;
+        String startAndEnd =  start.latitude + "," + start.longitude + "&destination=" + destination.latitude +  "," + destination.longitude;
         final String  jsonRequestURL =  apiUrl1 + startAndEnd + apiUrl2;
-        try {
-            //creating a URL
-            URL url = new URL(jsonRequestURL);
-            //Opening the URL using HttpURLConnection
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
-            //StringBuilder object to read the string from the service
-            StringBuilder sb = new StringBuilder();
-            //We will use a buffered reader to read the string from service
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            //A simple string to read values from each line
-            String json;
-            //reading until we don't find null
-            while ((json = bufferedReader.readLine()) != null) {
-                //appending it to string builder
-                sb.append(json + "\n");
+
+        class GetJSON extends AsyncTask<Void, Void, String> {
+            String returnThisString;
+            //this method will be called before execution
+            //you can display a progress bar or something
+            //so that user can understand that he should wait
+            //as network operation may take some time
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+               //          Toast.makeText(getApplicationContext(), "onPreExecute is working", Toast.LENGTH_LONG).show();
             }
-            showTrip(parseJsonToDirections(sb.toString().trim(), start, destination));
 
-        }catch (Exception e) {
+            //this method will be called after execution
+            //so here we are displaying a toast with the json string
+            @Override
+            protected void onPostExecute(String jsonString) {
+                try {
+                //    Toast.makeText(getApplicationContext(), "JSON RESPONSE"+ jsonString, Toast.LENGTH_LONG).show();
+                    showTrip(parseJsonToDirections(jsonString,start,destination));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
 
-        }catch (JSONException e) {
-            e.printStackTrace();
+            //in this method we are fetching the json string
+            @Override
+            protected String doInBackground(Void... voids) {
+                try {
+                    //creating a URL
+                    URL url = new URL(jsonRequestURL);
+                    //Opening the URL using HttpURLConnection
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    //StringBuilder object to read the string from the service
+                    StringBuilder sb = new StringBuilder();
+                    //We will use a buffered reader to read the string from service
+                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    //A simple string to read values from each line
+                    String json;
+                    //reading until we don't find null
+                    while ((json = bufferedReader.readLine()) != null) {
+                        //appending it to string builder
+                        sb.append(json + "\n");
+                    }
+
+                    //finally returning the read string
+                    //jsonString =sb.toString().trim();
+                    return sb.toString().trim();
+                } catch (Exception e) {
+                    return null;
+                }
+            }
         }
-            //finally returning the read string
-            //jsonString =sb.toString().trim();
-//        class GetJSON extends AsyncTask<Void, Void, String> {
-//            String returnThisString;
-//
-//            //this method will be called before execution
-//            //you can display a progress bar or something
-//            //so that user can understand that he should wait
-//            //as network operation may take some time
-//            @Override
-//            protected void onPreExecute() {
-//                super.onPreExecute();
-//                     //    Toast.makeText(getApplicationContext(), "onPreExecute is working", Toast.LENGTH_LONG).show();
-//            }
-//
-//            //this method will be called after execution
-//            //so here we are displaying a toast with the json string
-//            @Override
-//            protected void onPostExecute(String jsonString) {
-//                try {
-//                    showTrip(parseJsonToDirections(jsonString,start,destination));
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            //in this method we are fetching the json string
-//            @Override
-//            protected String doInBackground(Void... voids) {
-//                try {
-//                    //creating a URL
-//                    URL url = new URL(jsonRequestURL);
-//                    //Opening the URL using HttpURLConnection
-//                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
-//                    //StringBuilder object to read the string from the service
-//                    StringBuilder sb = new StringBuilder();
-//                    //We will use a buffered reader to read the string from service
-//                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-//                    //A simple string to read values from each line
-//                    String json;
-//                    //reading until we don't find null
-//                    while ((json = bufferedReader.readLine()) != null) {
-//                        //appending it to string builder
-//                        sb.append(json + "\n");
-//                    }
-//
-//                    //finally returning the read string
-//                    //jsonString =sb.toString().trim();
-//                    return sb.toString().trim();
-//                } catch (Exception e) {
-//                    return null;
-//                }
-//            }
-//        }
-//        GetJSON getJSON = new GetJSON();
-//        getJSON.execute();
+        GetJSON getJSON = new GetJSON();
+        getJSON.execute();
     }
 }

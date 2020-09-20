@@ -50,11 +50,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener  {
 
     private static final String TAG = MapsActivity.class.getSimpleName();
 
@@ -90,8 +89,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Boolean startingLocationNeeded = false;
 
     // Markers for route locations
-    MarkerOptions startMarker = null;
-    MarkerOptions destMarker = null;
+//    MarkerOptions startMarker = null;
+//    MarkerOptions destMarker = null;
+
+    BikeBuddyLocation startingOrigin;
+    BikeBuddyLocation theDestination;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,6 +179,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    private void setAutoCompleteLatLang(LatLng latLang){
+        autoCompleteLatLng = latLang;
+        if(startingLocation==null){
+            startingLocation = latLang;
+        }else if(destination==null){
+            destination= latLang;
+        }else{
+            startingLocation=null;
+            destination=null;
+            startingLocation = latLang;
+        }
+    }
+
     private void toggleRouteButton() {
         // make route button visible
         View routeButt = findViewById(R.id.route_button);
@@ -192,18 +207,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     public void initRoute(View view) {
-        // locations set, show route
-        if(destination != null && startingLocation != null)
-        {
-            try {
-                Toast.makeText(this, "start is : "+ startingLocation.toString()+" DEST IS"+destination.toString(), Toast.LENGTH_LONG).show();
-                jsonRoutes.getDirections(startingLocation, destination);
-            }catch (Exception e){
-                System.err.println(e);
-            }
-        }
-        if(view.getId() == R.id.route_button) {
 
+        if(view.getId() == R.id.route_button) {
             // if need to set starting locale
             if(startingLocationNeeded)
             {
@@ -216,16 +221,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (autoCompleteLatLng != null) {
                     startingLocation = autoCompleteLatLng;
                     // place marker
-                    startMarker = new MarkerOptions().position(startingLocation).title("Start");
-                    mMap.addMarker(startMarker);
+
+                   // startMarker = new MarkerOptions().position(startingLocation).title("Start");
+                 //   mMap.addMarker(startMarker);
                     // debug toast
+                    startingOrigin = new BikeBuddyLocation(true, gc, startingLocation, mMap);
                     Toast.makeText(this, "Start: " + startingLocation + "\nDestination: " + destination, Toast.LENGTH_LONG).show();
                 }
                 startingLocationNeeded = false;
             }
             // standard init / location setting
             else {
-
                 // clear markers
                 startMarker = null;
                 destMarker = null;
@@ -236,17 +242,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (autoCompleteLatLng != null) {
                     destination = autoCompleteLatLng;
                     // place marker
-                    destMarker = new MarkerOptions().position(destination).title("Destination");
-                    mMap.addMarker(destMarker);
+                 //   destMarker = new MarkerOptions().position(destination).title("Destination");
+                //    mMap.addMarker(destMarker);
+                    theDestination = new BikeBuddyLocation(false, gc, destination, mMap);
                 }
-
                 // set user's location as start if known
                 if (lastKnownLocation != null) {
                     startingLocation = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
                     // place marker
-                    startMarker = new MarkerOptions().position(startingLocation).title("Start");
-                    mMap.addMarker(startMarker);
+                 //   startMarker = new MarkerOptions().position(startingLocation).title("Start");
+                //    mMap.addMarker(startMarker);
                     // debug toast
+                    startingOrigin = new BikeBuddyLocation(true, gc, startingLocation, mMap);
                     Toast.makeText(this, "Start: " + startingLocation + "\nDestination: " + destination, Toast.LENGTH_LONG).show();
                 }
                 else
@@ -254,8 +261,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     // if a starting location already selected
                     if(startingLocation != null)
                     {
-                        startMarker = new MarkerOptions().position(startingLocation).title("Start");
-                        mMap.addMarker(startMarker);
+                    //  startMarker = new MarkerOptions().position(startingLocation).title("Start");
+                   //   mMap.addMarker(startMarker);
+                        startingOrigin = new BikeBuddyLocation(true, gc, startingLocation, mMap);
                         // debug toast
                         Toast.makeText(this, "Start: " + startingLocation + "\nDestination: " + destination, Toast.LENGTH_LONG).show();
                     }
@@ -264,10 +272,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         Toast.makeText(this, "User Location not found.\nPlease select starting location.", Toast.LENGTH_LONG).show();
                         startingLocationNeeded = true;
                     }
-
                 }
             }
-
+            // locations set, show route
+            if(startingOrigin !=null || theDestination!=null)
+            {
+                try {
+                    Toast.makeText(this, "start is : "+ startingLocation.toString()+" DEST IS"+destination.toString(), Toast.LENGTH_LONG).show();
+                    jsonRoutes.getDirections(startingOrigin.coordinate, theDestination.coordinate);
+                }catch (Exception e){
+                    System.err.println(e);
+                }
+            }
             // hide button
           //  toggleRouteButton();
         }
@@ -321,25 +337,48 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Get the current location of the device and set the position of the map.
         getDeviceLocation();
 
+        mMap.setOnMarkerDragListener(this);
+
         markerFromLongPress = new MarkerQueue(startingLocationNeeded);//allows 1 marker on map if start location isnt needed, allows 2 if its needed
         //ActionListener for long press
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             public void onMapLongClick(LatLng latLng) {
                 try {
-                    if(startingLocation==null)
-                        startingLocation =latLng;
-                    else if(destination== null)
-                        destination=latLng;
+                    BikeBuddyLocation aPlace;
+                    if(startingOrigin==null) {
+                        startingOrigin = new BikeBuddyLocation(true, gc, latLng, mMap);
+                        startingLocationNeeded = false;
+                    }
+                    else if(theDestination== null) {
+                        theDestination = new BikeBuddyLocation(false, gc, latLng, mMap);
+                        aPlace = theDestination;
+                    }else{
+                        theDestination.setCoordinate(latLng);
+                    }
                     mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-                    addressFromLongPress = gc.getFromLocation(latLng.latitude,latLng.longitude,1).get(0);
-                    Marker aMarker = mMap.addMarker(new MarkerOptions().position(latLng).title(addressFromLongPress.getLocality()));
-                    markerFromLongPress.addMarker(aMarker);
+               //     addressFromLongPress = gc.getFromLocation(latLng.latitude,latLng.longitude,1).get(0);
+               //     Marker aMarker = mMap.addMarker(new MarkerOptions().position(latLng).title(addressFromLongPress.getLocality()));
+               //     markerFromLongPress.addMarker(aMarker);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         });
     }
+
+    public void onMarkerDragStart(Marker marker) {
+    }
+    @Override
+    public void onMarkerDrag(Marker marker) {
+    }
+
+    public void onMarkerDragEnd(Marker marker) {
+       startingOrigin.update();
+       theDestination.update();
+    }
+
+
+
 
 
     /**

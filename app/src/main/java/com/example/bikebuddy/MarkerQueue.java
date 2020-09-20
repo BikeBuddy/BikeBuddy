@@ -1,5 +1,6 @@
 package com.example.bikebuddy;
 
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -24,6 +25,8 @@ public class MarkerQueue{
         if(markerLimit<= markers.size()){
             Marker oldMarker = markers.remove();//.poll();
             oldMarker.setVisible(false);
+            oldMarker = null;
+        //   oldMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
         }markers.add(marker);
     }
 

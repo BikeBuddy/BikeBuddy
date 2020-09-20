@@ -391,8 +391,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.clear();
         for (Address a : locationsList) {
             LatLng aLatLng = new LatLng(a.getLatitude(), a.getLongitude());
-          //  Marker marker = mMap.addMarker(new MarkerOptions().position(aLatLng).title("M").snippet("000")
-                //    .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
+            Marker marker = mMap.addMarker(new MarkerOptions().position(aLatLng).title("M").snippet("000")
+                    .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
             //markerArray.add(marker);
         }
 

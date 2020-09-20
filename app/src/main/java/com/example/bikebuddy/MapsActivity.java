@@ -42,7 +42,9 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -52,10 +54,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private static final String TAG = MapsActivity.class.getSimpleName();
 
-    public static double lon;
-    public double lat;
     public FetchWeather fw;
-    public String weatherstring;
 
     private GoogleMap mMap;
 
@@ -63,7 +62,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LatLng currentLocation;
     private List<Address> locationsList;
     private Bitmap smallMarker;
-    //private GetJSON getJSON;
+
 
     private CameraPosition cameraPosition;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -171,12 +170,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
 
         this.mMap = googleMap;
+        smallMarker = generateIcons();
 
         fw = new FetchWeather(this);
-        fw.fetch(37.8892, 175.4664);
-        //getJSON = new GetJSON();
-        // getJSON.execute();
-        System.out.println("test");
+
         // stock google maps UI buttons
         mMap.getUiSettings().setZoomControlsEnabled(true);
 
@@ -357,7 +354,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             //creates new list of locations based on camera centre position.
                 locationsList = getAddressListFromLatLong(currentLocation.latitude, currentLocation.longitude);
                 //creates marker for each location and adds to list
-                displayLocations(smallMarker);
+                //displayLocations(smallMarker);
+                getLocationsWeather();
+               // addLocationsWeather();
 
            // checkWeatherIconDisplay();
 
@@ -373,12 +372,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         try {
             list = geocoder.getFromLocation(lat, lng, 20);
 
-
             // 20 is no of address you want to fetch near by the given lat-long
 
-            for (Address address : list) {
-                System.out.println(address);
-            }
         } catch (Throwable e) {
             e.printStackTrace();
         }
@@ -386,16 +381,55 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return list;
     }
 
-    public void displayLocations(Bitmap smallMarker) {
+/*    public void displayLocations(Bitmap smallMarker) {
 
         mMap.clear();
         for (Address a : locationsList) {
+            System.out.println(a.getLocale());
+
+
             LatLng aLatLng = new LatLng(a.getLatitude(), a.getLongitude());
             Marker marker = mMap.addMarker(new MarkerOptions().position(aLatLng).title("M").snippet("000")
                     .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
             //markerArray.add(marker);
         }
+    }*/
 
+    public void getLocationsWeather() {
+
+        mMap.clear();
+/*        for (Address a : locationsList) {
+            fw.fetch(a.getLatitude(), a.getLongitude());
+            //delete a from list after request?
+        }*/
+
+        //had to change to iterator in order to delete
+        Iterator<Address> it = locationsList.iterator();
+        while (it.hasNext()) {
+            Address a = it.next();
+            fw.fetch(a.getLatitude(), a.getLongitude());
+            it.remove();
+        }
+    }
+
+    public void addLocationsWeather(double lat, double lon, String description) {
+        //option 1 using address object, creates address object with everything else set to null, uses URL as description
+        // allows to use the same locationslist but the addresses are nto that useful, could reverse locate to get full address.
+      //  Address a = new Address(Locale.ENGLISH);
+      //  a.setLatitude(lat);
+      //  a.setLongitude(lon);
+      //  a.setUrl(description);
+       // locationsList.add(a);
+
+        //option 2 just creates a marker with lat, lon, description in a seperate array to the locations
+        //similar to the previous displaylocations method
+        LatLng latLng = new LatLng(lat, lon);
+        //Marker marker =
+
+        //option 3 similar to above but doesn't store the markers just displays them (this could have issues with the weather toggle)
+        //LatLng latLng = new LatLng(lat, lon);
+        mMap.addMarker(new MarkerOptions().position(latLng).title(description).snippet("000")
+                .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
     }
 
     public Bitmap generateIcons() {
@@ -407,5 +441,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
 
         return smallMarker;
+
     }
 }

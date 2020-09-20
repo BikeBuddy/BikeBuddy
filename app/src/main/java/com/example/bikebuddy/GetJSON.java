@@ -27,6 +27,9 @@ class GetJSON extends AsyncTask<String, Void, String> {
     public GetJSON(GoogleMap gm) {
         this.gm = gm;
     }
+    public GetJSON() {
+
+    }
 
 
     //this method will be called before execution
@@ -45,9 +48,6 @@ class GetJSON extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String jsonString) {
         try {
            // super.onPostExecute(jsonString);
-            System.out.println("jsonString");
-            System.out.println(jsonString);
-            System.out.println("endjsonString");
             //this.ma.weatherstring = jsonString;
 
 
@@ -61,10 +61,10 @@ class GetJSON extends AsyncTask<String, Void, String> {
 
     private void addWeather(String jsonString) throws JSONException {
         JSONObject obj = new JSONObject(jsonString);
-        //System.out.println((obj.getJSONArray("coord")));
+
         JSONArray weather = obj.getJSONArray("weather");
         JSONObject weather0 = weather.getJSONObject(0);
-        String description = weather0.getString("description");
+
 
         JSONObject coord = obj.getJSONObject("coord");
 
@@ -75,14 +75,12 @@ class GetJSON extends AsyncTask<String, Void, String> {
         //String lon = coord.getString("lon");
        // String lat = coord.getString("lat");
 
-       // String description = weather.getString(2); //description eg clear sky
-       // String description = weather.getString(1); //main eg Clear
-     //   String iconID = weather.getString(3);
-        System.out.println((lon));
-        System.out.println((lat));
-        System.out.println((description));
+        String description = weather0.getString("description"); //description eg clear sky
+        String main= weather0.getString("main"); //main eg Clear
+        String iconID = weather0.getString("icon"); //weather icon id
 
-        ma.weatherstring = "description";
+
+        ma.addLocationsWeather(lat, lon, description);
 
     }
 
@@ -94,7 +92,7 @@ class GetJSON extends AsyncTask<String, Void, String> {
             //creating a URL
             //URL url = new URL(jsonRequestURL);
             URL url = new URL(strings[0]);
-            System.out.println(strings[0]);
+
             //Opening the URL using HttpURLConnection
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
@@ -114,8 +112,6 @@ class GetJSON extends AsyncTask<String, Void, String> {
             }
 
             //finally returning the read string
-            //jsonString =sb.toString().trim();
-            System.out.println(sb.toString().trim());
             return sb.toString().trim();
         } catch (Exception e) {
             System.out.println(e);

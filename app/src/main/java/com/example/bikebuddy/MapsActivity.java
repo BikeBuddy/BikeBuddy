@@ -3,13 +3,6 @@ package com.example.bikebuddy;
 import androidx.annotation.NonNull;
 
 
-
-import android.content.Context;
-
-
-import android.view.inputmethod.InputMethodManager;
-
-
 import com.google.android.gms.common.api.Status;
 
 import androidx.core.app.ActivityCompat;
@@ -17,6 +10,10 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +29,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -44,7 +42,7 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
 import java.util.Arrays;
-
+import java.util.List;
 
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -54,8 +52,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private static final String TAG = MapsActivity.class.getSimpleName();
 
+    public static double lon;
+    public double lat;
+    public FetchWeather fw;
+    public String weatherstring;
 
     private GoogleMap mMap;
+
+    private float zoomLevel = 10.0f;
+    private LatLng currentLocation;
+    private List<Address> locationsList;
+    private Bitmap smallMarker;
+    //private GetJSON getJSON;
 
     private CameraPosition cameraPosition;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -164,6 +172,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         this.mMap = googleMap;
 
+        fw = new FetchWeather(this);
+        fw.fetch(37.8892, 175.4664);
+        //getJSON = new GetJSON();
+        // getJSON.execute();
+        System.out.println("test");
         // stock google maps UI buttons
         mMap.getUiSettings().setZoomControlsEnabled(true);
 
@@ -175,32 +188,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
        // mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(-42, 172)));
        // mMap.moveCamera(CameraUpdateFactory.zoomTo(5));
 
-
+        this.mMap.setOnCameraIdleListener(onCameraIdleListener);
 
         // Use a custom info window adapter to handle multiple lines of text in the
         // info window contents.
-        this.mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-            @Override
-            // Return null here, so that getInfoContents() is called next.
-            public View getInfoWindow(Marker arg0) {
-                return null;
-            }
+        this.mMap.setInfoWindowAdapter(customInfoWindowAdapter);
 
-            @Override
-            public View getInfoContents(Marker marker) {
-                // Inflate the layouts for the info window, title and snippet.
-                View infoWindow = getLayoutInflater().inflate(R.layout.custom_info_contents,
-                        (FrameLayout) findViewById(R.id.map), false);
-
-                TextView title = infoWindow.findViewById(R.id.title);
-                title.setText(marker.getTitle());
-
-                TextView snippet = infoWindow.findViewById(R.id.snippet);
-                snippet.setText(marker.getSnippet());
-
-                return infoWindow;
-            }
-        });
 
         // Prompt the user for permission.
         getLocationPermission();
@@ -316,5 +309,103 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } catch (SecurityException e)  {
             Log.e("Exception: %s", e.getMessage());
         }
+    }
+
+    public void testToast (String s) {
+        Toast.makeText(this, s, Toast.LENGTH_LONG).show();
+    }
+
+
+    // Use a custom info window adapter to handle multiple lines of text in the
+    // info window contents.
+    private GoogleMap.InfoWindowAdapter customInfoWindowAdapter =
+            new GoogleMap.InfoWindowAdapter() {
+                @Override
+                // Return null here, so that getInfoContents() is called next.
+                public View getInfoWindow(Marker arg0) {
+                    return null;
+                }
+
+                @Override
+                public View getInfoContents(Marker marker) {
+                    // Inflate the layouts for the info window, title and snippet.
+                    View infoWindow = getLayoutInflater().inflate(R.layout.custom_info_contents,
+                            (FrameLayout) findViewById(R.id.map), false);
+
+                    TextView title = infoWindow.findViewById(R.id.title);
+                    title.setText(marker.getTitle());
+
+                    TextView snippet = infoWindow.findViewById(R.id.snippet);
+                    snippet.setText(marker.getSnippet());
+
+                    return infoWindow;
+                }
+            };
+
+    private GoogleMap.OnCameraIdleListener onCameraIdleListener =
+        new GoogleMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+                zoomLevel = mMap.getCameraPosition().zoom;
+                currentLocation = mMap.getCameraPosition().target;
+
+            // Grid locations
+            //generateLocations(currentLocation);
+            //displayLocations(smallMarker);
+
+            // Geocoder locations
+            //creates new list of locations based on camera centre position.
+                locationsList = getAddressListFromLatLong(currentLocation.latitude, currentLocation.longitude);
+                //creates marker for each location and adds to list
+                displayLocations(smallMarker);
+
+           // checkWeatherIconDisplay();
+
+           // makeToast(String.valueOf(zoomLevel));
+            }
+        };
+
+    public  List<Address> getAddressListFromLatLong(double lat, double lng) {
+
+        Geocoder geocoder = new Geocoder(this);
+
+        List<Address> list = null;
+        try {
+            list = geocoder.getFromLocation(lat, lng, 20);
+
+
+            // 20 is no of address you want to fetch near by the given lat-long
+
+            for (Address address : list) {
+                System.out.println(address);
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public void displayLocations(Bitmap smallMarker) {
+
+        mMap.clear();
+        for (Address a : locationsList) {
+            LatLng aLatLng = new LatLng(a.getLatitude(), a.getLongitude());
+          //  Marker marker = mMap.addMarker(new MarkerOptions().position(aLatLng).title("M").snippet("000")
+                //    .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
+            //markerArray.add(marker);
+        }
+
+    }
+
+    public Bitmap generateIcons() {
+        // custom the size of the weather icon
+        int height = 100;
+        int width = 100;
+        BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.lighting);
+        Bitmap b=bitmapdraw.getBitmap();
+        Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+
+        return smallMarker;
     }
 }

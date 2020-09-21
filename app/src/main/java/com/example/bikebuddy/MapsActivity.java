@@ -54,6 +54,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private static final String TAG = MapsActivity.class.getSimpleName();
 
+    public WeatherFunctions wf;
     public FetchWeather fw;
 
     private GoogleMap mMap;
@@ -170,9 +171,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
 
         this.mMap = googleMap;
-        smallMarker = generateIcons();
+
 
         fw = new FetchWeather(this);
+        wf = new WeatherFunctions();
+
+        BitmapDrawable lightning = (BitmapDrawable)getResources().getDrawable(R.drawable.lighting);
+        smallMarker = wf.generateIcons(lightning);
 
         // stock google maps UI buttons
         mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -432,7 +437,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
     }
 
-    public Bitmap generateIcons() {
+    //Function moved to weatherfunctions class
+/*    public Bitmap generateIcons() {
         // custom the size of the weather icon
         int height = 100;
         int width = 100;
@@ -441,6 +447,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
 
         return smallMarker;
-
-    }
+    }*/
 }

@@ -64,8 +64,12 @@ public class FetchWeather {
                     // update static variable "lon" in MapsActivity -- FAILED
                     System.out.println("debug");
 
+                    //pass lon, lat, cityName to MapsActivity global variable
                     System.out.println(MapsActivity.lon);
                     MapsActivity.lon = Double.parseDouble(lon);
+                    MapsActivity.lat = Double.parseDouble(lat);
+                    MapsActivity.cityName = cityName;
+
                     System.out.println(MapsActivity.lon);
                     //print lon and lat
                     System.out.println("lon");
@@ -78,6 +82,9 @@ public class FetchWeather {
                     String icon = weatherArray0.getString("icon");
                     System.out.println("sky");
                     System.out.println(sky);
+
+                    //pass sky to MapActivity
+                    MapsActivity.sky = sky;
 
                     // print icon id
                     System.out.println("icon");

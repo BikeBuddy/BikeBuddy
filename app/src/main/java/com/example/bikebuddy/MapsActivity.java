@@ -41,12 +41,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Marker marker1;
     private ArrayList<City> city = new ArrayList<City>();
     private ArrayList<Marker> markerArray = new ArrayList<Marker>();
-    private static String sky = "Raining";
-    private static String cityName = "Hong Kong";
-    public static double lon =0;
-    private static double lat =0;
-
-
+    public static String sky = "Raining";
+    public static String cityName = "Hong Kong";
+    public static double lon =114.1694;
+    public static double lat =22.3193;
+    private float zoomLevel = 10.0f;
+    private LatLng currentLocation;
+    private ArrayList<String> cityToFetch = new ArrayList();
     //push test PK
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +57,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        // Make Toast
-//        Toast.makeText(this, "What a stick did you see that", Toast.LENGTH_LONG).show();
-
         generateCities();
 
         // set onClick listener for "Show Weather" button to show/hide markers on the map when pressed
@@ -74,39 +72,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // fetch data from openWeatherMap
         FetchWeather fw = new FetchWeather();
-        fw.getJSON("http://api.openweathermap.org/data/2.5/weather?q=rome,italy&APPID=d2222fc373d644fa109aea09a4046a3c");
-        fw.getJSON("http://api.openweathermap.org/data/2.5/weather?q=auckland,newzealand&APPID=d2222fc373d644fa109aea09a4046a3c");
-//        System.out.println("mainActivity sky");
-//        System.out.println(sky);
+        cityToFetch.add("rome,italy");
+        cityToFetch.add("auckland,newzealand");
 
-        // check if static variable cityName, lon, lat, sky changed after fetching
-//        MapsActivity.sky = sky;
-//        MapsActivity.cityName = cityName;
-//        MapsActivity.lon = Double.parseDouble(lon);
-//        MapsActivity.lat = Double.parseDouble(lat);
-//        System.out.println("MapsActivity sky: ");
-//        System.out.println(MapsActivity.sky);
-//        System.out.println("MapsActivity cityName: ");
-//        System.out.println(MapsActivity.cityName);
-//        try {
-//            Thread.sleep(20000);
-//            System.out.println("MapsActivity lon: ");
-//            System.out.println(lon);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+        for(String fetchCity : cityToFetch){
+            fw.getJSON("http://api.openweathermap.org/data/2.5/weather?q=" + fetchCity +"&APPID=d2222fc373d644fa109aea09a4046a3c");
+        }
+//        fw.getJSON("http://api.openweathermap.org/data/2.5/weather?q=" + cityToFetch.get(0)+"&APPID=d2222fc373d644fa109aea09a4046a3c");
+//        fw.getJSON("http://api.openweathermap.org/data/2.5/weather?q="+ cityToFetch.get(1)+"&APPID=d2222fc373d644fa109aea09a4046a3c");
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                System.out.println("MapsActivity lon: ");
+                //print the global variable and check if it is the most update one from openWeatherApi
+                System.out.println("MapsActivity global variable: ");
                 System.out.println(lon);
+                System.out.println(lat);
+                System.out.println(sky);
+                System.out.println(cityName);
+                mMap.clear();
+                displayCities(generateIcons());
             }
         }, 5000);
-
-//        System.out.println("MapsActivity lat: ");
-//        System.out.println(MapsActivity.lat);
     }
 
     /**
@@ -122,12 +110,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
 
         mMap = googleMap;
-
+//        currentLocation = new LatLng(city.get(0).getLat(), city.get(0).getLng());
         // custom the size of the weather icon
         Bitmap smallMarker = generateIcons();
 
         // Add a marker on map
         displayCities(smallMarker);
+
+//      setOnnCameraIdle didn't work
+//        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+//            @Override
+//            public void onCameraIdle() {
+//                System.out.print("onCameraIdle works ");
+//                // custom the size of the weather icon
+//                Bitmap smallMarker = generateIcons1();
+//
+//                // Add a marker on map
+//                displayCities(smallMarker);
+//            }
+//        });
+//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, zoomLevel));
     }
 
     //get method for showLogo
@@ -155,8 +157,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void displayCities(Bitmap smallMarker){
         for(City c : city){
-            LatLng cityLatLng = new LatLng(c.getLat(),c.getLng());
-            marker = mMap.addMarker(new MarkerOptions().position(cityLatLng).title("Marker in Halminton").snippet("Population: 300,000")
+            //LatLng cityLatLng = new LatLng(c.getLat(),c.getLng());
+            LatLng cityLatLng = new LatLng(lat,lon);
+            marker = mMap.addMarker(new MarkerOptions().position(cityLatLng).title(cityName).snippet(sky)
                     .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
             mMap.moveCamera(CameraUpdateFactory.newLatLng(cityLatLng));
             markerArray.add(marker);
@@ -180,8 +183,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.lighting);
         Bitmap b=bitmapdraw.getBitmap();
         Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
-
         return smallMarker;
     }
-
 }

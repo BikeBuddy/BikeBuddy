@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="weather_icons">
+        <item>@drawable/i01d</item>
+        <item>@drawable/i01n</item>
+        <item>@drawable/i02d</item>
+        <item>@drawable/i02n</item>
+        <item>@drawable/i03d</item>
+        <item>@drawable/i03n</item>
+        <item>@drawable/i04d</item>
+        <item>@drawable/i04n</item>
+        <item>@drawable/i09d</item>
+        <item>@drawable/i09n</item>
+        <item>@drawable/i10d</item>
+        <item>@drawable/i10n</item>
+        <item>@drawable/i11d</item>
+        <item>@drawable/i11n</item>
+        <item>@drawable/i13d</item>
+        <item>@drawable/i13n</item>
+        <item>@drawable/i50d</item>
+        <item>@drawable/i50n</item>
+    </array>
+</resources>

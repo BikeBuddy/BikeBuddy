@@ -78,9 +78,12 @@ class GetJSON extends AsyncTask<String, Void, String> {
         String description = weather0.getString("description"); //description eg clear sky
         String main= weather0.getString("main"); //main eg Clear
         String iconID = weather0.getString("icon"); //weather icon id
+        System.out.println((iconID));
 
 
-        ma.addLocationsWeather(lat, lon, description);
+       // ma.wf.addLocationsWeather(lat, lon, description);
+       // ma.addLocationsWeather(lat, lon, description);
+        ma.wf.addLocationsWeather(lat, lon, iconID, description);
 
     }
 

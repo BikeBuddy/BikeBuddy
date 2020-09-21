@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentActivity;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -42,6 +43,7 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -56,6 +58,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public WeatherFunctions wf;
     public FetchWeather fw;
+    HashMap<String, String> weatherIcons;
 
     private GoogleMap mMap;
 
@@ -68,6 +71,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private CameraPosition cameraPosition;
     private FusedLocationProviderClient fusedLocationProviderClient;
 
+    // A default location (Auckland, New Zealand) and default zoom to use when location permission is
     // A default location (Auckland, New Zealand) and default zoom to use when location permission is
     // not granted.
     private final LatLng defaultLocation = new LatLng(-36.8483, 174.7625);
@@ -174,10 +178,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         fw = new FetchWeather(this);
-        wf = new WeatherFunctions();
+        wf = new WeatherFunctions(this, this.mMap);
+        HashMap<String, Drawable> weatherIcons = new HashMap<String, Drawable>();
+       // wf.generateIcons(weatherIcons);
 
-        BitmapDrawable lightning = (BitmapDrawable)getResources().getDrawable(R.drawable.lighting);
-        smallMarker = wf.generateIcons(lightning);
+       // BitmapDrawable lightning = (BitmapDrawable)getResources().getDrawable(R.drawable.i04n);
+       // smallMarker = wf.generateIcons(lightning);
 
         // stock google maps UI buttons
         mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -407,13 +413,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             fw.fetch(a.getLatitude(), a.getLongitude());
             //delete a from list after request?
         }*/
-
+        if (locationsList != null ){
         //had to change to iterator in order to delete
         Iterator<Address> it = locationsList.iterator();
         while (it.hasNext()) {
             Address a = it.next();
             fw.fetch(a.getLatitude(), a.getLongitude());
             it.remove();
+        }
         }
     }
 

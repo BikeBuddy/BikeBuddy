@@ -21,6 +21,7 @@ public class WeatherFunctionsTest {
         BitmapDrawable bmd = (BitmapDrawable)InstrumentationRegistry.getInstrumentation().getTargetContext().getDrawable(R.drawable.lighting);
 
         test_bmp = wf.generateIcons(bmd);
-        assertTrue(test_bmp.getHeight() == 100);
+       // assertTrue(test_bmp.getHeight() == 100);
+        assertEquals(test_bmp.getHeight(), 100);
     }
 }

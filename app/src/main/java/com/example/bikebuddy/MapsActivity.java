@@ -170,7 +170,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }));
 
     }
-    //for the input latLang, sets the origin if not already set, if it set it changes the destination
+    //for the input latLang, sets the origin if not already set, if the origin is set,the latLang is used to set the destination
     private void setAutoCompleteLatLang(LatLng latLang){
         autoCompleteLatLng = latLang;
         if(startingOrigin==null){
@@ -267,18 +267,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //action listener for draggable markers
         mMap.setOnMarkerDragListener(this);
 
-        //ActionListener for long press
+        //ActionListener for long press --PK
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             public void onMapLongClick(LatLng latLng) {
-                if(startingOrigin==null) {
-                    startingOrigin = new BikeBuddyLocation(true, gc, latLng, mMap);
-                    startingLocationNeeded = false;
-                }
-                else if(theDestination== null) {
-                    theDestination = new BikeBuddyLocation(false, gc, latLng, mMap);
-                }else{
-                    theDestination.setCoordinate(latLng);
-                }
+                setAutoCompleteLatLang(latLng);
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
             }
         });

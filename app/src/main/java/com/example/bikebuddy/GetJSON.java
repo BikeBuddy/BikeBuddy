@@ -83,7 +83,7 @@ class GetJSON extends AsyncTask<String, Void, String> {
 
        // ma.wf.addLocationsWeather(lat, lon, description);
        // ma.addLocationsWeather(lat, lon, description);
-        ma.wf.addLocationsWeather(lat, lon, iconID, description);
+       // ma.weatherFunctions.addLocationsWeather(lat, lon, iconID, description);
 
     }
 

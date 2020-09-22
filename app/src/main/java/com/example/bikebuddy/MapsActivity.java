@@ -11,7 +11,6 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -21,7 +20,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -30,7 +28,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -46,7 +43,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -56,8 +52,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private static final String TAG = MapsActivity.class.getSimpleName();
 
-    public WeatherFunctions wf;
-    public FetchWeather fw;
+    public WeatherFunctions weatherFunctions;
+    public FetchWeather fetchWeather;
     HashMap<String, String> weatherIcons;
 
     private GoogleMap mMap;
@@ -67,6 +63,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private List<Address> locationsList;
     private Bitmap smallMarker;
 
+    // init data for autocomplete to store
+    private LatLng autoCompleteLatLng;
 
     private CameraPosition cameraPosition;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -121,8 +119,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onSaveInstanceState(outState);
     }
 
-    // init data for autocomplete to store
-    private LatLng autoCompleteLatLng;
+
     // initialise places API
     private void initPlaces() {
         // Initialize Places.
@@ -177,13 +174,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         this.mMap = googleMap;
 
 
-        fw = new FetchWeather(this);
-        wf = new WeatherFunctions(this, this.mMap);
-        HashMap<String, Drawable> weatherIcons = new HashMap<String, Drawable>();
-       // wf.generateIcons(weatherIcons);
+        initFetchWeather();
+        initWeatherFunctions();
 
-       // BitmapDrawable lightning = (BitmapDrawable)getResources().getDrawable(R.drawable.i04n);
-       // smallMarker = wf.generateIcons(lightning);
+        HashMap<String, Drawable> weatherIcons = new HashMap<String, Drawable>();
 
         // stock google maps UI buttons
         mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -319,10 +313,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    public void testToast (String s) {
-        Toast.makeText(this, s, Toast.LENGTH_LONG).show();
-    }
-
 
     // Use a custom info window adapter to handle multiple lines of text in the
     // info window contents.
@@ -356,22 +346,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onCameraIdle() {
                 zoomLevel = mMap.getCameraPosition().zoom;
                 currentLocation = mMap.getCameraPosition().target;
-
-            // Grid locations
-            //generateLocations(currentLocation);
-            //displayLocations(smallMarker);
-
-            // Geocoder locations
-            //creates new list of locations based on camera centre position.
-                locationsList = getAddressListFromLatLong(currentLocation.latitude, currentLocation.longitude);
-                //creates marker for each location and adds to list
+                // Grid locations
+                //generateLocations(currentLocation);
                 //displayLocations(smallMarker);
+                // Geocoder locations
+                //creates new list of locations based on camera centre position.
+                locationsList = getAddressListFromLatLong(currentLocation.latitude, currentLocation.longitude);
+
                 getLocationsWeather();
-               // addLocationsWeather();
-
-           // checkWeatherIconDisplay();
-
-           // makeToast(String.valueOf(zoomLevel));
             }
         };
 
@@ -379,32 +361,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         Geocoder geocoder = new Geocoder(this);
 
-        List<Address> list = null;
+        List<Address> addressList = null;
         try {
-            list = geocoder.getFromLocation(lat, lng, 20);
-
+            addressList = geocoder.getFromLocation(lat, lng, 20);
             // 20 is no of address you want to fetch near by the given lat-long
-
         } catch (Throwable e) {
             e.printStackTrace();
         }
-
-        return list;
+        return addressList;
     }
-
-/*    public void displayLocations(Bitmap smallMarker) {
-
-        mMap.clear();
-        for (Address a : locationsList) {
-            System.out.println(a.getLocale());
-
-
-            LatLng aLatLng = new LatLng(a.getLatitude(), a.getLongitude());
-            Marker marker = mMap.addMarker(new MarkerOptions().position(aLatLng).title("M").snippet("000")
-                    .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
-            //markerArray.add(marker);
-        }
-    }*/
 
     public void getLocationsWeather() {
 
@@ -418,41 +383,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Iterator<Address> it = locationsList.iterator();
         while (it.hasNext()) {
             Address a = it.next();
-            fw.fetch(a.getLatitude(), a.getLongitude());
+            fetchWeather.fetch(a.getLatitude(), a.getLongitude());
             it.remove();
         }
         }
     }
 
-    public void addLocationsWeather(double lat, double lon, String description) {
-        //option 1 using address object, creates address object with everything else set to null, uses URL as description
-        // allows to use the same locationslist but the addresses are nto that useful, could reverse locate to get full address.
-      //  Address a = new Address(Locale.ENGLISH);
-      //  a.setLatitude(lat);
-      //  a.setLongitude(lon);
-      //  a.setUrl(description);
-       // locationsList.add(a);
-
-        //option 2 just creates a marker with lat, lon, description in a seperate array to the locations
-        //similar to the previous displaylocations method
-        LatLng latLng = new LatLng(lat, lon);
-        //Marker marker =
-
-        //option 3 similar to above but doesn't store the markers just displays them (this could have issues with the weather toggle)
-        //LatLng latLng = new LatLng(lat, lon);
-        mMap.addMarker(new MarkerOptions().position(latLng).title(description).snippet("000")
-                .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
+    public void initWeatherFunctions() {
+       this.weatherFunctions = new WeatherFunctions(this, this.mMap);
     }
 
-    //Function moved to weatherfunctions class
-/*    public Bitmap generateIcons() {
-        // custom the size of the weather icon
-        int height = 100;
-        int width = 100;
-        BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.lighting);
-        Bitmap b=bitmapdraw.getBitmap();
-        Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
-
-        return smallMarker;
-    }*/
+    public void initFetchWeather() {
+        this.fetchWeather = new FetchWeather(this);
+    }
 }

@@ -29,6 +29,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -105,7 +106,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // Locations for route planning
     private BikeBuddyLocation startingOrigin;//BikeBuddyLocation contained location , address & marker data.
     private BikeBuddyLocation theDestination;
-    private LatLng autoCompleteLatLng = null;
+
+
 
     // Boolean for telling route initialization the user has no location
     Boolean startingLocationNeeded = false;
@@ -478,6 +480,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             it.remove();
         }
         }
+        
     }
 
     public void initWeatherFunctions() {

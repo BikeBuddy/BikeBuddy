@@ -61,7 +61,7 @@ public class WeatherFunctions {
     */
     public Bitmap generateIcon(String iconName) {
 
-        String drawableIcon = "@drawable/"+iconName;
+        String drawableIcon = "@drawable/i"+iconName;
         String defaultIcon = "@drawable/idefault";
         //custom size of the weather icon
         int height = 100;
@@ -87,7 +87,7 @@ public class WeatherFunctions {
         return weatherIcon;
     }
 
-/*    public void addLocationsWeather(double lat, double lon, String iconId, String description) {
+    public void addLocationsWeather(double lat, double lon, String iconId, String description) {
         //option 1 using address object, creates address object with everything else set to null, uses URL as description
         // allows to use the same locationslist but the addresses are nto that useful, could reverse locate to get full address.
         //  Address a = new Address(Locale.ENGLISH);
@@ -103,14 +103,11 @@ public class WeatherFunctions {
 
         //option 3 similar to above but doesn't store the markers just displays them (this could have issues with the weather toggle)
         //LatLng latLng = new LatLng(lat, lon);
-       *//* mMap.addMarker(new MarkerOptions().position(latLng).title(description).snippet("000")
-                .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));*//*
 
-*//*              gm.addMarker(new MarkerOptions().position(latLng).title(description).snippet("000")
-                .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));*//*
+
+
         googleMap.addMarker(new MarkerOptions().position(latLng).title(description)
                 .icon(BitmapDescriptorFactory.fromBitmap(generateIcon(iconId))));
 
-    }*/
-
+    }
 }

@@ -480,7 +480,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             it.remove();
         }
         }
-        
+        updateMap();
+
+
     }
 
     public void initWeatherFunctions() {

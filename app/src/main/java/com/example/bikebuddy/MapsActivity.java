@@ -62,8 +62,8 @@ import java.util.Locale;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener  {
-
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback  {
+    //, GoogleMap.OnMarkerDragListener
     private static final String TAG = MapsActivity.class.getSimpleName();
 
     public WeatherFunctions weatherFunctions;
@@ -289,7 +289,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setUpOriginFromLocation();
 
         //action listener for draggable markers
-        mMap.setOnMarkerDragListener(this);
+        mMap.setOnMarkerDragListener(markerDragListener);
 
         //ActionListener for long press --PK
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
@@ -451,22 +451,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         };
 
-    //updates the snippet, Address etc when start and destination markers are dragged
-    public void onMarkerDragEnd(Marker marker) {
-        mMap.clear();//clears the old poly line if there was one
-        marker.setVisible(false);
-        if(marker==startingOrigin.marker) {
-            startingOrigin.setCoordinate(marker.getPosition());
-        }else if(theDestination!=null && theDestination.marker == marker) {
-            theDestination.setCoordinate(marker.getPosition());
-        }
-        Toast.makeText(this, "the action listener is working", Toast.LENGTH_LONG);
+    private GoogleMap.OnMarkerDragListener markerDragListener = new GoogleMap.OnMarkerDragListener() {
+        @Override
+        public void onMarkerDragStart(Marker marker) {
 
-    }
+        }
+        @Override
+        public void onMarkerDrag(Marker marker) {
+
+        }
+        //updates the snippet, Address etc when start and destination markers are dragged
+        public void onMarkerDragEnd(Marker marker) {
+            LatLng latlong = marker.getPosition();
+            if(marker==startingOrigin.marker) {
+                startingOrigin.setCoordinate(latlong);
+            }else if(theDestination!=null && theDestination.marker == marker) {
+                theDestination.setCoordinate(latlong);
+            }
+            mMap.clear();//clears the old poly line if there was one
+            theDestination.createMarker();
+            startingOrigin.createMarker();
+        }
+    };
+
+
 
     public  List<Address> getAddressListFromLatLong(double lat, double lng) {
 
-        Geocoder geocoder = new Geocoder(this);
+        Geocoder geocoder = gc;
 
         List<Address> addressList = null;
         try {
@@ -479,8 +491,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void getLocationsWeather() {
-
-        mMap.clear();
 /*        for (Address a : locationsList) {
             fw.fetch(a.getLatitude(), a.getLongitude());
             //delete a from list after request?
@@ -491,12 +501,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             while (it.hasNext()) {
                 Address a = it.next();
                 fetchWeather.fetch(a.getLatitude(), a.getLongitude());
-                it.remove();
+                if(it.hasNext())
+                    it.remove();
             }
         }
+    //    mMap.clear();
         updateMap();
-
-
     }
 
     public void initWeatherFunctions() {

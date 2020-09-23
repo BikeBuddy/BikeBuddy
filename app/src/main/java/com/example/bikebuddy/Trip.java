@@ -16,7 +16,6 @@ public class Trip {
     String encodedPolyLine;
     ArrayList<LatLng> points;// the LatLng coordinates throughout the route
 
-
     public String getTripDistance(){
         String tripDistance = "Distance: ";
         if(distance>1000){

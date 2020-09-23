@@ -1,6 +1,9 @@
 package com.example.bikebuddy;
 
+import junit.framework.JUnit4TestAdapter;
+
 import org.junit.Test;
+import org.junit.runners.JUnit4;
 
 import static org.junit.Assert.*;
 
@@ -12,6 +15,8 @@ import static org.junit.Assert.*;
 public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() {
+
+       // <Trip> testTrip  = new Test<>();
         assertEquals(4, 2 + 2);
     }
 }

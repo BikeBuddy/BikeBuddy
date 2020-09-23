@@ -29,12 +29,12 @@ public class RouteTests {
         BikeBuddyLocation startingOrigin = mapsActivity.getStartingOrigin();
         BikeBuddyLocation theDestination = mapsActivity.getTheDestination();
 
+
         assertNull(startingOrigin);
         assertNull(theDestination);
+        mapsActivity.setAutoCompleteLatLang(new LatLng(0, 0));
 
-       // mapsActivity.setAutoCompleteLatLang(new LatLng(0, 0));
-
-        //  assertNotNull(startingOrigin);
+        assertNotNull(mapsActivity.getStartingOrigin());
         //  assertNotNull(theDestination);
     }
 
@@ -50,18 +50,22 @@ public class RouteTests {
         assertEquals(mapsActivity.findViewById(R.id.route_button).getVisibility(), View.INVISIBLE);
     }
 
-    @Test
-    public void durationCalcTest() {
-        MapsActivity mapsActivity = rule.getActivity();
 
-        for(int i =0; i< 10000; i++)
-            assertEquals(mapsActivity);
 
-        mapsActivity.toggleRouteButton();
 
-        assertEquals(mapsActivity.findViewById(R.id.route_button).getVisibility(), View.INVISIBLE);
-    }
-
+//
+//    @Test
+//    public void durationCalcTest() {
+//        MapsActivity mapsActivity = rule.getActivity();
+//
+//        for(int i =0; i< 1000; i++)
+//            assertEquals(mapsActivity);
+//
+//        mapsActivity.toggleRouteButton();
+//
+//        assertEquals(mapsActivity.findViewById(R.id.route_button).getVisibility(), View.INVISIBLE);
+//    }
+//
 
 
 /*        Bitmap testBitmap;

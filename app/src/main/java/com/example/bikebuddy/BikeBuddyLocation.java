@@ -34,18 +34,17 @@ public class BikeBuddyLocation {
         this.marker = mMap.addMarker(new MarkerOptions().position(coordinate));
         this.marker.setDraggable(true);
         if(isOrigin){
-            this.marker.showInfoWindow();
             this.marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
             this.marker.setTitle("Origin");
         }else{
-            this.marker.showInfoWindow();
             this.marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
             this.marker.setTitle("Destination");
         }
+        this.marker.showInfoWindow();
         try {
             address= gc.getFromLocation(coordinate.latitude, coordinate.longitude,1).get(0);
             if(address!= null)
-                this.marker = mMap.addMarker(new MarkerOptions().position(coordinate).title("Destination").snippet(address.getLocality());
+                this.marker = mMap.addMarker(new MarkerOptions().position(coordinate).title("Destination").snippet(address.getLocality()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -53,7 +52,6 @@ public class BikeBuddyLocation {
 
     public void setCoordinate(LatLng coordinate){
         this.coordinate = coordinate;
-        createMarker();
     }
 
     //when marker was dragged from map,

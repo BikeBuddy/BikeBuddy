@@ -16,22 +16,15 @@ public class Trip {
     String encodedPolyLine;
     ArrayList<LatLng> points;// the LatLng coordinates throughout the route
 
-    public Integer getDistanceKMs(){
-        if(this.distance!=null){
-            return distance/1000;
-        }
-        return null;
-    }
 
     public String getTripDistance(){
-        int distanceInMetres = getDistanceKMs();
         String tripDistance = "Distance: ";
-        if(distanceInMetres>1000){
-            int KMs = distanceInMetres/1000;
-            int meters = (distanceInMetres % 1000);
+        if(distance>1000){
+            int KMs = distance/1000;
+            int meters = (distance % 1000);
             tripDistance += KMs + "KM & " + meters + "meters";
         }else{
-            tripDistance += distanceInMetres + " meters";
+            tripDistance += distance + " meters";
         }
         return tripDistance;
     }

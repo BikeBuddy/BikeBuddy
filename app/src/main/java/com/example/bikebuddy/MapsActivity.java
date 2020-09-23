@@ -488,11 +488,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (locationsList != null ){
         //had to change to iterator in order to delete
         Iterator<Address> it = locationsList.iterator();
-        while (it.hasNext()) {
-            Address a = it.next();
-            fetchWeather.fetch(a.getLatitude(), a.getLongitude());
-            it.remove();
-        }
+            while (it.hasNext()) {
+                Address a = it.next();
+                fetchWeather.fetch(a.getLatitude(), a.getLongitude());
+                it.remove();
+            }
         }
         updateMap();
 
@@ -522,9 +522,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //redraws all the markers and polyline onto map
     public void updateMap(){
         if(startingOrigin!=null)
-            startingOrigin.update();
+            startingOrigin.createMarker();
         if(theDestination!=null)
-            theDestination.update();
+            theDestination.createMarker();
         if(routeStarted)
             jsonRoutes.getDirections(startingOrigin.coordinate, theDestination.coordinate);
     }

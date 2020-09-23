@@ -44,7 +44,7 @@ public class BikeBuddyLocation {
         try {
             address= gc.getFromLocation(coordinate.latitude, coordinate.longitude,1).get(0);
             if(address!= null)
-                this.marker = mMap.addMarker(new MarkerOptions().position(coordinate).title("Destination").snippet(address.getLocality()));
+                this.marker.setSnippet(address.getLocality());
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -22,21 +22,21 @@ public class RouteTests {
     is scaled to 100x100 pixels.
      */
     @Test
-    public void setAutoCompleteLatLangTest() {
+    public void startingLocationSetTest() {
 
         MapsActivity mapsActivity = rule.getActivity();
 
         BikeBuddyLocation startingOrigin = mapsActivity.getStartingOrigin();
         BikeBuddyLocation theDestination = mapsActivity.getTheDestination();
-
-
-        assertNull(startingOrigin);
-        assertNull(theDestination);
-        mapsActivity.setAutoCompleteLatLang(new LatLng(0, 0));
-
-        assertNotNull(mapsActivity.getStartingOrigin());
-        //  assertNotNull(theDestination);
+        if(!mapsActivity.startingLocationNeeded){
+            assertTrue(( mapsActivity.lastKnownLocation.getLatitude() == startingOrigin.coordinate.latitude )
+                    && ( mapsActivity.lastKnownLocation.getLongitude() == startingOrigin.coordinate.longitude));
+        }else{
+            assertNull(startingOrigin);
+        }
     }
+
+
 
     @Test
     public void toggleRouteButtonTest() {

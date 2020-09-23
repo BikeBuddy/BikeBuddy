@@ -3,7 +3,7 @@ package com.example.bikebuddy;
 import androidx.annotation.NonNull;
 
 
-
+import android.app.Activity;
 import android.content.Context;
 
 
@@ -44,6 +44,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
@@ -62,8 +63,8 @@ import java.util.Locale;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback  {
-    //, GoogleMap.OnMarkerDragListener
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback , GoogleMap.OnMarkerDragListener {
+
     private static final String TAG = MapsActivity.class.getSimpleName();
 
     public WeatherFunctions weatherFunctions;
@@ -97,7 +98,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     // The geographical location where the device is currently located. That is, the last-known
     // location retrieved by the Fused Location Provider.
-    private Location lastKnownLocation;
+    protected Location lastKnownLocation;
 
     // Keys for storing activity state.
     private static final String KEY_CAMERA_POSITION = "camera_position";
@@ -195,6 +196,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }));
 
     }
+
     //for the input latLang, sets the origin if not already set, if the origin is set,the latLang is used to set the destination
     public void setAutoCompleteLatLang(LatLng latLang){
         autoCompleteLatLng = latLang;
@@ -204,11 +206,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             startingLocationNeeded = false;
         }else if(theDestination==null){
             theDestination = new BikeBuddyLocation(false,gc,latLang, mMap);
-            theDestination.createMarker();;
+            theDestination.createMarker();
         }else{
+            theDestination.marker.setVisible(false);
             theDestination.setCoordinate(latLang);
+            theDestination.createMarker();
         }
     }
+
+
+
+
 
     //instead of making the button invisible should we change the text to instructions, eg "please select destination"
     public void toggleRouteButton() {
@@ -229,7 +237,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if(startingOrigin !=null || theDestination!=null){
             try {
                 routeStarted = true; //sets flag so that the polyline for the route will be redrawn if map is cleared
-                Toast.makeText(this, "start is : "+ startingOrigin.coordinate.toString()+" DEST IS"+theDestination.coordinate.toString(), Toast.LENGTH_LONG).show();
                 mMap.clear();
                 updateMap();//adds polyline and markers onto map
             }catch (Exception e){
@@ -272,8 +279,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         this.mMap.setInfoWindowAdapter(customInfoWindowAdapter);
         
         toggleRouteButton();
-    
-
 
 
         // Prompt the user for permission.
@@ -289,7 +294,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setUpOriginFromLocation();
 
         //action listener for draggable markers
-        mMap.setOnMarkerDragListener(markerDragListener);
+        mMap.setOnMarkerDragListener(this);
 
         //ActionListener for long press --PK
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
@@ -451,35 +456,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         };
 
-    private GoogleMap.OnMarkerDragListener markerDragListener = new GoogleMap.OnMarkerDragListener() {
-        @Override
-        public void onMarkerDragStart(Marker marker) {
 
-        }
-        @Override
-        public void onMarkerDrag(Marker marker) {
-
-        }
         //updates the snippet, Address etc when start and destination markers are dragged
         public void onMarkerDragEnd(Marker marker) {
-            LatLng latlong = marker.getPosition();
-            if(marker==startingOrigin.marker) {
-                startingOrigin.setCoordinate(latlong);
-            }else if(theDestination!=null && theDestination.marker == marker) {
-                theDestination.setCoordinate(latlong);
+
+                startingOrigin.update();
+              //  startingOrigin.setCoordinate(marker.getPosition());
+
+            if(theDestination!=null ) {
+               theDestination.update();
+               Toast.makeText(this  , "marker is : "+ theDestination.marker.getPosition().toString() + " after drag: " + theDestination.marker.getPosition().toString() , Toast.LENGTH_LONG).show();
             }
             mMap.clear();//clears the old poly line if there was one
-            theDestination.createMarker();
             startingOrigin.createMarker();
+            if(theDestination!=null)
+                theDestination.createMarker();
         }
-    };
-
 
 
     public  List<Address> getAddressListFromLatLong(double lat, double lng) {
 
         Geocoder geocoder = gc;
-
         List<Address> addressList = null;
         try {
             addressList = geocoder.getFromLocation(lat, lng, 20);
@@ -505,7 +502,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     it.remove();
             }
         }
-    //    mMap.clear();
+        //mMap.clear();
         updateMap();
     }
 
@@ -516,6 +513,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void initFetchWeather() {
         this.fetchWeather = new FetchWeather(this);
     }
+
+
     //sets the starting location to gps location, otherwise sets startingLocationNeeded flag to true
     private void setUpOriginFromLocation(){
         if(lastKnownLocation==null){
@@ -523,8 +522,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }else{
             LatLng startLatLong = new LatLng(lastKnownLocation.getLatitude(),lastKnownLocation.getLongitude());
             Toast.makeText(this, lastKnownLocation.toString(), Toast.LENGTH_LONG).show();
-            //  startingOrigin = new BikeBuddyLocation(true,gc, startLatLong, mMap);
-            //    startingLocationNeeded = false;
+            startingOrigin = new BikeBuddyLocation(true,gc, startLatLong, mMap);
+            startingLocationNeeded = false;
         }
     }
 

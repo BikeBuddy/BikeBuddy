@@ -1,6 +1,7 @@
 package com.example.bikebuddy;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,10 +16,8 @@ public class TripTest {
         Trip testTrip = new Trip();
         for(int i = 1; i<6000; i++ ){
             testTrip.duration = i;
-           // assertEquals(testTrip.getDuration(), (i/60));
+            Assert.assertEquals( ((float)(i/600)), testTrip.getDuration(), 0.1f);
         }
-
-
     }
 
     @Test

@@ -200,6 +200,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //for the input latLang, sets the origin if not already set, if the origin is set,the latLang is used to set the destination
     public void setAutoCompleteLatLang(LatLng latLang){
         autoCompleteLatLng = latLang;
+        mMap.clear();
         if(startingOrigin==null){
             startingOrigin = new BikeBuddyLocation(true,gc,latLang, mMap);
             startingOrigin.createMarker();
@@ -208,10 +209,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             theDestination = new BikeBuddyLocation(false,gc,latLang, mMap);
             theDestination.createMarker();
         }else{
-            theDestination.marker.setVisible(false);
             theDestination.setCoordinate(latLang);
             theDestination.createMarker();
         }
+
+
     }
 
 

@@ -50,6 +50,18 @@ public class RouteTests {
         assertEquals(mapsActivity.findViewById(R.id.route_button).getVisibility(), View.INVISIBLE);
     }
 
+    @Test
+    public void durationCalcTest() {
+        MapsActivity mapsActivity = rule.getActivity();
+
+        for(int i =0; i< 10000; i++)
+            assertEquals(mapsActivity);
+
+        mapsActivity.toggleRouteButton();
+
+        assertEquals(mapsActivity.findViewById(R.id.route_button).getVisibility(), View.INVISIBLE);
+    }
+
 
 
 /*        Bitmap testBitmap;

@@ -62,9 +62,9 @@ public class JSONRoutes {
         mMap.addPolyline(places);
         LatLng midPoint = aTrip.points.get(aTrip.points.size()/2);
         mMap.addMarker(new MarkerOptions().position(midPoint)
-                .snippet("duration :" + (aTrip.duration/60) +" minutes")
-                .title("duration :" +  (aTrip.duration/60) +" minutes")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                .snippet(aTrip.getTripDuration())
+                .title(aTrip.getTripDistance())).showInfoWindow();
+                //.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
     }
 
     //takes in two LatLong locations, sends a request to google maps, parses the repsonse to a Trip and shows it on the map

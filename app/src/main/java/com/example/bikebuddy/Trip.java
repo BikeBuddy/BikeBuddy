@@ -15,6 +15,48 @@ public class Trip {
     LatLng endLocation;
     String encodedPolyLine;
     ArrayList<LatLng> points;// the LatLng coordinates throughout the route
+
+    public Integer getDistanceKMs(){
+        if(this.distance!=null){
+            return distance/1000;
+        }
+        return null;
+    }
+
+    public String getTripDistance(){
+        int distanceInMetres = getDistanceKMs();
+        String tripDistance = "Distance: ";
+        if(distanceInMetres>1000){
+            int KMs = distanceInMetres/1000;
+            int meters = (distanceInMetres % 1000);
+            tripDistance += KMs + "KM & " + meters + "meters";
+        }else{
+            tripDistance += distanceInMetres + " meters";
+        }
+        return tripDistance;
+    }
+
+    public Integer getDuration(){
+        if(duration!=null){
+           return  (duration/60);
+        }
+        return null;
+    }
+
+    public String getTripDuration(){
+        int durationMins = getDuration();
+        String tripDuration ="Duration: ";
+        if(durationMins>60){
+            int minutes = (60 % durationMins);
+            int hours = (durationMins/60);
+            tripDuration += hours + "h "+ minutes + "mins";
+        }else{
+            tripDuration += durationMins  + "mins";
+        }
+        return tripDuration;
+    }
+
+
     public void decodePolyLine() {
         int len = encodedPolyLine.length();
         int index = 0;

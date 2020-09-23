@@ -248,7 +248,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         this.mMap = googleMap;
 
-
         initFetchWeather();
         initWeatherFunctions();
 
@@ -452,6 +451,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         };
 
+    //updates the snippet, Address etc when start and destination markers are dragged
+    public void onMarkerDragEnd(Marker marker) {
+        mMap.clear();//clears the old poly line if there was one
+        marker.setVisible(false);
+        if(marker==startingOrigin.marker) {
+            startingOrigin.setCoordinate(marker.getPosition());
+        }else if(theDestination!=null && theDestination.marker == marker) {
+            theDestination.setCoordinate(marker.getPosition());
+        }
+        Toast.makeText(this, "the action listener is working", Toast.LENGTH_LONG);
+
+    }
+
     public  List<Address> getAddressListFromLatLong(double lat, double lng) {
 
         Geocoder geocoder = new Geocoder(this);
@@ -506,12 +518,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    //updates the snippet, Address etc when start and destination markers are dragged
-    public void onMarkerDragEnd(Marker marker) {
-        mMap.clear();//clears the old poly line if there was one
-        startingOrigin.update();
-        theDestination.update();
-    }
 
     //redraws all the markers and polyline onto map
     public void updateMap(){

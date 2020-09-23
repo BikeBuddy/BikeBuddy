@@ -35,6 +35,7 @@ public class BikeBuddyLocation {
         this.marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
         this.marker.setDraggable(true);
         if(isOrigin){
+            this.marker.showInfoWindow();
             this.marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
             this.marker.setTitle("Origin");
         }
@@ -49,14 +50,13 @@ public class BikeBuddyLocation {
 
     public void setCoordinate(LatLng coordinate){
         this.coordinate = coordinate;
-        this.marker.setPosition(coordinate);
-        update();
+        createMarker();
     }
 
-    //when marker was cleared from map, calll this function to redraw
+    //when marker was dragged from map,
     public void update(){
-            createMarker();
-            coordinate = marker.getPosition();
+        coordinate = marker.getPosition();
+        createMarker();
     }
 
 }

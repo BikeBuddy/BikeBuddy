@@ -51,6 +51,20 @@
         android:onClick="initRoute"
         android:text="Start Route" />
 
+    <Button
+        android:id="@+id/button1"
+        android:background="@drawable/white_border"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginStart="150dp"
+        android:layout_marginLeft="150dp"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:onClick="toggleWeather"
+        android:text="Show Weather"/>
+
 
 
     <!-- the map fragment -->

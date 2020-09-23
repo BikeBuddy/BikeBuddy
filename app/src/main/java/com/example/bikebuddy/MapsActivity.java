@@ -196,20 +196,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
     //for the input latLang, sets the origin if not already set, if the origin is set,the latLang is used to set the destination
-    private void setAutoCompleteLatLang(LatLng latLang){
+    public void setAutoCompleteLatLang(LatLng latLang){
         autoCompleteLatLng = latLang;
         if(startingOrigin==null){
             startingOrigin = new BikeBuddyLocation(true,gc,latLang, mMap);
+            startingOrigin.createMarker();
             startingLocationNeeded = false;
         }else if(theDestination==null){
             theDestination = new BikeBuddyLocation(false,gc,latLang, mMap);
+            theDestination.createMarker();;
         }else{
             theDestination.setCoordinate(latLang);
         }
     }
 
     //instead of making the button invisible should we change the text to instructions, eg "please select destination"
-    private void toggleRouteButton() {
+    public void toggleRouteButton() {
         // make route button visible
         View routeButt = findViewById(R.id.route_button);
         if(routeButt.getVisibility() == View.INVISIBLE)
@@ -522,4 +524,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
     public void onMarkerDragStart(Marker marker) {    }
     public void onMarkerDrag(Marker marker) {    }
+
+    public BikeBuddyLocation getStartingOrigin() {
+        return startingOrigin;
+    }
+
+    public BikeBuddyLocation getTheDestination() {
+        return theDestination;
+    }
 }
+

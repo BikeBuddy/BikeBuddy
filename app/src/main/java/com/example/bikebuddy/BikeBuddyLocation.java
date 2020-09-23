@@ -27,7 +27,7 @@ public class BikeBuddyLocation {
         if(address!= null)
              this.address = address;
         coordinate= autoCompleteLatLang;
-        createMarker();
+       // createMarker();
     }
 
     public void createMarker(){

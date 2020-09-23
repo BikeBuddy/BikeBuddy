@@ -20,14 +20,14 @@ public class BikeBuddyLocation {
     boolean isOrigin;//marker will be different depending if its the start or destination
     Geocoder gc;
 
-    public BikeBuddyLocation(boolean isOrigin, Geocoder gc, LatLng autoCompleteLatLang, GoogleMap mMap){
+    public BikeBuddyLocation(boolean isOrigin, Geocoder gc, LatLng latLong, GoogleMap mMap){
         this.isOrigin = isOrigin;
         this.gc = gc;
         this.mMap = mMap;
         if(address!= null)
              this.address = address;
-        coordinate= autoCompleteLatLang;
-       // createMarker();
+        coordinate = latLong;
+        createMarker();
     }
 
     public void createMarker(){
@@ -39,7 +39,7 @@ public class BikeBuddyLocation {
             this.marker.setTitle("Origin");
         }
         try {
-            address= gc.getFromLocation(coordinate.latitude, coordinate.longitude,1).get(0);
+            address = gc.getFromLocation(coordinate.latitude, coordinate.longitude,1).get(0);
             if(address!= null)
                 this.marker = mMap.addMarker(new MarkerOptions().position(coordinate).title("Destination").snippet(address.getLocality()));
         } catch (IOException e) {
@@ -54,7 +54,7 @@ public class BikeBuddyLocation {
     }
 
     //when marker was cleared from map, calll this function to redraw
-    public void update(){
+    public synchronized void update(){
             createMarker();
             coordinate = marker.getPosition();
     }

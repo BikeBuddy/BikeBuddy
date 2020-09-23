@@ -2,6 +2,7 @@ package com.example.bikebuddy;
 
 
 import android.graphics.Color;
+import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -21,11 +22,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 //@Author PK
-public class JSONRoutes {
+public class RouteFetcher {
     String key;
     GoogleMap mMap;//class has reference to the main map fragment
 
-    public JSONRoutes(String key, GoogleMap mMap){
+    public RouteFetcher(String key, GoogleMap mMap){
         this.key = key;
         this.mMap = mMap;
     }

@@ -26,7 +26,7 @@ public class RouteTests {
 
         MapsActivity mapsActivity = rule.getActivity();
 
-        BikeBuddyLocation startingOrigin = mapsActivity.getStartingOrigin();
+        BikeBuddyLocation startingOrigin = mapsActivity.routeManager.getStartingOrigin();
         BikeBuddyLocation theDestination = mapsActivity.getTheDestination();
 
         assertNull(startingOrigin);

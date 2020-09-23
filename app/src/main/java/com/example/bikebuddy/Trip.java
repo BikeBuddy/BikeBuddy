@@ -15,6 +15,9 @@ public class Trip {
     LatLng endLocation;
     String encodedPolyLine;
     ArrayList<LatLng> points;// the LatLng coordinates throughout the route
+
+
+
     public void decodePolyLine() {
         int len = encodedPolyLine.length();
         int index = 0;

@@ -8,12 +8,18 @@ import android.graphics.drawable.Drawable;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
 
 public class WeatherFunctions {
 
     MapsActivity mapsActivity;
     GoogleMap googleMap;
+    private Marker marker;
+    private ArrayList<Marker> markerArray = new ArrayList<Marker>();
+    private boolean showMarker = true;
 
     // default constructor for testing
     public WeatherFunctions() {
@@ -23,6 +29,7 @@ public class WeatherFunctions {
     public WeatherFunctions(MapsActivity mapsActivity, GoogleMap googleMap) {
         this.mapsActivity = mapsActivity;
         this.googleMap = googleMap;
+
     }
 
 //    Resources res = ma.getResources();
@@ -104,10 +111,32 @@ public class WeatherFunctions {
         //option 3 similar to above but doesn't store the markers just displays them (this could have issues with the weather toggle)
         //LatLng latLng = new LatLng(lat, lon);
 
-
-
-        googleMap.addMarker(new MarkerOptions().position(latLng).title(description)
+        //store the markers so when toggling the showWeather button it shows and hide the weather
+        marker = googleMap.addMarker(new MarkerOptions().position(latLng).title(description).snippet("000")
                 .icon(BitmapDescriptorFactory.fromBitmap(generateIcon(iconId))));
+        markerArray.add(marker);
+        //googleMap.addMarker(new MarkerOptions().position(latLng).title(description)
+                //.icon(BitmapDescriptorFactory.fromBitmap(generateIcon(iconId))));
+
+    }
+
+    //toggle the "showMarker" variable to show or hide the markers on the map
+    public void toggleWeather() {
+System.out.println("toggle");
+        if (showMarker == false) {
+            showMarker = true;
+        } else {
+            showMarker = false;
+        }
+        checkWeatherIconDisplay();
+
+    }
+
+    // set the markers visible or invisible
+    public void checkWeatherIconDisplay() {
+        for (Marker m : markerArray) {
+            m.setVisible((showMarker));
+        }
 
     }
 }

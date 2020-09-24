@@ -21,7 +21,11 @@ public class Trip {
         if(distance>1000){
             int KMs = distance/1000;
             int meters = (distance % 1000);
-            tripDistance += KMs + "KM & " + meters + "meters";
+            if(KMs<2)
+                tripDistance += KMs + "KM & " + meters + "meters";
+            else{
+                tripDistance += KMs + "KM";
+            }
         }else{
             tripDistance += distance + " meters";
         }

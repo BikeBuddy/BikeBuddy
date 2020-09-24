@@ -44,7 +44,7 @@ public class BikeBuddyLocation {
         this.marker.showInfoWindow();
 
         try {// The snippet will include the city name if the geo coder recieves atleast once response from the places api
-            address= gc.getFromLocation(coordinate.latitude, coordinate.longitude,1).get(0);
+            address= gc.getFromLocation(coordinate.latitude ,coordinate.longitude,1).get(0);
             if(address!= null)
                 this.marker.setSnippet(address.getLocality() );
         } catch (IOException e) {

@@ -109,10 +109,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private BikeBuddyLocation theDestination;
 
 
-
     // Boolean for telling route initialization the user has no location
     Boolean startingLocationNeeded = false;
-
 
 
 
@@ -123,10 +121,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
 
         // Retrieve location and camera position from saved instance state.
-        if (savedInstanceState != null) {
-            lastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
-            cameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
-        }
+//        if (savedInstanceState != null) {
+//            lastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
+//            cameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
+//        }
 
         setContentView(R.layout.activity_maps);
         // Construct a FusedLocationProviderClient.
@@ -141,9 +139,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.mMap = googleMap;
+
 
         initFetchWeather();
         initWeatherFunctions();
@@ -168,9 +168,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // info window contents.
         this.mMap.setInfoWindowAdapter(customInfoWindowAdapter);
 
-        toggleRouteButton();
-
-
         // Prompt the user for permission.
         getLocationPermission();
 
@@ -193,6 +190,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.clear();
                 updateMap();
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+                if(theDestination != null && findViewById(R.id.route_button).getVisibility() == View.INVISIBLE)//if the destination has been selected for the first time, then the button will become visible
+                    toggleRouteButton();
             }
         });
     }
@@ -440,6 +439,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 locationsList = getAddressListFromLatLong(currentLocation.latitude, currentLocation.longitude);
 
                 getLocationsWeather();
+            //    mMap.clear();
+            //    updateMap();
             }
         };
 
@@ -470,7 +471,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             theDestination.createMarker();
         }else{
             theDestination.setCoordinate(latLang);
-         //   theDestination.createMarker();
+            theDestination.createMarker();
         }
     }
 

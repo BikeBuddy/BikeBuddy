@@ -4,7 +4,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
-//Route object
+//Route object, encapsulates details regarding the trip/route recieved from google directions API
 //@author PK
 public class Trip {
     Integer distance;

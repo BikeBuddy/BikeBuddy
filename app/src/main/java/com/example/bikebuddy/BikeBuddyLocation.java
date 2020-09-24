@@ -11,6 +11,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 
+/**
+ * Class which encapulates and manages google map API objects for one "location"
+ */
 public class BikeBuddyLocation {
 
     LatLng coordinate;
@@ -44,7 +47,7 @@ public class BikeBuddyLocation {
         try {
             address= gc.getFromLocation(coordinate.latitude, coordinate.longitude,1).get(0);
             if(address!= null)
-                this.marker.setSnippet(address.getLocality());
+                this.marker.setSnippet(address.getLocality().toString()+ " " + address.getLocale().toString());
         } catch (IOException e) {
             e.printStackTrace();
         }

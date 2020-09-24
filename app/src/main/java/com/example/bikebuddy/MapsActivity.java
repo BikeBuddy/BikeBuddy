@@ -105,7 +105,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String KEY_LOCATION = "location";
 
     // Locations for route planning
-    private BikeBuddyLocation startingOrigin;//BikeBuddyLocation contained location , address & marker data.
+    private BikeBuddyLocation startingOrigin;
     private BikeBuddyLocation theDestination;
 
 
@@ -132,14 +132,70 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Construct a FusedLocationProviderClient.
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
+        gc = new Geocoder(this);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        gc = new Geocoder(this);
+
     }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        this.mMap = googleMap;
 
+        initFetchWeather();
+        initWeatherFunctions();
+
+        HashMap<String, Drawable> weatherIcons = new HashMap<String, Drawable>();
+
+        this.jsonRoutes = new JSONRoutes(getResources().getString(R.string.google_maps_key), mMap); //jsonRoutes needs reference to mMap
+        // stock google maps UI buttons
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+
+        // call initialisations
+        initPlaces();
+        initAutoComplete();
+
+        // start the camera above nz
+        // mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(-42, 172)));
+        // mMap.moveCamera(CameraUpdateFactory.zoomTo(5));
+
+        this.mMap.setOnCameraIdleListener(onCameraIdleListener);
+
+        // Use a custom info window adapter to handle multiple lines of text in the
+        // info window contents.
+        this.mMap.setInfoWindowAdapter(customInfoWindowAdapter);
+
+        toggleRouteButton();
+
+
+        // Prompt the user for permission.
+        getLocationPermission();
+
+        // Turn on the My Location layer and the related control on the map.
+        updateLocationUI();
+
+        // Get the current location of the device and set the position of the map.
+        getDeviceLocation();
+
+        //sets origin to gps location
+        setUpOriginFromLocation();
+
+        //action listener for draggable markers
+        mMap.setOnMarkerDragListener(this);
+
+        //ActionListener for long press --PK
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            public void onMapLongClick(LatLng latLng) {
+                setAutoCompleteLatLang(latLng);
+                mMap.clear();
+                updateMap();
+                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+            }
+        });
+    }
     /**
      * Saves the state of the map when the activity is paused.
      */
@@ -197,25 +253,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    //for the input latLang, sets the origin if not already set, if the origin is set,the latLang is used to set the destination
-    public void setAutoCompleteLatLang(LatLng latLang){
-        autoCompleteLatLng = latLang;
-        mMap.clear();
-        if(startingOrigin==null){
-            startingOrigin = new BikeBuddyLocation(true,gc,latLang, mMap);
-            startingOrigin.createMarker();
-            startingLocationNeeded = false;
-        }else if(theDestination==null){
-            theDestination = new BikeBuddyLocation(false,gc,latLang, mMap);
-            theDestination.createMarker();
-        }else{
-            theDestination.setCoordinate(latLang);
-            theDestination.createMarker();
-        }
-
-
-    }
-
 
 
 
@@ -253,59 +290,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        this.mMap = googleMap;
 
-        initFetchWeather();
-        initWeatherFunctions();
-
-        HashMap<String, Drawable> weatherIcons = new HashMap<String, Drawable>();
-
-        this.jsonRoutes = new JSONRoutes(getResources().getString(R.string.google_maps_key), mMap); //jsonRoutes needs reference to mMap
-        // stock google maps UI buttons
-        mMap.getUiSettings().setZoomControlsEnabled(true);
-
-        // call initialisations
-        initPlaces();
-        initAutoComplete();
-
-        // start the camera above nz
-       // mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(-42, 172)));
-       // mMap.moveCamera(CameraUpdateFactory.zoomTo(5));
-
-        this.mMap.setOnCameraIdleListener(onCameraIdleListener);
-
-        // Use a custom info window adapter to handle multiple lines of text in the
-        // info window contents.
-        this.mMap.setInfoWindowAdapter(customInfoWindowAdapter);
-        
-        toggleRouteButton();
-
-
-        // Prompt the user for permission.
-        getLocationPermission();
-
-        // Turn on the My Location layer and the related control on the map.
-        updateLocationUI();
-
-        // Get the current location of the device and set the position of the map.
-        getDeviceLocation();
-
-        //sets origin to gps location
-        setUpOriginFromLocation();
-
-        //action listener for draggable markers
-        mMap.setOnMarkerDragListener(this);
-
-        //ActionListener for long press --PK
-        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-            public void onMapLongClick(LatLng latLng) {
-                setAutoCompleteLatLang(latLng);
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-            }
-        });
-    }
 
 
     /**
@@ -459,21 +444,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         };
 
 
-        //updates the snippet, Address etc when start and destination markers are dragged
-        public void onMarkerDragEnd(Marker marker) {
-
-                startingOrigin.update();
-              //  startingOrigin.setCoordinate(marker.getPosition());
-
-            if(theDestination!=null ) {
-               theDestination.update();
-               Toast.makeText(this  , "marker is : "+ theDestination.marker.getPosition().toString() + " after drag: " + theDestination.marker.getPosition().toString() , Toast.LENGTH_LONG).show();
-            }
-            mMap.clear();//clears the old poly line if there was one
-            startingOrigin.createMarker();
-            if(theDestination!=null)
-                theDestination.createMarker();
+    //updates the snippet, Address etc when start and destination markers are dragged
+    public void onMarkerDragEnd(Marker marker) {
+        startingOrigin.update();
+        //  startingOrigin.setCoordinate(marker.getPosition());
+        if(theDestination!=null ) {
+            theDestination.update();
+            Toast.makeText(this  , "marker is : "+ theDestination.marker.getPosition().toString() + " after drag: " + theDestination.marker.getPosition().toString() , Toast.LENGTH_LONG).show();
         }
+        mMap.clear();//clears the old poly line if there was one
+        startingOrigin.createMarker();
+        if(theDestination!=null)
+            theDestination.createMarker();
+    }
+
+    //for the input latLang, sets the origin if not already set, if the origin is set,the latLang is used to set the destination
+    public void setAutoCompleteLatLang(LatLng latLang){
+        autoCompleteLatLng = latLang;
+        if(startingOrigin==null){
+            startingOrigin = new BikeBuddyLocation(true,gc,latLang, mMap);
+            startingOrigin.createMarker();
+            startingLocationNeeded = false;
+        }else if(theDestination==null){
+            theDestination = new BikeBuddyLocation(false,gc,latLang, mMap);
+            theDestination.createMarker();
+        }else{
+            theDestination.setCoordinate(latLang);
+         //   theDestination.createMarker();
+        }
+    }
+
+
 
 
     public  List<Address> getAddressListFromLatLong(double lat, double lng) {
@@ -505,7 +506,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
         //mMap.clear();
-        updateMap();
+    //    updateMap();
     }
 
     public void initWeatherFunctions() {

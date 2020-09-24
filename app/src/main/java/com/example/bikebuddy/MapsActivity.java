@@ -446,10 +446,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //updates the snippet, Address etc when start and destination markers are dragged
     public void onMarkerDragEnd(Marker marker) {
         startingOrigin.update();
-        //  startingOrigin.setCoordinate(marker.getPosition());
         if(theDestination!=null ) {
             theDestination.update();
-            Toast.makeText(this  , "marker is : "+ theDestination.marker.getPosition().toString() + " after drag: " + theDestination.marker.getPosition().toString() , Toast.LENGTH_LONG).show();
         }
         mMap.clear();//clears the old poly line if there was one
         startingOrigin.createMarker();

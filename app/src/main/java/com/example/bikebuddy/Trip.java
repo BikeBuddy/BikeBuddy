@@ -34,7 +34,7 @@ public class Trip {
 
     public Integer getDuration(){
         if(duration!=null){
-           return  (duration/61);
+           return  (duration/60);
         }
         return null;
     }

@@ -13,12 +13,8 @@ public class TripTest {
         Trip testTrip = new Trip();
         for(int i = 1; i<6000; i++ ){
             testTrip.duration = i;
-            Assert.assertEquals( ((float)(i/600)), testTrip.getDuration(), 0.1f);
+            Assert.assertEquals( ((float)(i/600)), testTrip.getDuration(), 0.01f);
         }
     }
 
-
-    @Test
-    public void testGetDuration() {
-    }
 }

@@ -35,41 +35,6 @@ public class setUpFromOriginTest {
             assertNull(startingOrigin);
         }
     }
-
-
-
-
-
-//
-//    @Test
-//    public void durationCalcTest() {
-//        MapsActivity mapsActivity = rule.getActivity();
-//
-//        for(int i =0; i< 1000; i++)
-//            assertEquals(mapsActivity);
-//
-//        mapsActivity.toggleRouteButton();
-//
-//        assertEquals(mapsActivity.findViewById(R.id.route_button).getVisibility(), View.INVISIBLE);
-//    }
-//
-
-
-/*        Bitmap testBitmap;
-
-        MapsActivity act = rule.getActivity();
-        act.initWeatherFunctions();
-
-        //valid IconName
-        testBitmap = act.weatherFunctions.generateIcon("test");
-        assertNotNull(testBitmap);
-        assertEquals(testBitmap.getHeight(), 100);
-        assertEquals(testBitmap.getWidth(), 100);
-
-        //invalid IconName (returns default icon - red circle)
-        testBitmap = act.weatherFunctions.generateIcon("notAnIcon");
-        assertNotNull(testBitmap);
-        assertEquals(testBitmap.getHeight(), 100);
-        assertEquals(testBitmap.getWidth(), 100);*/
 }
+
 

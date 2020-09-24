@@ -11,6 +11,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 
+/**
+ * Class which encapulates and manages objects from the google maps API
+ */
 public class BikeBuddyLocation {
 
     LatLng coordinate;
@@ -24,39 +27,40 @@ public class BikeBuddyLocation {
         this.isOrigin = isOrigin;
         this.gc = gc;
         this.mMap = mMap;
-        if(address!= null)
-             this.address = address;
         coordinate= autoCompleteLatLang;
-        createMarker();
     }
 
+    //creates the marker based on the objects set coordinate, the colour of the marker depends on if it is a destination or origin
     public void createMarker(){
-        this.marker = mMap.addMarker(new MarkerOptions().position(coordinate).title("Destination"));
-        this.marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+        this.marker = mMap.addMarker(new MarkerOptions().position(coordinate));
         this.marker.setDraggable(true);
         if(isOrigin){
             this.marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
             this.marker.setTitle("Origin");
+        }else{
+            this.marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+            this.marker.setTitle("Destination");
         }
-        try {
-            address= gc.getFromLocation(coordinate.latitude, coordinate.longitude,1).get(0);
+        this.marker.showInfoWindow();
+
+        try {// The snippet will include the city name if the geo coder recieves atleast once response from the places api
+            address= gc.getFromLocation(coordinate.latitude ,coordinate.longitude,1).get(0);
             if(address!= null)
-                this.marker = mMap.addMarker(new MarkerOptions().position(coordinate).title("Destination").snippet(address.getLocality()));
+                this.marker.setSnippet(address.getLocality() );
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    //either from long pressing the map, or using the auto complete search. An already existing destination/origin will be updated via this function.
     public void setCoordinate(LatLng coordinate){
         this.coordinate = coordinate;
-        this.marker.setPosition(coordinate);
-        update();
     }
 
-    //when marker was cleared from map, calll this function to redraw
+    //when marker was dragged from map,
     public void update(){
-            createMarker();
-            coordinate = marker.getPosition();
+        coordinate = marker.getPosition();
+        createMarker();
     }
 
 }

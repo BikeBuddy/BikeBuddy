@@ -4,7 +4,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
-//Route object
+//Route object, encapsulates details regarding the trip/route recieved from google directions API
 //@author PK
 public class Trip {
     Integer distance;
@@ -15,6 +15,44 @@ public class Trip {
     LatLng endLocation;
     String encodedPolyLine;
     ArrayList<LatLng> points;// the LatLng coordinates throughout the route
+
+    public String getTripDistance(){
+        String tripDistance = "Distance: ";
+        if(distance>1000){
+            int KMs = distance/1000;
+            int meters = (distance % 1000);
+            if(KMs<2)
+                tripDistance += KMs + "KM & " + meters + "meters";
+            else{
+                tripDistance += KMs + "KM";
+            }
+        }else{
+            tripDistance += distance + " meters";
+        }
+        return tripDistance;
+    }
+
+    public Integer getDuration(){
+        if(duration!=null){
+           return  (duration/60);
+        }
+        return null;
+    }
+
+    public String getTripDuration(){
+        int durationMins = getDuration();
+        String tripDuration ="Duration: ";
+        if(durationMins>60){
+            int minutes = (60 % durationMins);
+            int hours = (durationMins/60);
+            tripDuration += hours + "h "+ minutes + "mins";
+        }else{
+            tripDuration += durationMins  + "mins";
+        }
+        return tripDuration;
+    }
+
+
     public void decodePolyLine() {
         int len = encodedPolyLine.length();
         int index = 0;

@@ -190,8 +190,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.clear();
                 updateMap();
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-                if(theDestination != null && findViewById(R.id.route_button).getVisibility() == View.INVISIBLE)//if the destination has been selected for the first time, then the button will become visible
-                    toggleRouteButton();
             }
         });
     }
@@ -473,6 +471,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             theDestination.setCoordinate(latLang);
             theDestination.createMarker();
         }
+        if(theDestination != null && findViewById(R.id.route_button).getVisibility() == View.INVISIBLE)//if the destination has been selected for the first time, then the button will become visible
+            toggleRouteButton();
     }
 
 

@@ -12,7 +12,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 
 /**
- * Class which encapulates and manages google map API objects for one "location"
+ * Class which encapulates and manages objects from the google maps API
  */
 public class BikeBuddyLocation {
 
@@ -27,12 +27,10 @@ public class BikeBuddyLocation {
         this.isOrigin = isOrigin;
         this.gc = gc;
         this.mMap = mMap;
-        if(address!= null)
-             this.address = address;
         coordinate= autoCompleteLatLang;
-       // createMarker();
     }
 
+    //creates the marker based on the objects set coordinate, the colour of the marker depends on if it is a destination or origin
     public void createMarker(){
         this.marker = mMap.addMarker(new MarkerOptions().position(coordinate));
         this.marker.setDraggable(true);
@@ -44,15 +42,17 @@ public class BikeBuddyLocation {
             this.marker.setTitle("Destination");
         }
         this.marker.showInfoWindow();
-        try {
+
+        try {// The snippet will include the city name if the geo coder recieves atleast once response from the places api
             address= gc.getFromLocation(coordinate.latitude, coordinate.longitude,1).get(0);
             if(address!= null)
-                this.marker.setSnippet(address.getLocality().toString()+ " " + address.getLocale().toString());
+                this.marker.setSnippet(address.getLocality() );
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    //either from long pressing the map, or using the auto complete search. An already existing destination/origin will be updated via this function.
     public void setCoordinate(LatLng coordinate){
         this.coordinate = coordinate;
     }

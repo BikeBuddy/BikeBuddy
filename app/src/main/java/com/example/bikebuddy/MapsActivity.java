@@ -519,7 +519,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     //sets the starting location to gps location, otherwise sets startingLocationNeeded flag to true
-    private void setUpOriginFromLocation(){
+    public void setUpOriginFromLocation(){
         if(lastKnownLocation==null){
             startingLocationNeeded =true;
         }else{

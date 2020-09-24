@@ -31,7 +31,7 @@ public class JSONRoutes {
     }
 
 
-    //parses a Json response into a Trip object and returns it-PK
+    //parses a Json response into a Trip object and returns it
     public Trip parseJsonToDirections(String jsonString, LatLng start, LatLng Destination) throws JSONException {
         JSONObject recievedJsonDirections = new JSONObject(jsonString);
         JSONArray jsonRoutes =recievedJsonDirections.getJSONArray("routes");
@@ -64,7 +64,6 @@ public class JSONRoutes {
         mMap.addMarker(new MarkerOptions().position(midPoint)
                 .snippet(aTrip.getTripDuration())
                 .title(aTrip.getTripDistance())).showInfoWindow();
-                //.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
     }
 
     //takes in two LatLong locations, sends a request to google maps, parses the repsonse to a Trip and shows it on the map
@@ -75,7 +74,6 @@ public class JSONRoutes {
         final String  jsonRequestURL =  apiUrl1 + startAndEnd + apiUrl2;
 
         class GetJSON extends AsyncTask<Void, Void, String> {
-            String returnThisString;
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
@@ -96,25 +94,17 @@ public class JSONRoutes {
             @Override
             protected String doInBackground(Void... voids) {
                 try {
-                    //creating a URL
+
                     URL url = new URL(jsonRequestURL);
-                    //Opening the URL using HttpURLConnection
                     HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                    //StringBuilder object to read the string from the service
                     StringBuilder sb = new StringBuilder();
-                    //We will use a buffered reader to read the string from service
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                    //A simple string to read values from each line
                     String json;
-                    //reading until we don't find null
                     while ((json = bufferedReader.readLine()) != null) {
-                        //appending it to string builder
                         sb.append(json + "\n");
                     }
 
-                    //finally returning the read string
-                    //jsonString =sb.toString().trim();
-                    return sb.toString().trim();
+                    return sb.toString().trim();//returning the recieved json response to postExecutue
                 } catch (Exception e) {
                     return null;
                 }

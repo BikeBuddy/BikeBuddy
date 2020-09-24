@@ -20,18 +20,6 @@ public class TripTest {
         }
     }
 
-    @Test
-    public void getTripDuration() {
-
-    }
-
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    @After
-    public void tearDown() throws Exception {
-    }
 
     @Test
     public void testGetDuration() {

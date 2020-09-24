@@ -1,18 +1,17 @@
 package com.example.bikebuddy;
 
-import android.graphics.Bitmap;
 import android.view.View;
 
 import androidx.test.rule.ActivityTestRule;
 
-import com.google.android.gms.maps.model.LatLng;
-
 import org.junit.Rule;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
-public class RouteTests {
+public class setUpFromOriginTest {
 
     @Rule
     public ActivityTestRule<MapsActivity> rule = new ActivityTestRule<>(MapsActivity.class);
@@ -21,18 +20,22 @@ public class RouteTests {
     This tests that the generateIcon() method returns a Bitmap and that it
     is scaled to 100x100 pixels.
      */
-
     @Test
-    public void toggleRouteButtonTest() {
+    public void startingLocationSetTest() {
 
         MapsActivity mapsActivity = rule.getActivity();
+        mapsActivity.setUpOriginFromLocation();
 
-        assertEquals(mapsActivity.findViewById(R.id.route_button).getVisibility(), View.VISIBLE);
-
-        mapsActivity.toggleRouteButton();
-
-        assertEquals(mapsActivity.findViewById(R.id.route_button).getVisibility(), View.INVISIBLE);
+        BikeBuddyLocation startingOrigin = mapsActivity.getStartingOrigin();
+        BikeBuddyLocation theDestination = mapsActivity.getTheDestination();
+        if(!mapsActivity.startingLocationNeeded){//if starting location is needed flag is false, the the startingOrigin co ordinates should be the same as the last known location
+            assertTrue(( mapsActivity.lastKnownLocation.getLatitude() == startingOrigin.coordinate.latitude )
+                    && ( mapsActivity.lastKnownLocation.getLongitude() == startingOrigin.coordinate.longitude));
+        }else{
+            assertNull(startingOrigin);
+        }
     }
+
 
 
 

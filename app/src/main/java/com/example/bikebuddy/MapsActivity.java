@@ -449,8 +449,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 locationsList = getAddressListFromLatLong(currentLocation.latitude, currentLocation.longitude);
 
                 getLocationsWeather();
-            //    mMap.clear();
-            //    updateMap();
+                mMap.clear();
+                updateMap();
             }
         };
 

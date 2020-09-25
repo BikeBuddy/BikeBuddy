@@ -32,7 +32,7 @@ public class Trip {
         return tripDistance;
     }
 
-    public Integer getDuration(){
+    public Integer getDurationInMinutes(){
         if(duration!=null){
            return  (duration/60);
         }
@@ -40,7 +40,7 @@ public class Trip {
     }
 
     public String getTripDuration(){
-        int durationMins = getDuration();
+        int durationMins = getDurationInMinutes();
         String tripDuration ="Duration: ";
         if(durationMins>60){
             int minutes = (60 % durationMins);

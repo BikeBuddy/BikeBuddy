@@ -8,7 +8,7 @@ public class FetchWeather
     MapsActivity mapsActivity;
 
     public FetchWeather(MapsActivity mapsActivity) {
-        //gj = new GetJSON(mapsActivity); //error trying to run multiple executes, so have to create new getJSON each time
+     //error trying to run multiple executes, so have to create new getJSON each time
         this.mapsActivity = mapsActivity;
     }
 

@@ -32,15 +32,17 @@ public class Trip {
         return tripDistance;
     }
 
-    public Integer getDuration(){
-        if(duration!=null){
+    public Integer getDurationInMinutes()
+    {
+        if(duration!=null && duration>0)
+        {
            return  (duration/60);
         }
         return null;
     }
 
     public String getTripDuration(){
-        int durationMins = getDuration();
+        int durationMins = getDurationInMinutes();
         String tripDuration ="Duration: ";
         if(durationMins>60){
             int minutes = (60 % durationMins);
@@ -52,7 +54,7 @@ public class Trip {
         return tripDuration;
     }
 
-
+    //Decodes the encoded polyline recieved from the google directions API into a list of LatLng values
     public void decodePolyLine() {
         int len = encodedPolyLine.length();
         int index = 0;

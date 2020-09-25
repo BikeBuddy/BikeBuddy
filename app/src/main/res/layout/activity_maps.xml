@@ -37,15 +37,15 @@
 
     <Button
         android:id="@+id/route_button"
-        android:layout_width="100dp"
-        android:layout_height="60dp"
+        android:layout_width="110dp"
+        android:layout_height="50dp"
         android:background="@drawable/white_border"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="150dp"
         android:layout_marginLeft="150dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="45dp"
         android:layout_weight="1"
         android:visibility="invisible"
         android:onClick="initRoute"
@@ -54,8 +54,8 @@
     <Button
         android:id="@+id/button1"
         android:background="@drawable/white_border"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
+        android:layout_width="110dp"
+        android:layout_height="30dp"
         android:layout_marginStart="150dp"
         android:layout_marginLeft="150dp"
         android:layout_marginBottom="10dp"
@@ -73,8 +73,7 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MapsActivity"
-        />
+        tools:context=".MapsActivity" />
 
 
 </RelativeLayout>

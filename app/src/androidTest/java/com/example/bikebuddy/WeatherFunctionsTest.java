@@ -45,24 +45,3 @@ public class WeatherFunctionsTest {
     }
 }
 
-
-/*
-    public Bitmap generateIcon(String iconName) {
-
-        String drawableIcon = "@drawable/i"+iconName;
-
-        int imageResource = mapsActivity.getResources().getIdentifier(drawableIcon, null, mapsActivity.getPackageName());
-
-        Drawable drawable = mapsActivity.getResources().getDrawable(imageResource);
-        // custom the size of the weather icon
-        int height = 100;
-        int width = 100;
-        //BitmapDrawable bitmapdraw=(BitmapDrawable)ma.getResources().getDrawable(R.drawable.iconName);
-        BitmapDrawable bitmapDrawable=(BitmapDrawable)drawable;
-
-        Bitmap bitmap=bitmapDrawable.getBitmap();
-
-        Bitmap smallMarker = Bitmap.createScaledBitmap(bitmap, width, height, false);
-
-        return smallMarker;
-    }*/

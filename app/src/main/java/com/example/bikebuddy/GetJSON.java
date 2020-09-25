@@ -47,13 +47,7 @@ class GetJSON extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String jsonString) {
         try {
-           // super.onPostExecute(jsonString);
-            //this.ma.weatherstring = jsonString;
-
-
             addWeather(jsonString);
-             // Toast.makeText(MapsActivity, "JSON RESPONSE"+ jsonString, Toast.LENGTH_LONG).show();
-            //showTrip(parseJsonToDirections(jsonString,start,destination));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -71,19 +65,12 @@ class GetJSON extends AsyncTask<String, Void, String> {
         double lon = coord.getDouble("lon");
         double lat = coord.getDouble("lat");
 
-        //or
-        //String lon = coord.getString("lon");
-       // String lat = coord.getString("lat");
-
         String description = weather0.getString("description"); //description eg clear sky
         String main= weather0.getString("main"); //main eg Clear
         String iconID = weather0.getString("icon"); //weather icon id
         System.out.println((iconID));
 
-
-       // ma.wf.addLocationsWeather(lat, lon, description);
-       // ma.addLocationsWeather(lat, lon, description);
-       ma.weatherFunctions.addLocationsWeather(lat, lon, iconID, description);
+       ma.weatherFunctions.addLocationsWeather(lat, lon, iconID, description);//adds weather Icon
 
     }
 

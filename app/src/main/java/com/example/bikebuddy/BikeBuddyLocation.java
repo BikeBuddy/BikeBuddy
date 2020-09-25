@@ -16,12 +16,12 @@ import java.io.IOException;
  */
 public class BikeBuddyLocation {
 
-    LatLng coordinate;
+    LatLng coordinate;//the lat long of the location
     Marker marker;
     GoogleMap mMap;//reference to the map
-    Address address;
+    Address address; //address of the location ie local details such as city name
     boolean isOrigin;//marker will be different depending if its the start or destination
-    Geocoder gc;
+    Geocoder gc; //used to obtain the address from the coordinate
 
     public BikeBuddyLocation(boolean isOrigin, Geocoder gc, LatLng autoCompleteLatLang, GoogleMap mMap){
         this.isOrigin = isOrigin;
@@ -57,7 +57,7 @@ public class BikeBuddyLocation {
         this.coordinate = coordinate;
     }
 
-    //when marker was dragged from map,
+    //when marker was dragged from map, the object updates based on the marker position
     public void update(){
         coordinate = marker.getPosition();
         createMarker();

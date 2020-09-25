@@ -23,7 +23,7 @@ public class RouteTests {
      */
 
     @Test
-    public void toggleRouteButtonTest() {
+    public void toggleRouteButtonVisibleTest() {
 
         MapsActivity mapsActivity = rule.getActivity();
 
@@ -31,8 +31,15 @@ public class RouteTests {
 
         mapsActivity.toggleRouteButton();
 
+    }
+    @Test
+    public void toggleRouteButtonInvisibleTest() {
+
+        MapsActivity mapsActivity = rule.getActivity();
+
+        mapsActivity.toggleRouteButton();
+
         assertEquals(mapsActivity.findViewById(R.id.route_button).getVisibility(), View.INVISIBLE);
     }
-
 
 }

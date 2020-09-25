@@ -32,8 +32,10 @@ public class Trip {
         return tripDistance;
     }
 
-    public Integer getDurationInMinutes(){
-        if(duration!=null && duration>0){
+    public Integer getDurationInMinutes()
+    {
+        if(duration!=null && duration>0)
+        {
            return  (duration/60);
         }
         return null;

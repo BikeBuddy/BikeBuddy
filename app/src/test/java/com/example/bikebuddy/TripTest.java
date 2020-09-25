@@ -5,7 +5,6 @@ import org.junit.Test;
 
 public class TripTest {
 
-
     @Test
     public void getDurationTest() {
         Trip testTrip = new Trip();

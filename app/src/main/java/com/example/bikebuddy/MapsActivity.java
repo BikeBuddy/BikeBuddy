@@ -75,21 +75,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
 
     private float zoomLevel = 10.0f;
-    private LatLng currentLocation;
-    private List<Address> locationsList;
-    private Bitmap smallMarker;
+    private LatLng currentLocation;//current location the camera is centered on
+    private List<Address> locationsList;//locations for weather icons
+    private Bitmap smallMarker; //weather icons
 
     // init data for autocomplete to store
     private LatLng autoCompleteLatLng;
 
-    private Geocoder gc;
+    private Geocoder gc;//used to obtain the address of a location based on the lat long coordinates
 
     private JSONRoutes jsonRoutes;// send requests and show routes on map with this object--PK
     private CameraPosition cameraPosition;
     private FusedLocationProviderClient fusedLocationProviderClient;
 
 
-    // A default location (Auckland, New Zealand) and default zoom to use when location permission is
+
     // A default location (Auckland, New Zealand) and default zoom to use when location permission is
     // not granted.
     private final LatLng defaultLocation = new LatLng(-36.8483, 174.7625);
@@ -111,7 +111,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     // Boolean for telling route initialization the user has no location
-    Boolean startingLocationNeeded = false;
+    protected Boolean startingLocationNeeded = false;
 
 
 
@@ -121,11 +121,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Retrieve location and camera position from saved instance state.
-//        if (savedInstanceState != null) {
-//            lastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
-//            cameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
-//        }
+     //    Retrieve location and camera position from saved instance state.
+        if (savedInstanceState != null) {
+            lastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
+            cameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
+        }
 
         setContentView(R.layout.activity_maps);
         // Construct a FusedLocationProviderClient.
@@ -170,9 +170,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         initPlaces();
         initAutoComplete();
 
-        // start the camera above nz
-        // mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(-42, 172)));
-        // mMap.moveCamera(CameraUpdateFactory.zoomTo(5));
 
         this.mMap.setOnCameraIdleListener(onCameraIdleListener);
 
@@ -245,14 +242,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // currently just grabbing LatLng for marker making
                 autoCompleteLatLng = place.getLatLng();
                 setAutoCompleteLatLang(autoCompleteLatLng);
-                // display found lat long (for debugging)
-                //Toast.makeText(MapsActivity.this, "LAT"+autoCompleteLatLng.latitude+"\nLONG"+autoCompleteLatLng.longitude, Toast.LENGTH_LONG).show();
 
                 // go to found location
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(autoCompleteLatLng));
-                // make marker
-                // MarkerOptions searchedLocationMarker = new MarkerOptions().position(autoCompleteLatLng).title(place.getAddress());
-                //mMap.addMarker(searchedLocationMarker);
             }
             @Override
             public void onError(@NonNull Status status) {
@@ -264,9 +256,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
-
-
-    //instead of making the button invisible should we change the text to instructions, eg "please select destination"
+    //Toggles the buttons visibility
     public void toggleRouteButton() {
         // make route button visible
         View routeButt = findViewById(R.id.route_button);
@@ -297,9 +287,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
     }
-
-
-
 
 
     /**
@@ -435,22 +422,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             };
 
+    //when the camera goes idle, new weather icons are drawn on the map
     private GoogleMap.OnCameraIdleListener onCameraIdleListener =
         new GoogleMap.OnCameraIdleListener() {
             @Override
             public void onCameraIdle() {
                 zoomLevel = mMap.getCameraPosition().zoom;
                 currentLocation = mMap.getCameraPosition().target;
-                // Grid locations
-                //generateLocations(currentLocation);
-                //displayLocations(smallMarker);
-                // Geocoder locations
+
                 //creates new list of locations based on camera centre position.
                 locationsList = getAddressListFromLatLong(currentLocation.latitude, currentLocation.longitude);
 
                 getLocationsWeather();
-            //    mMap.clear();
-            //    updateMap();
             }
         };
 
@@ -467,6 +450,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             theDestination.createMarker();
     }
 
+    //LatLng which are generated by long press on the map or from the address entered from the search bar will be input into this function
     //for the input latLang, sets the origin if not already set, if the origin is set,the latLang is used to set the destination
     public void setAutoCompleteLatLang(LatLng latLang){
         autoCompleteLatLng = latLang;
@@ -477,7 +461,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }else if(theDestination==null){
             theDestination = new BikeBuddyLocation(false,gc,latLang, mMap);
             theDestination.createMarker();
-        }else{
+        }else{//once both origin and destination has been set, all input LatLng will be used to update the destination
             theDestination.setCoordinate(latLang);
             theDestination.createMarker();
         }
@@ -488,6 +472,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
+    //Gets 20 locations which are within view in the camera
     public  List<Address> getAddressListFromLatLong(double lat, double lng) {
 
         Geocoder geocoder = gc;
@@ -501,11 +486,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return addressList;
     }
 
+    // Pulls weather data from the weather service api and generates weather icons onto the map
     public void getLocationsWeather() {
-/*        for (Address a : locationsList) {
-            fw.fetch(a.getLatitude(), a.getLongitude());
-            //delete a from list after request?
-        }*/
         if (locationsList != null ){
         //had to change to iterator in order to delete
         Iterator<Address> it = locationsList.iterator();
@@ -516,8 +498,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     it.remove();
             }
         }
-        //mMap.clear();
-    //    updateMap();
+        mMap.clear();
+        updateMap();
     }
 
     public void initWeatherFunctions() {

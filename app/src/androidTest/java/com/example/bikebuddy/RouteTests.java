@@ -18,8 +18,7 @@ public class RouteTests {
     public ActivityTestRule<MapsActivity> rule = new ActivityTestRule<>(MapsActivity.class);
 
     /*
-    This tests that the generateIcon() method returns a Bitmap and that it
-    is scaled to 100x100 pixels.
+       Tests the toggling functionality of the start route button
      */
 
     @Test

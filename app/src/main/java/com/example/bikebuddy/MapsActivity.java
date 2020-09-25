@@ -90,7 +90,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     // A default location (Auckland, New Zealand) and default zoom to use when location permission is
-    // A default location (Auckland, New Zealand) and default zoom to use when location permission is
     // not granted.
     private final LatLng defaultLocation = new LatLng(-36.8483, 174.7625);
     private static final int DEFAULT_ZOOM = 15;
@@ -560,6 +559,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public BikeBuddyLocation getTheDestination() {
         return theDestination;
+    }
+    public LatLng getDefaultLocation() {
+        return defaultLocation;
     }
 }
 

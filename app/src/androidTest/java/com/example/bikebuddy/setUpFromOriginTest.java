@@ -1,7 +1,8 @@
 package com.example.bikebuddy;
 
-import android.view.View;
+import android.content.Context;
 
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import org.junit.Rule;
@@ -10,6 +11,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+
 
 public class setUpFromOriginTest {
 
@@ -28,13 +30,14 @@ public class setUpFromOriginTest {
 
         BikeBuddyLocation startingOrigin = mapsActivity.getStartingOrigin();
         BikeBuddyLocation theDestination = mapsActivity.getTheDestination();
-        if(!mapsActivity.startingLocationNeeded){//if starting location is needed flag is false, the the startingOrigin co ordinates should be the same as the last known location
-            assertTrue(( mapsActivity.lastKnownLocation.getLatitude() == startingOrigin.coordinate.latitude )
-                    && ( mapsActivity.lastKnownLocation.getLongitude() == startingOrigin.coordinate.longitude));
-        }else{
+        if (!mapsActivity.startingLocationNeeded) {//if starting location is needed flag is false, the the startingOrigin co ordinates should be the same as the last known location
+            assertTrue((mapsActivity.lastKnownLocation.getLatitude() == startingOrigin.coordinate.latitude)
+                    && (mapsActivity.lastKnownLocation.getLongitude() == startingOrigin.coordinate.longitude));
+        } else {
             assertNull(startingOrigin);
         }
     }
+
     /*
      * Checks if starting location is in NZ, default location is Auckland, New Zealand so test should pass.
      */
@@ -45,8 +48,9 @@ public class setUpFromOriginTest {
         mapsActivity.setUpOriginFromLocation();
 
         BikeBuddyLocation startingOrigin = mapsActivity.getStartingOrigin();
-       assertEquals("NZ", mapsActivity.getStartingOrigin().address.getCountryCode() );
+        assertEquals("NZ", mapsActivity.getStartingOrigin().address.getCountryCode());
     }
+
     /*
      *Checks if starting location is in NZ, default location is Auckland, New Zealand so test should fail.
      */
@@ -57,7 +61,20 @@ public class setUpFromOriginTest {
         mapsActivity.setUpOriginFromLocation();
 
         BikeBuddyLocation startingOrigin = mapsActivity.getStartingOrigin();
-        assertEquals("US", mapsActivity.getStartingOrigin().address.getCountryCode() );
+        assertEquals("US", mapsActivity.getStartingOrigin().address.getCountryCode());
+    }
+
+    /*
+     *Checks if starting location is in NZ, default location is Auckland, New Zealand so test should fail.
+     */
+    @Test
+    public void InstrumentStartingLocationInValidNameTest() {
+        Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        MapsActivity mapsActivity = rule.getActivity();
+        mapsActivity.setUpOriginFromLocation();
+
+        BikeBuddyLocation startingOrigin = mapsActivity.getStartingOrigin();
+        assertEquals("US", mapsActivity.getStartingOrigin().address.getCountryCode());
     }
 }
 

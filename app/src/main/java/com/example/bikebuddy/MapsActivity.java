@@ -115,6 +115,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
+
     boolean routeStarted = false;//flag determined if a poly line between start and destination markers is drawn or not after map has been cleared
 
     @Override
@@ -270,14 +271,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void toggleRouteButton() {
         // make route button visible
         View routeButt = findViewById(R.id.route_button);
-        if(routeButt.getVisibility() == View.INVISIBLE)
+          if(routeButt.getVisibility() == View.INVISIBLE)
         {
             routeButt.setVisibility(View.VISIBLE);
+
         }
         else
         {
             routeButt.setVisibility(View.INVISIBLE);
-        }
+       }
     }
 
     public void initRoute(View view) {
@@ -516,8 +518,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     it.remove();
             }
         }
-        //mMap.clear();
-    //    updateMap();
+        mMap.clear();
+        updateMap();
     }
 
     public void initWeatherFunctions() {
@@ -535,7 +537,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             startingLocationNeeded =true;
         }else{
             LatLng startLatLong = new LatLng(lastKnownLocation.getLatitude(),lastKnownLocation.getLongitude());
-            Toast.makeText(this, lastKnownLocation.toString(), Toast.LENGTH_LONG).show();
+          //  Toast.makeText(this, lastKnownLocation.toString(), Toast.LENGTH_LONG).show();
             startingOrigin = new BikeBuddyLocation(true,gc, startLatLong, mMap);
             startingLocationNeeded = false;
         }

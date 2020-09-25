@@ -21,6 +21,13 @@ public class WeatherFunctions {
     private ArrayList<Marker> markerArray = new ArrayList<Marker>();
     private boolean showMarker = true;
 
+
+    public boolean isShowMarker() {
+        return showMarker;
+    }
+
+
+
     // default constructor for testing
     public WeatherFunctions() {
 
@@ -31,37 +38,6 @@ public class WeatherFunctions {
         this.googleMap = googleMap;
 
     }
-
-//    Resources res = ma.getResources();
-//    TypedArray icons = res.obtainTypedArray(R.array.weather_icons);
-
-
-
-
-/*   // public Bitmap generateIcons(BitmapDrawable bitmapdraw) {
-   public Bitmap generateIcons(HashMap weatherIcons) {
-
-        for (int i = 0; i < icons.length(); i++) {
-            Drawable dr = icons.getDrawable(i);
-            String name = dr.
-
-
-            weatherIcons.put(i.)
-
-
-        }
-
-   //public Bitmap generateIcons(String iconName) {
-        // custom the size of the weather icon
-        int height = 100;
-        int width = 100;
-       // BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.itest);
-
-        Bitmap b=bitmapdraw.getBitmap();
-        Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
-
-        return smallMarker;
-    }*/
 
     /*
     This method takes an iconName and returns the corresponding Bitmap
@@ -123,11 +99,7 @@ public class WeatherFunctions {
     //toggle the "showMarker" variable to show or hide the markers on the map
     public void toggleWeather() {
 System.out.println("toggle");
-        if (showMarker == false) {
-            showMarker = true;
-        } else {
-            showMarker = false;
-        }
+        showMarker = !showMarker;
         checkWeatherIconDisplay();
 
     }

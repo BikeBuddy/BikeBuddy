@@ -105,7 +105,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
 
-    // Locations for route planning
+    // Locations for route planning/generating
     private BikeBuddyLocation startingOrigin;
     private BikeBuddyLocation theDestination;
 

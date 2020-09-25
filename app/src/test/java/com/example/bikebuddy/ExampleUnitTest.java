@@ -24,6 +24,7 @@ public class ExampleUnitTest {
                 MockLocationTest locTest = new MockLocationTest();
         locTest.addNewLocation(45.5051, 122.6750, 1f, 0, 0f, 0f, 0);
        MapsActivity ma = new MapsActivity();
+       //FIXME Need to change either this or MapsActivity.getCountryCode() so that both work off either GPS or device cell network.
         assertEquals("us", ma.getCountryCode());
     }
 

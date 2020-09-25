@@ -534,7 +534,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             startingLocationNeeded =true;
         }else{
             LatLng startLatLong = new LatLng(lastKnownLocation.getLatitude(),lastKnownLocation.getLongitude());
-            Toast.makeText(this, lastKnownLocation.toString(), Toast.LENGTH_LONG).show();
+//            Toast.makeText(this, lastKnownLocation.toString(), Toast.LENGTH_LONG).show();
             startingOrigin = new BikeBuddyLocation(true,gc, startLatLong, mMap);
             startingLocationNeeded = false;
         }

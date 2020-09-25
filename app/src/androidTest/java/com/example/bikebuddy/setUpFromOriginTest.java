@@ -35,6 +35,30 @@ public class setUpFromOriginTest {
             assertNull(startingOrigin);
         }
     }
+    /*
+     * Checks if starting location is in NZ, default location is Auckland, New Zealand so test should pass.
+     */
+    @Test
+    public void startingLocationValidNameTest() {
+
+        MapsActivity mapsActivity = rule.getActivity();
+        mapsActivity.setUpOriginFromLocation();
+
+        BikeBuddyLocation startingOrigin = mapsActivity.getStartingOrigin();
+       assertEquals("NZ", mapsActivity.getStartingOrigin().address.getCountryCode() );
+    }
+    /*
+     *Checks if starting location is in NZ, default location is Auckland, New Zealand so test should fail.
+     */
+    @Test
+    public void startingLocationInValidNameTest() {
+
+        MapsActivity mapsActivity = rule.getActivity();
+        mapsActivity.setUpOriginFromLocation();
+
+        BikeBuddyLocation startingOrigin = mapsActivity.getStartingOrigin();
+        assertEquals("US", mapsActivity.getStartingOrigin().address.getCountryCode() );
+    }
 }
 
 

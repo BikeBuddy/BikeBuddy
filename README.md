@@ -1,5 +1,7 @@
 #Instructions
 
+For Google API key and instructions required to run app, email Sam at tkw4629@autuni.ac.nz
+
 Enter a origin or the destination via pressing and holding on the map, or entering a location via the search bar.
 
 Once a origin and destination is set, the show route button will appear

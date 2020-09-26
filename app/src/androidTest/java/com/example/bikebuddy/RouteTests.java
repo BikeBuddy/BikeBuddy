@@ -26,7 +26,7 @@ public class RouteTests {
 
         MapsActivity mapsActivity = rule.getActivity();
 
-        assertEquals(mapsActivity.findViewById(R.id.route_button).getVisibility(), View.VISIBLE);
+        assertEquals(mapsActivity.findViewById(R.id.route_button).getVisibility(), View.INVISIBLE);
 
         mapsActivity.toggleRouteButton();
 

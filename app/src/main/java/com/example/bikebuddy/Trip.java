@@ -45,8 +45,8 @@ public class Trip {
         int durationMins = getDurationInMinutes();
         String tripDuration ="Duration: ";
         if(durationMins>60){
-            int minutes = (60 % durationMins);
             int hours = (durationMins/60);
+            int minutes = durationMins - (hours*60);
             tripDuration += hours + "h "+ minutes + "mins";
         }else{
             tripDuration += durationMins  + "mins";

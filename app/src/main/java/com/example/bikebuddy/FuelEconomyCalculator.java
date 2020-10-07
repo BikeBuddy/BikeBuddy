@@ -1,9 +1,26 @@
 package com.example.bikebuddy;
 
 public class FuelEconomyCalculator {
-    private double fuelEconomy = 0;
 
-    public double calculateMPG(Trip trip, Vehicle v) {
-        return 0;
+    /*
+     * Calculates the Miles per Gallon of a trip. Commented out until multi-unit support is introduced.
+     */
+//    public double calculateMPG(Trip trip, Vehicle v) {
+//       return v.getFuelUsed();
+//    }
+
+    /*
+     * Returns
+     */
+    public double calculateTripKmL(Trip trip, Vehicle v) {
+        return (trip.distance/v.getFuelUsed());
     }
+
+    /*
+     * Returns the predicted maximum range of a vehicle, assuming a full tank and consistent fuel usage.
+     */
+    public double calculateMaxRange(Vehicle v){
+        return (v.getFuelTankSize()/v.getAvgKmPerLitre());
+    }
+
 }

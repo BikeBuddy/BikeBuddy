@@ -5,16 +5,19 @@ public class Vehicle {
     private String make = "";
     private String model = "";
     private double fuelTankSize = 0; //size of the fuel tank in Litres
-    private double avgMilesPerGallon = 0; //Average MPG
+    private double fuelUsed = 0; //The amount of fuel used on the trip. Updates with each trip.
+    private double totalFuelUsed = 0;
+    //private double avgMilesPerGallon = 0; //Average MPG
     private double avgKmPerLitre = 0;  //Average KM/L
-    private double tachometer = 0;
+    private double tachometer = 0;  //The vehicle's Tachometer reading.
 
-    public Vehicle(String vehicleID, String make, String model, int fuelTankSize, int avgMilesPerGallon, int avgKmPerLitre, int tachometer) {
+    public Vehicle(String vehicleID, String make, String model, double fuelTankSize, double fuelUsed, double avgKmPerLitre, double tachometer) {
         this.vehicleID = vehicleID;
         this.make = make;
         this.model = model;
         this.fuelTankSize = fuelTankSize;
-        this.avgMilesPerGallon = avgMilesPerGallon;
+        this.fuelUsed = fuelUsed;
+        //this.avgMilesPerGallon = avgMilesPerGallon;
         this.avgKmPerLitre = avgKmPerLitre;
         this.tachometer = tachometer;
     }
@@ -47,23 +50,31 @@ public class Vehicle {
         return fuelTankSize;
     }
 
-    public void setFuelTankSize(int fuelTankSize) {
+    public void setFuelTankSize(double fuelTankSize) {
         this.fuelTankSize = fuelTankSize;
     }
 
-    public double getAvgMilesPerGallon() {
-        return avgMilesPerGallon;
+    public double getFuelUsed() {
+        return fuelUsed;
     }
 
-    public void setAvgMilesPerGallon(int avgMilesPerGallon) {
-        this.avgMilesPerGallon = avgMilesPerGallon;
+    public void setFuelUsed(double fuelUsed) {
+        this.fuelUsed = fuelUsed;
     }
+
+//    public double getAvgMilesPerGallon() {
+//        return avgMilesPerGallon;
+//    }
+//
+//    public void setAvgMilesPerGallon(double avgMilesPerGallon) {
+//        this.avgMilesPerGallon = avgMilesPerGallon;
+//    }
 
     public double getAvgKmPerLitre() {
         return avgKmPerLitre;
     }
 
-    public void setAvgKmPerLitre(int avgKmPerLitre) {
+    public void setAvgKmPerLitre(double avgKmPerLitre) {
         this.avgKmPerLitre = avgKmPerLitre;
     }
 
@@ -71,7 +82,7 @@ public class Vehicle {
         return tachometer;
     }
 
-    public void setTachometer(int tachometer) {
+    public void setTachometer(double tachometer) {
         this.tachometer = tachometer;
     }
 
@@ -82,7 +93,7 @@ public class Vehicle {
                 ", make='" + make + '\'' +
                 ", model='" + model + '\'' +
                 ", fuelTankSize=" + fuelTankSize +
-                ", avgMilesPerGallon=" + avgMilesPerGallon +
+                ", fuelUsed=" + fuelUsed +
                 ", avgKmPerLitre=" + avgKmPerLitre +
                 ", tachometer=" + tachometer +
                 '}';

@@ -70,6 +70,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public WeatherFunctions weatherFunctions;
     public FetchWeather fetchWeather;
+    public FetchNearbyPlace fetchNearbyPlace;
     HashMap<String, String> weatherIcons;
 
     private GoogleMap mMap;
@@ -160,6 +161,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         initFetchWeather();
         initWeatherFunctions();
+        initFetchNearbyPlace();
 
         HashMap<String, Drawable> weatherIcons = new HashMap<String, Drawable>();
 
@@ -436,6 +438,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 locationsList = getAddressListFromLatLong(currentLocation.latitude, currentLocation.longitude);
 
                 getLocationsWeather();
+                fetchNearbyPlace.fetch();
+
             }
         };
 
@@ -510,6 +514,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void initFetchWeather() {
         this.fetchWeather = new FetchWeather(this);
+    }
+
+    public void initFetchNearbyPlace(){
+        this.fetchNearbyPlace = new FetchNearbyPlace(this);
     }
 
 

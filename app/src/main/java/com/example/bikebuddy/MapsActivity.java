@@ -9,6 +9,8 @@ import android.content.Context;
 
 import android.location.Address;
 import android.location.Geocoder;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.inputmethod.InputMethodManager;
 
 
@@ -149,6 +151,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.example_menu, menu);
+        return true;
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {

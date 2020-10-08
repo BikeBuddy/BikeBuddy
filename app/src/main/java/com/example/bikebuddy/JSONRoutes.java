@@ -24,11 +24,15 @@ import java.net.URL;
 public class JSONRoutes {
     String key;
     GoogleMap mMap;//class has reference to the main map fragment
+    boolean stopover;
+
 
     public JSONRoutes(String key, GoogleMap mMap){
         this.key = key;
         this.mMap = mMap;
+        stopover = false;
     }
+
 
 
     //parses a Json response into a Trip object and returns it
@@ -53,6 +57,12 @@ public class JSONRoutes {
         return newTrip;
     }
 
+
+
+
+
+
+
     //shows the polyline(route) of a trip onto the map
     //@param: Trip, the trip to be shown on the map
     public void showTrip(Trip aTrip){
@@ -70,9 +80,10 @@ public class JSONRoutes {
     public void getDirections(final LatLng start, final LatLng destination) {
         String apiUrl1 = "https://maps.googleapis.com/maps/api/directions/json?origin=";
         String apiUrl2 = "&key=" +   key;
-        String startAndEnd =  start.latitude + "," + start.longitude + "&destination=" + destination.latitude +  "," + destination.longitude;
-        final String  jsonRequestURL =  apiUrl1 + startAndEnd + apiUrl2;
+        //String startAndEnd =  start.latitude + "," + start.longitude + "&destination=" + destination.latitude +  "," + destination.longitude;
 
+      //  final String  jsonRequestURL =  apiUrl1 + startAndEnd + apiUrl2;
+        final String  jsonRequestURL = apiUrl1+"sydney,au&destination=perth,au&waypoints=via:-37.81223%2C144.96254%7Cvia:-34.92788%2C138.60008" + apiUrl2;
         class GetJSON extends AsyncTask<Void, Void, String> {
             @Override
             protected void onPreExecute() {

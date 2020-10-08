@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 
 
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.view.inputmethod.InputMethodManager;
@@ -64,7 +65,7 @@ import java.util.Locale;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback , GoogleMap.OnMarkerDragListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback , GoogleMap.OnMarkerDragListener,GoogleMap.OnInfoWindowClickListener {
 
     private static final String TAG = MapsActivity.class.getSimpleName();
 
@@ -114,8 +115,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Boolean startingLocationNeeded = false;
 
 
-
-
     boolean routeStarted = false;//flag determined if a poly line between start and destination markers is drawn or not after map has been cleared
 
     @Override
@@ -139,7 +138,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        gc = new Geocoder(this);
 
         // set onClick listener for "Show Weather" button to show/hide markers on the map when pressed
         final Button button = (Button) findViewById(R.id.button1);
@@ -149,7 +147,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 System.out.print("hello");
             }
         });
-
+        initSettingsPage();
     }
 
 
@@ -202,6 +200,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
             }
         });
+
+        mMap.setOnInfoWindowClickListener(this);
+
+       // mMap.setOnMarkerClickListener();
     }
     /**
      * Saves the state of the map when the activity is paused.
@@ -243,7 +245,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // currently just grabbing LatLng for marker making
                 autoCompleteLatLng = place.getLatLng();
                 setAutoCompleteLatLang(autoCompleteLatLng);
-
                 // go to found location
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(autoCompleteLatLng));
             }
@@ -252,7 +253,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         }));
+    }
 
+    private void initSettingsPage(){
+        Button settingsButton = (Button) findViewById(R.id.settings);
+        settingsButton.setOnClickListener( new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent options = new Intent(getApplicationContext(),OptionsActivity.class);
+                startActivity(options);
+            }
+
+        });
     }
 
 
@@ -438,6 +450,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 getLocationsWeather();
             }
         };
+
+    public void onInfoWindowClick(Marker marker) {
+        if((Integer) marker.getTag()==0){
+            startingOrigin.delete();
+        }
+    }
 
 
     //updates the snippet, Address etc when start and destination markers are dragged

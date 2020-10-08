@@ -37,19 +37,20 @@ public class BikeBuddyLocation {
         if(isOrigin){
             this.marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
             this.marker.setTitle("Origin");
+            this.marker.setTag(0);
         }else{
             this.marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
             this.marker.setTitle("Destination");
         }
         this.marker.showInfoWindow();
 
-        try {// The snippet will include the city name if the geo coder recieves atleast once response from the places api
-            address= gc.getFromLocation(coordinate.latitude ,coordinate.longitude,1).get(0);
-            if(address!= null)
-                this.marker.setSnippet(address.getLocality() );
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {// The snippet will include the city name if the geo coder recieves atleast once response from the places api
+//            address= gc.getFromLocation(coordinate.latitude ,coordinate.longitude,1).get(0);
+//            if(address!= null)
+//                this.marker.setSnippet(address.getLocality() );
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     //either from long pressing the map, or using the auto complete search. An already existing destination/origin will be updated via this function.
@@ -61,6 +62,10 @@ public class BikeBuddyLocation {
     public void update(){
         coordinate = marker.getPosition();
         createMarker();
+    }
+
+    public void delete(){
+        this.marker.setVisible(false);
     }
 
 }

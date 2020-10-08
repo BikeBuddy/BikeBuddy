@@ -1,12 +1,15 @@
 package com.example.bikebuddy;
 
+/*
+ * Author Theo Brown
+ */
 public class Vehicle {
     private String vehicleID = "";
     private String make = "";
     private String model = "";
     private double fuelTankSize = 0; //size of the fuel tank in Litres
     private double fuelUsed = 0; //The amount of fuel used on the trip. Updates with each trip.
-    private double totalFuelUsed = 0;
+    private double totalFuelUsed = 0; //the total amount of fuel usage logged in the app over time.
     //private double avgMilesPerGallon = 0; //Average MPG
     private double avgKmPerLitre = 0;  //Average KM/L
     private double tachometer = 0;  //The vehicle's Tachometer reading.
@@ -19,7 +22,13 @@ public class Vehicle {
         this.fuelUsed = fuelUsed;
         //this.avgMilesPerGallon = avgMilesPerGallon;
         this.avgKmPerLitre = avgKmPerLitre;
-        this.tachometer = tachometer;
+        this.tachometer = tachometer; //the vehicle's tachometer reading
+
+    }
+
+    public void updateKmPerLitre(Double kpl) {
+        //TODO
+        setAvgKmPerLitre(kpl);
     }
 
     public String getVehicleID() {

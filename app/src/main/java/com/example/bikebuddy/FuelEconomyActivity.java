@@ -6,13 +6,6 @@ package com.example.bikebuddy;
 public class FuelEconomyActivity {
 
     /*
-     * Calculates the Miles per Gallon of a trip. Commented out until multi-unit support is introduced.
-     */
-//    public double calculateMPG(Trip trip, Vehicle v) {
-//       return (trip.distance/v.getFuelUsed());
-//    }
-
-    /*
      * Returns the Km/L of the completed trip
      */
     public double calculateTripKmL(Trip trip, Vehicle v) {
@@ -26,4 +19,14 @@ public class FuelEconomyActivity {
         return (v.getFuelTankSize() / v.getAvgKmPerLitre());
     }
 
+    /*
+     *Returns false if trip is longer than the max range of the vehicle, returns true otherwise
+     */
+    public boolean calculateTripSufficientFuel(Trip trip, Vehicle v) {
+        //FIXME
+        if (trip.distance > v.calculateMaxRange())
+            return false;
+        else
+            return true;
+    }
 }

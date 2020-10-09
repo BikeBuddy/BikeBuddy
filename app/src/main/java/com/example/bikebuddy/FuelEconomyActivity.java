@@ -3,7 +3,7 @@ package com.example.bikebuddy;
 /*
  * Author Theo Brown
  */
-public class FuelEconomyCalculator {
+public class FuelEconomyActivity {
 
     /*
      * Calculates the Miles per Gallon of a trip. Commented out until multi-unit support is introduced.

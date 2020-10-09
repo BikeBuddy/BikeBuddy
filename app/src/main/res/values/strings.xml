@@ -27,4 +27,8 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="Fuel_Used">0.0</string>
+    <string name="settings">settings</string>
+    <string name="fuel_used_litres">Fuel Used (Litres)</string>
+    <string name="fuel_used">Fuel Used</string>
+    <string name="kilometers_per_litre">Kilometers Per Litre</string>
 </resources>

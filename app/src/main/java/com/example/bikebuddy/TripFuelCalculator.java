@@ -11,13 +11,13 @@ import org.w3c.dom.Text;
  */
 
 public class TripFuelCalculator extends AppCompatActivity {
-    ;
 
     /*
      * Returns the Km/L of the completed trip
      */
-    public double calculateTripKmL(Trip trip, Vehicle v) {
-        return (trip.distance / v.getFuelUsed());
+    public double calculateTripKmL(Trip trip) {
+        TextView fuelUsed = (TextView) findViewById(R.id.textFuelUsed);
+        return (trip.distance / Double.valueOf(String.valueOf(fuelUsed)));
     }
 
     /*
@@ -41,10 +41,18 @@ public class TripFuelCalculator extends AppCompatActivity {
     /*
      *Returns false if trip is longer than the max range of the vehicle, returns true otherwise
      */
-    public boolean calculateTripSufficientFuel(Trip trip, Vehicle v) {
-        if (trip.distance > calculateMaxRange())
-            return false;
-        else
-            return true;
+    public boolean calculateTripSufficientFuel(Trip trip) {
+        if (trip.distance != null) { //check if there is a route plotted on the map for us to get a trip distance from.
+            if (trip.distance > calculateMaxRange())
+                return false;
+            else
+                return true;
+        } else { // If no trip listed,
+            TextView distance = (TextView) findViewById(R.id.textTripDistance);
+            if (Double.valueOf(String.valueOf(distance)) > calculateMaxRange())
+                return false;
+            else
+                return true;
+        }
     }
 }

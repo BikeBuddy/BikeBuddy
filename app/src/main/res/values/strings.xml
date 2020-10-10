@@ -31,4 +31,11 @@
     <string name="fuel_used_litres">Fuel Used (Litres)</string>
     <string name="fuel_used">Fuel Used</string>
     <string name="kilometers_per_litre">Kilometers Per Litre</string>
+    <string name="fuel_tank_size_litres">Fuel Tank Size (Litres)</string>
+    <string name="fuel_tank_size">Fuel tank size</string>
+    <string name="_0_0">0.0</string>
+    <string name="trip_distance">Trip Distance</string>
+    <string name="calculated_maximum_range_km">Calculated Maximum Range (Km)</string>
+    <string name="trip_distance_km">Trip Distance (Km)</string>
+    <string name="max_range">Max Range</string>
 </resources>

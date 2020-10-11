@@ -9,13 +9,17 @@ import android.content.Context;
 
 import android.location.Address;
 import android.location.Geocoder;
+import android.view.Gravity;
 import android.view.inputmethod.InputMethodManager;
 
 
 import com.google.android.gms.common.api.Status;
 
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.pm.PackageManager;
@@ -113,7 +117,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // Boolean for telling route initialization the user has no location
     Boolean startingLocationNeeded = false;
 
-
+    /// init drawerlayout reference
+    private DrawerLayout drawerLayout,drawer;
 
 
     boolean routeStarted = false;//flag determined if a poly line between start and destination markers is drawn or not after map has been cleared
@@ -150,6 +155,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        drawerLayout = (DrawerLayout)findViewById(R.id.side_menu);
+        drawer = (DrawerLayout)findViewById(R.id.side_menu);
     }
 
 
@@ -543,6 +550,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public BikeBuddyLocation getTheDestination() {
         return theDestination;
+    }
+
+    // side menu button listener
+    public void openSideMenu(View view)
+    {
+        if(view.getId() == R.id.side_menu_button)
+        {
+            drawerLayout.openDrawer(Gravity.LEFT);
+        }
     }
 }
 

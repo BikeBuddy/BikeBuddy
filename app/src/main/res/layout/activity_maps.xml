@@ -1,79 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- All renderable elements must fall within this relativelayout      -->
-<!-- keep map fragment at bottom of list so map stays below everything -->
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.drawerlayout.widget.DrawerLayout
+    android:id="@+id/side_menu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:id="@+id/mainLayout">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/side_menu_content"/>
 
-    <!-- Search Bar -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/side_menu_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        map:menu="@menu/side_menu"
+        map:headerLayout="@layout/side_menu_header"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"/>
+
+    <!-- All renderable elements must fall within this relativelayout      -->
+    <!-- keep map fragment at bottom of list so map stays below everything -->
     <RelativeLayout
-        android:id="@+id/relLayout1"
-        android:layout_width="300dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:elevation="10dp"
-        android:background="@drawable/white_border"
-        android:orientation="horizontal">
 
-        <!-- autocomplete fragment -->
-        <fragment
-            android:id="@+id/autocomplete_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:orientation="vertical"
+        android:id="@+id/mainLayout">
+
+        <!-- top menu bar, containing side menu button and search bar -->
+        <RelativeLayout
+            android:id="@+id/top_menu_bar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-            />
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="60dp"
+            android:layout_marginLeft="10dp"
+            android:elevation="10dp"
+            android:orientation="horizontal">
+
+            <!-- Side Menu Toggle Button -->
+            <Button
+                android:id="@+id/side_menu_button"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/white_border"
+                android:drawableBottom="@drawable/ic_info"
+                android:onClick="openSideMenu"
+                />
+
+            <!-- Search Bar -->
+            <RelativeLayout
+                android:id="@+id/search_bar_rel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="50dp"
+                android:elevation="10dp"
+                android:background="@drawable/white_border"
+                android:orientation="horizontal">
+
+                <!-- autocomplete fragment -->
+                <fragment
+                    android:id="@+id/autocomplete_fragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+                    />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <!-- Route Button -->
+        <Button
+            android:id="@+id/route_button"
+            android:layout_width="110dp"
+            android:layout_height="50dp"
+            android:background="@drawable/white_border"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="150dp"
+            android:layout_marginLeft="150dp"
+            android:layout_marginBottom="45dp"
+            android:layout_weight="1"
+            android:visibility="invisible"
+            android:onClick="initRoute"
+            android:text="Start Route" />
+
+        <!-- Show Weather Button -->
+        <Button
+            android:id="@+id/button1"
+            android:background="@drawable/white_border"
+            android:layout_width="110dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="150dp"
+            android:layout_marginLeft="150dp"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:onClick="toggleWeather"
+            android:text="Show Weather"/>
+
+
+
+        <!-- the map fragment -->
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".MapsActivity" />
+
 
     </RelativeLayout>
 
-
-    <Button
-        android:id="@+id/route_button"
-        android:layout_width="110dp"
-        android:layout_height="50dp"
-        android:background="@drawable/white_border"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="150dp"
-        android:layout_marginLeft="150dp"
-        android:layout_marginBottom="45dp"
-        android:layout_weight="1"
-        android:visibility="invisible"
-        android:onClick="initRoute"
-        android:text="Start Route" />
-
-    <Button
-        android:id="@+id/button1"
-        android:background="@drawable/white_border"
-        android:layout_width="110dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="150dp"
-        android:layout_marginLeft="150dp"
-        android:layout_marginBottom="10dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
-        android:onClick="toggleWeather"
-        android:text="Show Weather"/>
-
-
-
-    <!-- the map fragment -->
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".MapsActivity" />
-
-
-</RelativeLayout>
+</androidx.drawerlayout.widget.DrawerLayout>

@@ -47,7 +47,7 @@ public class TripFuelCalculator extends AppCompatActivity {
                 return false;
             else
                 return true;
-        } else { // If no trip listed,
+        } else { // If no trip listed, use user entered data instead.
             TextView distance = (TextView) findViewById(R.id.textTripDistance);
             if (Double.valueOf(String.valueOf(distance)) > calculateMaxRange())
                 return false;

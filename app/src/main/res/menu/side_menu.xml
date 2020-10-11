@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto">
 
     <item android:title="Route Info">
         <menu>
-            <item android:title="Distance:"/>
-            <item android:title="Duration: "/>
+            <item android:title="Distance:"
+                android:id="@+id/distance"/>
+
+            <item android:title="Duration: "
+                android:id="@+id/duration"/>
+
         </menu>
     </item>
 
@@ -28,10 +33,6 @@
         </menu>
     </item>
 
-    <item android:title="Clear Markers"/>
-
-    <item android:title="Change Map Style"/>
-
-
+    <item android:title=""/>
 
 </menu>

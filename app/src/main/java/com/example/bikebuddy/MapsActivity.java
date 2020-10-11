@@ -10,6 +10,7 @@ import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 
 
@@ -67,6 +68,8 @@ import java.util.Locale;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.internal.NavigationMenuItemView;
+import com.google.android.material.navigation.NavigationView;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback , GoogleMap.OnMarkerDragListener {
 
@@ -117,9 +120,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // Boolean for telling route initialization the user has no location
     Boolean startingLocationNeeded = false;
 
-    /// init drawerlayout reference
-    private DrawerLayout drawerLayout,drawer;
-
+    // side menu things
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
 
     boolean routeStarted = false;//flag determined if a poly line between start and destination markers is drawn or not after map has been cleared
 
@@ -154,16 +157,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 System.out.print("hello");
             }
         });
-
-        drawerLayout = (DrawerLayout)findViewById(R.id.side_menu);
-        drawer = (DrawerLayout)findViewById(R.id.side_menu);
     }
 
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.mMap = googleMap;
-
 
         initFetchWeather();
         initWeatherFunctions();
@@ -177,6 +176,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // call initialisations
         initPlaces();
         initAutoComplete();
+        initSideMenu();
 
 
         this.mMap.setOnCameraIdleListener(onCameraIdleListener);
@@ -552,12 +552,46 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return theDestination;
     }
 
-    // side menu button listener
-    public void openSideMenu(View view)
+    public void initSideMenu()
     {
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+    }
+
+    // side menu button listener
+    public void openSideMenu(View view) {
         if(view.getId() == R.id.side_menu_button)
         {
             drawerLayout.openDrawer(Gravity.LEFT);
+        }
+    }
+
+    public void sideMenuClear(View view) {
+        if(view.getId() == R.id.side_menu_clear)
+        {
+            mMap.clear();
+            Toast.makeText(this, "clear map", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void sideMenuMapStyle(View view) {
+        if(view.getId() == R.id.side_menu_map) {
+            Toast.makeText(this, "map style change", Toast.LENGTH_SHORT).show();
+            // change to next map type
+            int mapType = mMap.getMapType() + 1;
+            // reset back to type 1 if end of types reached
+            if(mapType > 4)
+            {
+                mapType = 1;
+            }
+            mMap.setMapType(mapType);
+        }
+    }
+
+    public void sideMenuWeather(View view) {
+        if(view.getId() == R.id.side_menu_weather) {
+            Toast.makeText(this, "weather toggle", Toast.LENGTH_SHORT).show();
+            weatherFunctions.toggleWeather();
         }
     }
 }

@@ -1,26 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <androidx.drawerlayout.widget.DrawerLayout
-    android:id="@+id/side_menu"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <include
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        layout="@layout/side_menu_content"/>
 
+    <!-- Side Menu Thingy -->
     <com.google.android.material.navigation.NavigationView
-        android:id="@+id/side_menu_view"
+        android:id="@+id/nav_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         map:menu="@menu/side_menu"
         map:headerLayout="@layout/side_menu_header"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true"/>
+        android:fitsSystemWindows="true">
+
+        <!-- layout to hold buttons at footer of side menu -->
+        <RelativeLayout
+            android:id="@+id/side_menu_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom">
+
+            <!-- weather toggle button -->
+            <Button
+                android:id="@+id/side_menu_weather"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/gray_border"
+                android:text="Toggle Weather"
+                android:onClick="toggleWeather"
+            />
+
+            <!-- map toggle button -->
+            <Button
+                android:id="@+id/side_menu_map"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="125dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/gray_border"
+                android:text="Map Style"
+                android:onClick="sideMenuMapStyle"
+                />
+
+            <!-- clear markers button -->
+            <Button
+                android:id="@+id/side_menu_clear"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="235dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/gray_border"
+                android:text="Clear Markers"
+                android:onClick="sideMenuClear"
+                />
+        </RelativeLayout>
+    </com.google.android.material.navigation.NavigationView>
 
     <!-- All renderable elements must fall within this relativelayout      -->
     <!-- keep map fragment at bottom of list so map stays below everything -->
@@ -32,7 +77,7 @@
         android:orientation="vertical"
         android:id="@+id/mainLayout">
 
-        <!-- top menu bar, containing side menu button and search bar -->
+        <!-- header bar, containing side menu button and search bar -->
         <RelativeLayout
             android:id="@+id/top_menu_bar"
             android:layout_width="match_parent"

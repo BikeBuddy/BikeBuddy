@@ -2,10 +2,8 @@ package com.example.bikebuddy;
 
 import androidx.annotation.NonNull;
 
-
 import android.location.Address;
 import android.location.Geocoder;
-
 
 import com.google.android.gms.common.api.Status;
 
@@ -65,11 +63,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private List<Address> locationsList;//locations for weather icons
     private Bitmap smallMarker; //weather icons
 
-
     private Geocoder gc;//used to obtain the address of a location based on the lat long coordinates
 
     private TripManager tripManager;
-
 
     private CameraPosition cameraPosition;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -192,7 +188,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onSaveInstanceState(outState);
     }
 
-
     // initialise places API
     private void initPlaces() {
         // Initialize Places.
@@ -231,9 +226,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }));
 
     }
-
-
-
     //Toggles the buttons visibility
     public void toggleRouteButton() {
         // make route button visible
@@ -246,9 +238,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             routeButton.setVisibility(View.INVISIBLE);
        }
     }
-
-
-
 
     /**
      * Gets the current location of the device, and positions the map's camera.
@@ -356,7 +345,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-
     // Use a custom info window adapter to handle multiple lines of text in the
     // info window contents.
     private GoogleMap.InfoWindowAdapter customInfoWindowAdapter =
@@ -413,8 +401,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void initRoute(View view) {
         tripManager.showRoute();
     }
-
-
 
     //Gets 20 locations which are within view in the camera
     public  List<Address> getAddressListFromLatLong(double lat, double lng) {

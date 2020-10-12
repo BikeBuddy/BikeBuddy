@@ -26,6 +26,7 @@ public class JSONRoutes {
     private String key;
     private GoogleMap mMap;//class has reference to the main map fragment
     private ArrayList<LatLng> locations;
+    protected MapsActivity mapsActivity;
 
     public JSONRoutes(String key, GoogleMap mMap){
         this.key = key;
@@ -56,7 +57,7 @@ public class JSONRoutes {
         return newTrip;
     }
 
-    public Trip parseJsonToDirections(String jsonString)throws JSONException{
+    public Trip parseJsonToDirections(String jsonString)throws JSONException, UnsupportedOperationException{
         JSONObject recievedJsonDirections = new JSONObject(jsonString);
         String responseStatus = recievedJsonDirections.getString("status");
        // String responseStatus = status.getString("value");
@@ -79,10 +80,10 @@ public class JSONRoutes {
             newTrip.decodePolyLine();
             return newTrip;
         }
-        else if(responseStatus.equals("NOT_FOUND") || responseStatus.equals("ZERO_RESULTS"))
-            throw new UnsupportedOperationException("A route can not be generated from the locations you have chosen");
-        else
-            throw new UnsupportedOperationException("Server Error");
+        else if(responseStatus.equals("NOT_FOUND") || responseStatus.equals("ZERO_RESULTS")) {
+            Toast.makeText(mapsActivity, "A route can not be generated from the locations you have chosen", Toast.LENGTH_LONG);
+        }
+        return null;
     }
 
     //shows the polyline(route) of a trip onto the map
@@ -95,18 +96,23 @@ public class JSONRoutes {
         LatLng midPoint = aTrip.points.get(aTrip.points.size() / 2);
         mMap.addMarker(new MarkerOptions().position(midPoint)
                 .snippet(aTrip.getTripDuration())
-                .title(aTrip.getTripDistance())).showInfoWindow();
+                .title(aTrip.getTripDistance()).icon(null)
+        ).showInfoWindow();//BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)
 
     }
 
-    public void executeResponse(String jsonString){
+    public void executeResponse(String jsonString)throws UnsupportedOperationException{
         try {
             if(!hasMultipleLegs()){
                 LatLng start = locations.get(0);
                 LatLng destination = locations.get(1);
-                showTrip(parseJsonToDirections(jsonString,start,destination));
+                Trip trip = parseJsonToDirections(jsonString);
+                if(trip != null)
+                    showTrip(trip);
             }else{
-                showTrip(parseJsonToDirections(jsonString));
+                Trip trip = parseJsonToDirections(jsonString);
+                if(trip != null)
+                    showTrip(trip);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -120,12 +126,12 @@ origin=sydney,au&destination=perth,au
 &key=YOUR_API_KEY
  */
     //takes in two LatLong locations, sends a request to google maps, parses the repsonse to a Trip and shows it on the map
-    public void getDirections() {
+    public void getDirections() throws UnsupportedOperationException{
         String apiUrl1 = "https://maps.googleapis.com/maps/api/directions/json?origin=";
         String apiUrl2 = "&key=" + key;
         String startAndEnd = getStartLocation().latitude + "," + getStartLocation().longitude + "&destination=" + getDestination().latitude + "," + getDestination().longitude;
         if(hasMultipleLegs()){
-            startAndEnd += "waypoints=";
+            startAndEnd += "&waypoints=";
             int lastLeg = locations.size() - 1;
             for(int i = 1; i < lastLeg; i++){//iteration starts at second index position and ends at second to last
                 LatLng leg = locations.get(i);
@@ -133,13 +139,15 @@ origin=sydney,au&destination=perth,au
                 if(i < lastLeg){//%7C is not added to last waypoint
                     waypoint += "%7C";
                 }
+                startAndEnd += waypoint;
             }
+
         }
         String jsonRequestURL = apiUrl1 + startAndEnd + apiUrl2;
         getDirectionsResponse(jsonRequestURL);
     }
 
-    public void getDirectionsResponse(final String jsonRequestURL){
+    public void getDirectionsResponse(final String jsonRequestURL)throws UnsupportedOperationException{
         class GetJSON extends AsyncTask<Void, Void, String> {
             @Override
             protected void onPreExecute() {
@@ -149,10 +157,11 @@ origin=sydney,au&destination=perth,au
             //this method will be called after execution
             //so here we are displaying a toast with the json string
             @Override
-            protected void onPostExecute(String jsonString) {
+            protected void onPostExecute(String jsonString)throws UnsupportedOperationException{
                     executeResponse(jsonString);
                    // showTrip(parseJsonToDirections(jsonString,start,destination));
             }
+
 
             //in this method we are fetching the json string
             @Override
@@ -208,5 +217,8 @@ origin=sydney,au&destination=perth,au
         locations.add(legNum-1, leg);
     }
 
+    public void setLocations(ArrayList<LatLng> locations){
+        this.locations = locations;
+    }
 
 }

@@ -109,6 +109,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         tripManager = new TripManager(this, gc);
+
         routeButton = (Button) findViewById(R.id.route_button);
 
         // set onClick listener for "Show Weather" button to show/hide markers on the map when pressed
@@ -387,14 +388,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //updates the snippet, Address etc when start and destination markers are dragged
     public void onMarkerDragEnd(Marker marker) {
-        tripManager.getStartingOrigin().update();
-        if(tripManager.getTheDestination()!=null ) {
-            tripManager.getTheDestination().update();
-        }
-        mMap.clear();//clears the old poly line if there was one
-        tripManager.getStartingOrigin().createMarker();
-        if(tripManager.getTheDestination()!=null)
-            tripManager.getTheDestination().createMarker();
+//        tripManager.getStartingOrigin().update();
+//        if(tripManager.getTheDestination()!=null ) {
+//            tripManager.getTheDestination().update();
+//        }
+//        mMap.clear();//clears the old poly line if there was one
+//        tripManager.getStartingOrigin().createMarker();
+//        if(tripManager.getTheDestination()!=null)
+//            tripManager.getTheDestination().createMarker();
+        tripManager.updateMap();
     }
     public void initRoute(View view) {
         tripManager.showRoute();

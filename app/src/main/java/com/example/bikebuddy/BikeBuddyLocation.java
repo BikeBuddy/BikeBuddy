@@ -71,5 +71,8 @@ public class BikeBuddyLocation {
     public void setAsDestination(){
         this.isDestination = true;
     }
+    public void setAsOrigin(){
+        this.isOrigin = true;
+    }
 
 }

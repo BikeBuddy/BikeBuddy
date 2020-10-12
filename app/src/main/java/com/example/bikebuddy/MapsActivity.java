@@ -172,6 +172,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.clear();
                 tripManager.updateMap();
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+                tripManager.setFocusedMarker( (Integer) tripManager.getStartingOrigin().marker.getTag());
+                if(tripManager.getStartingOrigin()!= null && tripManager.getTheDestination()!=null)
+                    tripManager.showMarkerButtons(true);
+             //   else if(tripManager.getStartingOrigin()==null){
+             //       tripManager.showMarkerButtons(false);
+             //   }
+            }
+        });
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                Integer markerTag = (Integer) marker.getTag();
+                if(markerTag != null){
+                    tripManager.setFocusedMarker(markerTag);
+                    tripManager.showMarkerButtons(true);
+                    return true;
+                }
+                return false;
             }
         });
     }

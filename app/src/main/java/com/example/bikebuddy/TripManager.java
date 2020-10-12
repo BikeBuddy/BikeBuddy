@@ -10,7 +10,6 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 
 public class TripManager {
-    ArrayList<BikeBuddyLocation> locations;
     private JSONRoutes jsonRoutes;// send requests and show routes on map with this object--PK
     private Geocoder gc;//used to obtain the address of a location based on the lat long coordinates
     private MapsActivity mapsActivity;
@@ -25,10 +24,12 @@ public class TripManager {
     private LatLng autoCompleteLatLng;
     private GoogleMap mMap;
 
+    private ArrayList<BikeBuddyLocation> locations;
 
     public TripManager(MapsActivity activity, Geocoder gc){
         this.mapsActivity = activity;
         this.gc = gc;
+        locations = new ArrayList<>();
     }
 
     public void setJSONRoutes(String key, GoogleMap mMap){
@@ -41,15 +42,18 @@ public class TripManager {
     public void setAutoLatLang(LatLng latLang){
         autoCompleteLatLng = latLang;
         if(startingOrigin==null){
-            startingOrigin = new BikeBuddyLocation(true,gc,latLang, mMap);
+            setStartingOrigin(new BikeBuddyLocation(true,gc,latLang, mMap));
             startingOrigin.createMarker();
             startingLocationNeeded = false;
         }else if(theDestination==null){
-            theDestination = new BikeBuddyLocation(false,gc,latLang, mMap);
+            setDestination(theDestination = new BikeBuddyLocation(false,gc,latLang, mMap));
             theDestination.createMarker();
         }else{//once both origin and destination has been set, all input LatLng will be used to update the destination
-            theDestination.setCoordinate(latLang);
-            theDestination.createMarker();
+//            theDestination.setCoordinate(latLang);
+//            theDestination.createMarker();
+            BikeBuddyLocation leg = new BikeBuddyLocation(false,gc, latLang ,mMap);
+            addLeg(leg, locations.size());
+            leg.createMarker();
         }
         if(theDestination != null && mapsActivity.getRouteButton().getVisibility() == View.INVISIBLE)//if the destination has been selected for the first time, then the button will become visible
             mapsActivity.toggleRouteButton();
@@ -77,12 +81,25 @@ public class TripManager {
     }
     //redraws all the markers and polyline onto map
     public void updateMap(){
-        if(startingOrigin!=null)
-            startingOrigin.createMarker();
-        if(theDestination!=null)
-            theDestination.createMarker();
-        if(routeStarted)
-            jsonRoutes.getDirections(startingOrigin.coordinate, theDestination.coordinate);
+//        if(startingOrigin!=null)
+//            startingOrigin.createMarker();
+//        if(theDestination!=null)
+//            theDestination.createMarker();
+        for(BikeBuddyLocation location: locations){
+            location.createMarker();
+        }
+        if(routeStarted){
+            try {
+                if (locations.size() == 2) {
+                    jsonRoutes.getDirections();
+                } else {
+                    jsonRoutes.getDirections();
+                }
+            }catch (UnsupportedOperationException e){
+                Toast.makeText(mapsActivity, e.getMessage(), Toast.LENGTH_LONG);
+            }
+        }
+
     }
 
     //sets the starting location to gps location, otherwise sets startingLocationNeeded flag to true
@@ -103,4 +120,21 @@ public class TripManager {
         return theDestination;
     }
 
+    public void setStartingOrigin(BikeBuddyLocation startingOrigin){
+        locations.add(0, startingOrigin);
+        this.startingOrigin = startingOrigin;
+        jsonRoutes.setStart(startingOrigin.coordinate);
+    }
+
+    //last index is replaced by input BikeBikeBuddyLocation, it does NOT add to the list
+    public void setDestination(BikeBuddyLocation destination){
+        locations.set(locations.size()-1, destination);
+        theDestination = destination;
+        jsonRoutes.setDestination(destination.coordinate);
+    }
+
+    public void addLeg(BikeBuddyLocation leg, int legNumber){
+        locations.add(locations.size()-1, leg);
+        jsonRoutes.addLeg(leg.coordinate, legNumber);
+    }
 }

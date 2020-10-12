@@ -34,6 +34,7 @@ public class TripManager {
         this.mapsActivity = activity;
         this.gc = gc;
         locations = new ArrayList<>();
+        initMarkerButtons();
     }
 
     public void initMarkerButtons(){
@@ -53,9 +54,11 @@ public class TripManager {
                 if(clickedMarker != null){
                     removeLeg(clickedMarker);
                     showMarkerButtons(false);
+                    updateMap();
                 }
             }
         });
+
     }
 
 
@@ -130,7 +133,7 @@ public class TripManager {
             location.update();//Marker();
             latLngLocations.add(location.coordinate);
         }
-        if(routeStarted){
+        if(locations.size()>1){
             jsonRoutes.setLocations(latLngLocations);
             jsonRoutes.getDirections();
         }
@@ -163,7 +166,7 @@ public class TripManager {
 
     //last index is replaced by input BikeBikeBuddyLocation, it does NOT add to the list
     public void setDestination(BikeBuddyLocation destination){
-        locations.set(locations.size()-1, destination);
+        locations.add(destination);
         theDestination = destination;
         theDestination.setAsDestination();
         jsonRoutes.setDestination(destination.coordinate);
@@ -174,13 +177,14 @@ public class TripManager {
         jsonRoutes.addLeg(leg.coordinate, legNumber);
     }
 
-    private void updateMarkerTags(){
+    public void updateMarkerTags(){
         for(int i=0 ; i<locations.size() ; i++){
             locations.get(i).marker.setTag(i);
         }
     }
     public void removeLeg(int leg){
         if(leg >= 0 && leg < locations.size()){
+            locations.get(leg).setInvisible();
             locations.remove(leg);
             updateMarkerTags();
             updateMap();
@@ -196,4 +200,17 @@ public class TripManager {
         this.clickedMarker = markerTag;
     }
 
+    public ArrayList<BikeBuddyLocation> getLocations(){
+        return locations;
+    }
+
+    public int getMarkerIDByLatLong(LatLng latLng){
+        updateMarkerTags();
+        for(BikeBuddyLocation location: locations){
+            if(location.coordinate.equals(latLng)){
+                return (Integer) location.marker.getTag();
+            }
+        }
+        return 0;
+    }
 }

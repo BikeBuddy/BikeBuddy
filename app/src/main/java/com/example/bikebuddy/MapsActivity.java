@@ -172,19 +172,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.clear();
                 tripManager.updateMap();
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-                tripManager.setFocusedMarker( (Integer) tripManager.getStartingOrigin().marker.getTag());
-                if(tripManager.getStartingOrigin()!= null && tripManager.getTheDestination()!=null)
+                Integer markerID = tripManager.getMarkerIDByLatLong(latLng);
+                Toast.makeText(getApplicationContext(),"tag "+ markerID.toString(),Toast.LENGTH_LONG );
+                tripManager.setFocusedMarker(markerID);
+                if(markerID!=null && markerID >0 && markerID < tripManager.getLocations().size()-1){
                     tripManager.showMarkerButtons(true);
-             //   else if(tripManager.getStartingOrigin()==null){
+                }
+
+             //  else if(tripManager.getStartingOrigin()==null){
              //       tripManager.showMarkerButtons(false);
-             //   }
+             //  }
             }
         });
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
+                tripManager.updateMarkerTags();
                 Integer markerTag = (Integer) marker.getTag();
+                Toast.makeText(getApplicationContext(),"tag "+ markerTag.toString(),Toast.LENGTH_LONG );
                 if(markerTag != null){
                     tripManager.setFocusedMarker(markerTag);
                     tripManager.showMarkerButtons(true);
@@ -193,6 +199,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 return false;
             }
         });
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                tripManager.showMarkerButtons(false);
+            }
+        });
+//        setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+//            @Override
+//            public void onCameraMove() {
+//                tripManager.showMarkerButtons(false);
+//            }
+//        });
     }
     /**
      * Saves the state of the map when the activity is paused.

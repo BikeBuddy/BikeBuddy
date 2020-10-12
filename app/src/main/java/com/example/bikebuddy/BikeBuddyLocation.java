@@ -23,6 +23,8 @@ public class BikeBuddyLocation {
     boolean isOrigin;//marker will be different depending if its the start or destination
     boolean isDestination;
     Geocoder gc; //used to obtain the address from the coordinate
+    private boolean isVisible;
+
 
     public BikeBuddyLocation(boolean isOrigin, Geocoder gc, LatLng autoCompleteLatLang, GoogleMap mMap){
         this.isOrigin = isOrigin;
@@ -30,6 +32,7 @@ public class BikeBuddyLocation {
         this.mMap = mMap;
         coordinate= autoCompleteLatLang;
         isDestination = false;
+        isVisible = true;
     }
 
     //creates the marker based on the objects set coordinate, the colour of the marker depends on if it is a destination or origin
@@ -46,6 +49,7 @@ public class BikeBuddyLocation {
             this.marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
             this.marker.setTitle("Leg");
         }
+        this.marker.setVisible(isVisible);
         this.marker.showInfoWindow();
 
 //        try {// The snippet will include the city name if the geo coder recieves atleast once response from the places api
@@ -73,6 +77,10 @@ public class BikeBuddyLocation {
     }
     public void setAsOrigin(){
         this.isOrigin = true;
+    }
+
+    public void setInvisible(){
+        this.isVisible = false;
     }
 
 }

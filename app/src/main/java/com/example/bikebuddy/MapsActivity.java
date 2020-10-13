@@ -10,7 +10,9 @@ import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.inputmethod.InputMethodManager;
 
 
@@ -569,16 +571,44 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void openSideMenu(View view) {
         if(view.getId() == R.id.side_menu_button)
         {
+            // set side menu as active and clickable
             drawerLayout.openDrawer(Gravity.LEFT);
             navigationView.bringToFront();
 
+            updateSideMenu();
         }
+    }
+
+    public void updateSideMenu()
+    {
+        // update route information
+        Menu navMenu = navigationView.getMenu();
+        navMenu.findItem(R.id.duration).setTitle("Duration: "+"20 minutes");
+        navMenu.findItem(R.id.distance).setTitle("Distance: "+"12km");
+
+        SubMenu markerList = navMenu.findItem(R.id.marker_list).getSubMenu();
+        markerList.clear();
+        // update marker list with current markers
+        /**
+         *  Currently hard coded in 3 empty markers.
+         *  Once access to marker array, loop through and create entry for each marker.
+         */
+        markerList.add("Marker 1");
+        markerList.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker));
+        markerList.add("Marker 2");
+        markerList.getItem(1).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker));
+        markerList.add("Marker 3");
+        markerList.getItem(2).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker));
     }
 
     public void sideMenuClear(View view) {
         if(view.getId() == R.id.side_menu_clear)
         {
+            /**
+             * still needs to actually delete markers, currently just clears for current draw
+             */
             mMap.clear();
+            updateSideMenu();
         }
     }
 

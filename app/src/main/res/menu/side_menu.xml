@@ -2,9 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:map="http://schemas.android.com/apk/res-auto">
 
-    <item android:title="Route Info">
+    <item android:title="Route Info"
+        android:id="@+id/route_info">
         <menu>
-            <item android:title="Distance:"
+            <item android:title="Distance: "
                 android:id="@+id/distance"/>
 
             <item android:title="Duration: "
@@ -13,7 +14,8 @@
         </menu>
     </item>
 
-    <item android:title="Markers">
+    <item android:title="Markers"
+        android:id="@+id/marker_list">
         <menu>
             <item
                 android:title="Marker 1"
@@ -33,6 +35,5 @@
         </menu>
     </item>
 
-    <item android:title=""/>
 
 </menu>

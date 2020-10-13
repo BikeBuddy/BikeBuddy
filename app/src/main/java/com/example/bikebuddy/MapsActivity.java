@@ -157,6 +157,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 System.out.print("hello");
             }
         });
+        // add listener for weather toggle button within the side menu
+        final Button sideWeatherButton = (Button) findViewById(R.id.side_menu_weather);
+        sideWeatherButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                weatherFunctions.toggleWeather();
+            }
+        });
     }
 
 
@@ -563,6 +570,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if(view.getId() == R.id.side_menu_button)
         {
             drawerLayout.openDrawer(Gravity.LEFT);
+            navigationView.bringToFront();
+
         }
     }
 
@@ -570,13 +579,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if(view.getId() == R.id.side_menu_clear)
         {
             mMap.clear();
-            Toast.makeText(this, "clear map", Toast.LENGTH_SHORT).show();
         }
     }
 
     public void sideMenuMapStyle(View view) {
         if(view.getId() == R.id.side_menu_map) {
-            Toast.makeText(this, "map style change", Toast.LENGTH_SHORT).show();
             // change to next map type
             int mapType = mMap.getMapType() + 1;
             // reset back to type 1 if end of types reached
@@ -588,11 +595,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    public void sideMenuWeather(View view) {
-        if(view.getId() == R.id.side_menu_weather) {
-            Toast.makeText(this, "weather toggle", Toast.LENGTH_SHORT).show();
-            weatherFunctions.toggleWeather();
-        }
-    }
 }
 

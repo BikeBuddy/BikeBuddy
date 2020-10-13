@@ -27,6 +27,7 @@ public class JSONRoutes {
     private GoogleMap mMap;//class has reference to the main map fragment
     private ArrayList<LatLng> locations;
     protected MapsActivity mapsActivity;
+    private Trip newTrip;
 
     public JSONRoutes(String key, GoogleMap mMap){
         this.key = key;
@@ -36,27 +37,6 @@ public class JSONRoutes {
 
 
     //parses a Json response into a Trip object and returns it
-    public Trip parseJsonToDirections(String jsonString, LatLng start, LatLng Destination) throws JSONException {
-        JSONObject recievedJsonDirections = new JSONObject(jsonString);
-        JSONArray jsonRoutes =recievedJsonDirections.getJSONArray("routes");
-        JSONObject jsonRoute = jsonRoutes.getJSONObject(0);
-        JSONObject jsonPolyline = jsonRoute.getJSONObject("overview_polyline");
-        JSONArray jsonLegs = jsonRoute.getJSONArray("legs");
-        JSONObject jsonLeg = jsonLegs.getJSONObject(0);
-        JSONObject jsonDistance = jsonLeg.getJSONObject("distance");
-        JSONObject jsonDuration = jsonLeg.getJSONObject("duration");
-        Trip newTrip = new Trip();
-        newTrip.distance =  jsonDistance.getInt("value");
-        newTrip.duration =  jsonDuration.getInt("value");
-        newTrip.startLocation = start;
-        newTrip.endLocation = Destination;
-        newTrip.start = jsonLeg.getString("start_address");
-        newTrip.end = jsonLeg.getString("end_address");
-        newTrip.encodedPolyLine = jsonPolyline.getString("points");
-        newTrip.decodePolyLine();
-        return newTrip;
-    }
-
     public Trip parseJsonToDirections(String jsonString)throws JSONException, UnsupportedOperationException{
         JSONObject recievedJsonDirections = new JSONObject(jsonString);
         String responseStatus = recievedJsonDirections.getString("status");
@@ -69,7 +49,7 @@ public class JSONRoutes {
             JSONObject jsonLeg = jsonLegs.getJSONObject(0);
             JSONObject jsonDistance = jsonLeg.getJSONObject("distance");
             JSONObject jsonDuration = jsonLeg.getJSONObject("duration");
-            Trip newTrip = new Trip();
+            newTrip = new Trip();
             newTrip.distance = jsonDistance.getInt("value");
             newTrip.duration = jsonDuration.getInt("value");
             newTrip.startLocation = locations.get(0);
@@ -80,8 +60,9 @@ public class JSONRoutes {
             newTrip.decodePolyLine();
             return newTrip;
         }
+        //else if google directions is unable to find a route for the specified locations
         else if(responseStatus.equals("NOT_FOUND") || responseStatus.equals("ZERO_RESULTS")) {
-            Toast.makeText(mapsActivity, "A route can not be generated from the locations you have chosen", Toast.LENGTH_LONG);
+            Toast.makeText(mapsActivity.getApplicationContext(), "A route can not be generated from the locations you have chosen", Toast.LENGTH_LONG);
         }
         return null;
     }
@@ -117,14 +98,9 @@ public class JSONRoutes {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+     //   Toast.makeText(mapsActivity, jsonString, Toast.LENGTH_LONG).show();
     }
 
-/*
-https://maps.googleapis.com/maps/api/directions/json?
-origin=sydney,au&destination=perth,au
-&waypoints=via:-37.81223%2C144.96254%7Cvia:-34.92788%2C138.60008
-&key=YOUR_API_KEY
- */
     //takes in two LatLong locations, sends a request to google maps, parses the repsonse to a Trip and shows it on the map
     public void getDirections() throws UnsupportedOperationException{
         String apiUrl1 = "https://maps.googleapis.com/maps/api/directions/json?origin=";
@@ -159,9 +135,9 @@ origin=sydney,au&destination=perth,au
             @Override
             protected void onPostExecute(String jsonString)throws UnsupportedOperationException{
                     executeResponse(jsonString);
+                   //  Toast.makeText(mapsActivity, jsonString, Toast.LENGTH_LONG).show();
                    // showTrip(parseJsonToDirections(jsonString,start,destination));
             }
-
 
             //in this method we are fetching the json string
             @Override
@@ -219,6 +195,10 @@ origin=sydney,au&destination=perth,au
 
     public void setLocations(ArrayList<LatLng> locations){
         this.locations = locations;
+    }
+
+    public Trip getTrip(){
+        return newTrip;
     }
 
 }

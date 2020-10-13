@@ -134,14 +134,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         HashMap<String, Drawable> weatherIcons = new HashMap<String, Drawable>();
 
-        tripManager.setJSONRoutes(getResources().getString(R.string.google_maps_key), mMap); //jsonRoutes needs reference to mMap
+        tripManager.setUpMapObjects(mMap); //jsonRoutes needs reference to mMap
         // stock google maps UI buttons
         mMap.getUiSettings().setZoomControlsEnabled(true);
 
         // call initialisations
         initPlaces();
         initAutoComplete();
-
 
         this.mMap.setOnCameraIdleListener(onCameraIdleListener);
 
@@ -166,52 +165,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMarkerDragListener(this);
 
         //ActionListener for long press --PK
-        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-            public void onMapLongClick(LatLng latLng) {
-                tripManager.setAutoLatLang(latLng);
-                mMap.clear();
-                tripManager.updateMap();
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-                Integer markerID = tripManager.getMarkerIDByLatLong(latLng);
-                Toast.makeText(getApplicationContext(),"tag "+ markerID.toString(),Toast.LENGTH_LONG );
-                tripManager.setFocusedMarker(markerID);
-                if(markerID!=null && markerID >0 && markerID < tripManager.getLocations().size()-1){
-                    tripManager.showMarkerButtons(true);
-                }
 
-             //  else if(tripManager.getStartingOrigin()==null){
-             //       tripManager.showMarkerButtons(false);
-             //  }
-            }
-        });
-
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                tripManager.updateMarkerTags();
-                Integer markerTag = (Integer) marker.getTag();
-                Toast.makeText(getApplicationContext(),"tag "+ markerTag.toString(),Toast.LENGTH_LONG );
-                if(markerTag != null){
-                    tripManager.setFocusedMarker(markerTag);
-                    tripManager.showMarkerButtons(true);
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                tripManager.showMarkerButtons(false);
-            }
-        });
-//        setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
-//            @Override
-//            public void onCameraMove() {
-//                tripManager.showMarkerButtons(false);
-//            }
-//        });
     }
     /**
      * Saves the state of the map when the activity is paused.

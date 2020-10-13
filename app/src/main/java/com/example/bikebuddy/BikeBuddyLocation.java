@@ -20,11 +20,26 @@ public class BikeBuddyLocation {
     Marker marker;
     GoogleMap mMap;//reference to the map
     Address address; //address of the location ie local details such as city name
-    boolean isOrigin;//marker will be different depending if its the start or destination
-    boolean isDestination;
+    private boolean isOrigin;//marker will be different depending if its the start or destination
+    private boolean isDestination;
     Geocoder gc; //used to obtain the address from the coordinate
     private boolean isVisible;
 
+    public boolean isOrigin() {
+        return isOrigin;
+    }
+
+    public void setOrigin(boolean origin) {
+        isOrigin = origin;
+    }
+
+    public boolean isDestination() {
+        return isDestination;
+    }
+
+    public void setDestination(boolean destination) {
+        isDestination = destination;
+    }
 
     public BikeBuddyLocation(boolean isOrigin, Geocoder gc, LatLng autoCompleteLatLang, GoogleMap mMap){
         this.isOrigin = isOrigin;
@@ -48,6 +63,8 @@ public class BikeBuddyLocation {
         }else{
             this.marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
             this.marker.setTitle("Leg");
+            this.marker.setSnippet("sdkfjsd \n asd");
+
         }
         this.marker.setVisible(isVisible);
         this.marker.showInfoWindow();
@@ -74,9 +91,15 @@ public class BikeBuddyLocation {
 
     public void setAsDestination(){
         this.isDestination = true;
+        if(isOrigin){
+            isOrigin=false;
+        }
     }
     public void setAsOrigin(){
         this.isOrigin = true;
+        if(isDestination){
+            this.isDestination = false;
+        }
     }
 
     public void setInvisible(){

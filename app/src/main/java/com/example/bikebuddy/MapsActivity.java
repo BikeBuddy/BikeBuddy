@@ -439,7 +439,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 locationsList = getAddressListFromLatLong(currentLocation.latitude, currentLocation.longitude);
 
                 getLocationsWeather();
-                fetchNearbyPlace.fetch();
+                fetchNearbyPlace.fetch(lastKnownLocation.getLatitude(),lastKnownLocation.getLongitude());
 
             }
         };

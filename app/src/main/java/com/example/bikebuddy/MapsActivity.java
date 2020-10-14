@@ -3,13 +3,9 @@ package com.example.bikebuddy;
 import androidx.annotation.NonNull;
 
 
-import android.app.Activity;
-import android.content.Context;
-
-
 import android.location.Address;
 import android.location.Geocoder;
-import android.view.inputmethod.InputMethodManager;
+import android.os.Handler;
 
 
 import com.google.android.gms.common.api.Status;
@@ -21,8 +17,6 @@ import androidx.fragment.app.FragmentActivity;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,24 +36,18 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
-import java.util.Locale;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -70,6 +58,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public WeatherFunctions weatherFunctions;
     public FetchWeather fetchWeather;
+    public DateTimeFunctions dateTimeFunctions;
     HashMap<String, String> weatherIcons;
 
     private GoogleMap mMap;
@@ -88,7 +77,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private CameraPosition cameraPosition;
     private FusedLocationProviderClient fusedLocationProviderClient;
 
-
+    private TextView weatherDateTimeDisplay;
+    private TextView currentDateTimeDisplay;
 
     // A default location (Auckland, New Zealand) and default zoom to use when location permission is
     // not granted.
@@ -135,7 +125,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         gc = new Geocoder(this);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
@@ -150,6 +140,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+
     }
 
 
@@ -160,6 +151,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         initFetchWeather();
         initWeatherFunctions();
+        initDateTimeFunctions();
+      //  weatherDateTimeDisplay = findViewById(R.id.weatherDateTimeDisplay);
+       // timer();
 
         HashMap<String, Drawable> weatherIcons = new HashMap<String, Drawable>();
 
@@ -433,11 +427,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 currentLocation = mMap.getCameraPosition().target;
 
                 //creates new list of locations based on camera centre position.
-                locationsList = getAddressListFromLatLong(currentLocation.latitude, currentLocation.longitude);
+                //locationsList = getAddressListFromLatLong(currentLocation.latitude, currentLocation.longitude);
+                createLocationsList();
 
                 getLocationsWeather();
             }
         };
+
+    public void createLocationsList() {
+        locationsList = getAddressListFromLatLong(currentLocation.latitude, currentLocation.longitude);
+    }
 
 
     //updates the snippet, Address etc when start and destination markers are dragged
@@ -513,6 +512,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
+
+
     //sets the starting location to gps location, otherwise sets startingLocationNeeded flag to true
     public void setUpOriginFromLocation(){
         if(lastKnownLocation==null){
@@ -543,6 +544,63 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public BikeBuddyLocation getTheDestination() {
         return theDestination;
+    }
+
+
+    // Weather Date/Time stuff
+    public void initDateTimeFunctions() {
+        //date time display stuff
+        currentDateTimeDisplay = findViewById(R.id.currentDateTimeDisplay);
+        weatherDateTimeDisplay = findViewById(R.id.weatherDateTimeDisplay);
+        Handler handler = new Handler();
+        this.dateTimeFunctions = new DateTimeFunctions(this,handler, currentDateTimeDisplay, weatherDateTimeDisplay);
+       // this.dateTimeFunctions = new DateTimeFunctions(this, mMap, handler, currentDateTimeDisplay);
+    }
+    public void dateTimeFunctionsPlusHour(View view) {
+        dateTimeFunctions.addHour();
+    }
+    public void dateTimeFunctionsMinusHour(View view) {
+        dateTimeFunctions.minusHour();
+    }
+    public void dateTimeFunctionsResetHour(View view) {
+        dateTimeFunctions.resetHour();
+    }
+
+
+
+//    boolean run=true; //set it to false if you want to stop the timer
+//    Handler mHandler = new Handler();
+
+
+//    public void timer() {
+//
+//        weatherDateTimeDisplay = findViewById(R.id.weatherDateTimeDisplay);
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                while (run) {
+//                    try {
+//                        Thread.sleep(1000);
+//                        mHandler.post(new Runnable() {
+//
+//                            @Override
+//                            public void run() {
+//                                Calendar c = Calendar.getInstance();
+//                                int min = c.get(Calendar.MINUTE);
+//                                int hour=c.get(Calendar.HOUR);
+//                                int sec = c.get(Calendar.SECOND);
+//                                weatherDateTimeDisplay.setText(String.valueOf(hour)+":"+String.valueOf(min)+":"+String.valueOf(sec));
+//                            }
+//                        });
+//                    } catch (Exception e) {
+//                    }
+//                }
+//            }
+//        }).start();}
+
+
+    public DateTimeFunctions getDateTimeFunctions() {
+        return dateTimeFunctions;
     }
 }
 

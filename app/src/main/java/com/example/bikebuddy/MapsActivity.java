@@ -152,6 +152,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+
     }
 
 
@@ -205,6 +206,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
             }
         });
+
+
     }
     /**
      * Saves the state of the map when the activity is paused.
@@ -439,7 +442,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 locationsList = getAddressListFromLatLong(currentLocation.latitude, currentLocation.longitude);
 
                 getLocationsWeather();
-                fetchNearbyPlace.fetch(lastKnownLocation.getLatitude(),lastKnownLocation.getLongitude());
+                fetchNearbyPlace.fetch(currentLocation.latitude,currentLocation.longitude);
 
             }
         };
@@ -505,6 +508,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     it.remove();
             }
         }
+
+//        fetchNearbyPlace.fetch(lastKnownLocation.getLatitude(),lastKnownLocation.getLongitude());
 
         mMap.clear();
         updateMap();

@@ -99,14 +99,11 @@ public class PlaceFunction {
 
         //option 3 similar to above but doesn't store the markers just displays them (this could have issues with the weather toggle)
         //LatLng latLng = new LatLng(lat, lon);
-     //   String gas = "@drawable/gasStation.png";
+        String gas = "@drawable/gasStation.png";
         //store the markers so when toggling the showWeather button it shows and hide the weather
-//       marker = googleMap.addMarker(new MarkerOptions().position(latLng).title("gas station").snippet("000")
-//               .icon(BitmapDescriptorFactory.fromBitmap(generateIcon())));
-
-        googleMap.addMarker(new MarkerOptions()
-                .position(latLng)
-                .title("Marker in Sydney"));
+       marker = googleMap.addMarker(new MarkerOptions().position(latLng).title("gas station").snippet("000")
+               .icon(BitmapDescriptorFactory.fromBitmap(generateIcon())));
+       markerArray.add(marker);
         //googleMap.addMarker(new MarkerOptions().position(latLng).title(description)
         //.icon(BitmapDescriptorFactory.fromBitmap(generateIcon(iconId))));
 

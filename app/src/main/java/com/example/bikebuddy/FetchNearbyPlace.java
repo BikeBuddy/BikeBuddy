@@ -19,14 +19,11 @@ public class FetchNearbyPlace {
 
         // gj.execute(st); //error trying to run multiple executes, so have to create new getJSON each time
         new GetPlaceJSON(mapsActivity).execute(st);
-        System.out.print("fetch place running");
-
     }
 
     //option 2: extend MapsActivity to access it's methods
     public String fetch2(double lat, double lon){
         //testToast("test");
-
         String s = "description";
         return s;
     }

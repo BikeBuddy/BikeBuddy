@@ -5,6 +5,8 @@ package com.example.bikebuddy;
 
 
         import android.os.AsyncTask;
+        import android.text.style.ScaleXSpan;
+        import android.widget.Toast;
 
         import com.google.android.gms.maps.GoogleMap;
 
@@ -16,6 +18,8 @@ package com.example.bikebuddy;
         import java.io.InputStreamReader;
         import java.net.HttpURLConnection;
         import java.net.URL;
+
+        import static android.widget.Toast.LENGTH_LONG;
 
 class GetPlaceJSON extends AsyncTask<String, Void, String> {
     //  String returnThisString;
@@ -51,15 +55,35 @@ class GetPlaceJSON extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String jsonString) {
         try {
             addWeather(jsonString);
+            System.out.print("onPostExecute gary");
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
     private void addWeather(String jsonString) throws JSONException {
-//        JSONObject obj = new JSONObject(jsonString);
-//
-//        JSONArray weather = obj.getJSONArray("weather");
+        System.out.print(jsonString);
+        System.out.print("add weather gary");
+        JSONObject obj = new JSONObject(jsonString);
+
+        JSONArray results = obj.getJSONArray("results");
+        System.out.print("inside addWeather");
+        System.out.print(results);
+        String item0 = results.getString(0);
+        JSONObject insideItem0 = new JSONObject(item0);
+        //String business_status_s = insideItem0.getString("place_id");
+        String geometry = insideItem0.getString("geometry");
+        JSONObject geometry1  = new JSONObject(geometry);
+        //get lat , lng
+        String location = geometry1.getString("location");
+        JSONObject location_obj = new JSONObject(location);
+        Double lat = location_obj.getDouble("lat");
+        Double lon = location_obj.getDouble("lng");
+
+
+        Toast toast = Toast.makeText(ma, Double.toString(lat) , Toast.LENGTH_LONG);
+        toast.show();
+
 //        JSONObject weather0 = weather.getJSONObject(0);
 //
 //
@@ -73,10 +97,11 @@ class GetPlaceJSON extends AsyncTask<String, Void, String> {
 //        String iconID = weather0.getString("icon"); //weather icon id
 //        System.out.println((iconID));
 //
-//        ma.weatherFunctions.addLocationsWeather(lat, lon, iconID, description);//adds weather Icon
-        System.out.print("gary");
-        System.out.print(jsonString);
+        //ma.weatherFunctions.addLocationsWeather(lat, lon, iconID, description);//adds weather Icon
+
     }
+
+
 
 
     //in this method we are fetching the json string

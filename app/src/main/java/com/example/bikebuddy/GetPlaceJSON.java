@@ -54,20 +54,16 @@ class GetPlaceJSON extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String jsonString) {
         try {
-            addWeather(jsonString);
+            addPlace(jsonString);
             System.out.print("onPostExecute gary");
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    private void addWeather(String jsonString) throws JSONException {
-        System.out.print(jsonString);
-        System.out.print("add weather gary");
+    private void addPlace(String jsonString) throws JSONException {
         JSONObject obj = new JSONObject(jsonString);
-
         JSONArray results = obj.getJSONArray("results");
-        System.out.print("inside addWeather");
         System.out.print(results);
         String item0 = results.getString(0);
         JSONObject insideItem0 = new JSONObject(item0);
@@ -77,32 +73,16 @@ class GetPlaceJSON extends AsyncTask<String, Void, String> {
         //get lat , lng
         String location = geometry1.getString("location");
         JSONObject location_obj = new JSONObject(location);
-        Double lat = location_obj.getDouble("lat");
-        Double lon = location_obj.getDouble("lng");
 
+        //extract lat, lng
+        double lat = location_obj.getDouble("lat");
+        double lon = location_obj.getDouble("lng");
 
+      // ma.placeFunctions.addLocationsPlace(lat, lon);//adds place Icon
+        ma.placeFunctions.addLocationsPlace(lat,lon);
         Toast toast = Toast.makeText(ma, Double.toString(lat) , Toast.LENGTH_LONG);
         toast.show();
-
-//        JSONObject weather0 = weather.getJSONObject(0);
-//
-//
-//        JSONObject coord = obj.getJSONObject("coord");
-//
-//        double lon = coord.getDouble("lon");
-//        double lat = coord.getDouble("lat");
-//
-//        String description = weather0.getString("description"); //description eg clear sky
-//        String main= weather0.getString("main"); //main eg Clear
-//        String iconID = weather0.getString("icon"); //weather icon id
-//        System.out.println((iconID));
-//
-        //ma.weatherFunctions.addLocationsWeather(lat, lon, iconID, description);//adds weather Icon
-
     }
-
-
-
 
     //in this method we are fetching the json string
     @Override

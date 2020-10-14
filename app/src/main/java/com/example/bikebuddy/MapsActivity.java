@@ -72,6 +72,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public FetchWeather fetchWeather;
     public FetchNearbyPlace fetchNearbyPlace;
     HashMap<String, String> weatherIcons;
+    public PlaceFunction placeFunctions;
 
     private GoogleMap mMap;
 
@@ -504,6 +505,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     it.remove();
             }
         }
+
         mMap.clear();
         updateMap();
     }

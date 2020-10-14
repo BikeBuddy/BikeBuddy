@@ -79,7 +79,7 @@ class GetPlaceJSON extends AsyncTask<String, Void, String> {
         double lon = location_obj.getDouble("lng");
 
       // ma.placeFunctions.addLocationsPlace(lat, lon);//adds place Icon
-      // ma.placeFunctions.addLocationsPlace(lat,lon);
+      //  ma.placeFunctions.addLocationsPlace(lat,lon);
         //Toast toast = Toast.makeText(ma, Double.toString(lat) , Toast.LENGTH_LONG);
         Toast toast = Toast.makeText(ma, item0 , Toast.LENGTH_LONG);
         toast.show();

@@ -509,8 +509,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
 
-//        fetchNearbyPlace.fetch(lastKnownLocation.getLatitude(),lastKnownLocation.getLongitude());
-
         mMap.clear();
         updateMap();
     }

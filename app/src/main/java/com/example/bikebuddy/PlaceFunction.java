@@ -33,17 +33,11 @@ public class PlaceFunction {
     private Marker marker;
     private ArrayList<Marker> markerArray = new ArrayList<Marker>();
     private boolean showMarker = true;
-
-
     public boolean isShowMarker() {
         return showMarker;
     }
-
-
-
     // default constructor for testing
     public PlaceFunction() {
-
     }
 
     public PlaceFunction(MapsActivity mapsActivity, GoogleMap googleMap) {
@@ -106,22 +100,6 @@ public class PlaceFunction {
        markerArray.add(marker);
         //googleMap.addMarker(new MarkerOptions().position(latLng).title(description)
         //.icon(BitmapDescriptorFactory.fromBitmap(generateIcon(iconId))));
-
-    }
-
-    //toggle the "showMarker" variable to show or hide the markers on the map
-    public void toggleWeather() {
-        System.out.println("toggle");
-        showMarker = !showMarker;
-        checkWeatherIconDisplay();
-
-    }
-
-    // set the markers visible or invisible
-    public void checkWeatherIconDisplay() {
-        for (Marker m : markerArray) {
-            m.setVisible((showMarker));
-        }
 
     }
 }

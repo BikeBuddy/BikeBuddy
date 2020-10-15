@@ -1,23 +1,5 @@
 package com.example.bikebuddy;
 
-import androidx.annotation.NonNull;
-
-
-import android.app.Activity;
-import android.content.Context;
-
-
-import android.location.Address;
-import android.location.Geocoder;
-import android.view.inputmethod.InputMethodManager;
-
-
-import com.google.android.gms.common.api.Status;
-
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
-
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -32,9 +14,14 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
+
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -42,29 +29,20 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import java.util.Locale;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback , GoogleMap.OnMarkerDragListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener {
 
     private static final String TAG = MapsActivity.class.getSimpleName();
 
@@ -87,7 +65,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private JSONRoutes jsonRoutes;// send requests and show routes on map with this object--PK
     private CameraPosition cameraPosition;
     private FusedLocationProviderClient fusedLocationProviderClient;
-
 
 
     // A default location (Auckland, New Zealand) and default zoom to use when location permission is
@@ -114,15 +91,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Boolean startingLocationNeeded = false;
 
 
-
-
     boolean routeStarted = false;//flag determined if a poly line between start and destination markers is drawn or not after map has been cleared
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-     //    Retrieve location and camera position from saved instance state.
+        //    Retrieve location and camera position from saved instance state.
         if (savedInstanceState != null) {
             lastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
             cameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
@@ -203,6 +178,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
     }
+
     /**
      * Saves the state of the map when the activity is paused.
      */
@@ -247,6 +223,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // go to found location
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(autoCompleteLatLng));
             }
+
             @Override
             public void onError(@NonNull Status status) {
 
@@ -256,35 +233,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-
     //Toggles the buttons visibility
     public void toggleRouteButton() {
         // make route button visible
         View routeButt = findViewById(R.id.route_button);
-          if(routeButt.getVisibility() == View.INVISIBLE)
-        {
+        if (routeButt.getVisibility() == View.INVISIBLE) {
             routeButt.setVisibility(View.VISIBLE);
-
-        }
-        else
-        {
+        } else {
             routeButt.setVisibility(View.INVISIBLE);
-       }
+        }
     }
 
     public void initRoute(View view) {
         // locations set, show route
-        if(startingOrigin !=null || theDestination!=null){
+        if (startingOrigin != null || theDestination != null) {
             try {
                 routeStarted = true; //sets flag so that the polyline for the route will be redrawn if map is cleared
                 mMap.clear();
                 updateMap();//adds polyline and markers onto map
-            }catch (Exception e){
+            } catch (Exception e) {
                 System.err.println(e);
             }
-        }else if(theDestination == null){
+        } else if (theDestination == null) {
             Toast.makeText(this, "Please Select Destination", Toast.LENGTH_LONG).show();
-        }else{
+        } else {
             Toast.makeText(this, "Please Select Origin", Toast.LENGTH_LONG).show();
         }
 
@@ -329,7 +301,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
             }
-        } catch (SecurityException e)  {
+        } catch (SecurityException e) {
             Log.e("Exception: %s", e.getMessage(), e);
         }
     }
@@ -392,7 +364,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 lastKnownLocation = null;
                 //getLocationPermission();
             }
-        } catch (SecurityException e)  {
+        } catch (SecurityException e) {
             Log.e("Exception: %s", e.getMessage());
         }
     }
@@ -426,56 +398,54 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //when the camera goes idle, new weather icons are drawn on the map
     private GoogleMap.OnCameraIdleListener onCameraIdleListener =
-        new GoogleMap.OnCameraIdleListener() {
-            @Override
-            public void onCameraIdle() {
-                zoomLevel = mMap.getCameraPosition().zoom;
-                currentLocation = mMap.getCameraPosition().target;
+            new GoogleMap.OnCameraIdleListener() {
+                @Override
+                public void onCameraIdle() {
+                    zoomLevel = mMap.getCameraPosition().zoom;
+                    currentLocation = mMap.getCameraPosition().target;
 
-                //creates new list of locations based on camera centre position.
-                locationsList = getAddressListFromLatLong(currentLocation.latitude, currentLocation.longitude);
+                    //creates new list of locations based on camera centre position.
+                    locationsList = getAddressListFromLatLong(currentLocation.latitude, currentLocation.longitude);
 
-                getLocationsWeather();
-            }
-        };
+                    getLocationsWeather();
+                }
+            };
 
 
     //updates the snippet, Address etc when start and destination markers are dragged
     public void onMarkerDragEnd(Marker marker) {
         startingOrigin.update();
-        if(theDestination!=null ) {
+        if (theDestination != null) {
             theDestination.update();
         }
         mMap.clear();//clears the old poly line if there was one
         startingOrigin.createMarker();
-        if(theDestination!=null)
+        if (theDestination != null)
             theDestination.createMarker();
     }
 
     //LatLng which are generated by long press on the map or from the address entered from the search bar will be input into this function
     //for the input latLang, sets the origin if not already set, if the origin is set,the latLang is used to set the destination
-    public void setAutoCompleteLatLang(LatLng latLang){
+    public void setAutoCompleteLatLang(LatLng latLang) {
         autoCompleteLatLng = latLang;
-        if(startingOrigin==null){
-            startingOrigin = new BikeBuddyLocation(true,gc,latLang, mMap);
+        if (startingOrigin == null) {
+            startingOrigin = new BikeBuddyLocation(true, gc, latLang, mMap);
             startingOrigin.createMarker();
             startingLocationNeeded = false;
-        }else if(theDestination==null){
-            theDestination = new BikeBuddyLocation(false,gc,latLang, mMap);
+        } else if (theDestination == null) {
+            theDestination = new BikeBuddyLocation(false, gc, latLang, mMap);
             theDestination.createMarker();
-        }else{//once both origin and destination has been set, all input LatLng will be used to update the destination
+        } else {//once both origin and destination has been set, all input LatLng will be used to update the destination
             theDestination.setCoordinate(latLang);
             theDestination.createMarker();
         }
-        if(theDestination != null && findViewById(R.id.route_button).getVisibility() == View.INVISIBLE)//if the destination has been selected for the first time, then the button will become visible
+        if (theDestination != null && findViewById(R.id.route_button).getVisibility() == View.INVISIBLE)//if the destination has been selected for the first time, then the button will become visible
             toggleRouteButton();
     }
 
 
-
-
     //Gets 20 locations which are within view in the camera
-    public  List<Address> getAddressListFromLatLong(double lat, double lng) {
+    public List<Address> getAddressListFromLatLong(double lat, double lng) {
 
         Geocoder geocoder = gc;
         List<Address> addressList = null;
@@ -490,13 +460,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     // Pulls weather data from the weather service api and generates weather icons onto the map
     public void getLocationsWeather() {
-        if (locationsList != null ){
-        //had to change to iterator in order to delete
-        Iterator<Address> it = locationsList.iterator();
+        if (locationsList != null) {
+            //had to change to iterator in order to delete
+            Iterator<Address> it = locationsList.iterator();
             while (it.hasNext()) {
                 Address a = it.next();
                 fetchWeather.fetch(a.getLatitude(), a.getLongitude());
-                if(it.hasNext())
+                if (it.hasNext())
                     it.remove();
             }
         }
@@ -505,7 +475,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void initWeatherFunctions() {
-       this.weatherFunctions = new WeatherFunctions(this, this.mMap);
+        this.weatherFunctions = new WeatherFunctions(this, this.mMap);
     }
 
     public void initFetchWeather() {
@@ -514,28 +484,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     //sets the starting location to gps location, otherwise sets startingLocationNeeded flag to true
-    public void setUpOriginFromLocation(){
-        if(lastKnownLocation==null){
-            startingLocationNeeded =true;
-        }else{
-            LatLng startLatLong = new LatLng(lastKnownLocation.getLatitude(),lastKnownLocation.getLongitude());
-            startingOrigin = new BikeBuddyLocation(true,gc, startLatLong, mMap);
+    public void setUpOriginFromLocation() {
+        if (lastKnownLocation == null) {
+            startingLocationNeeded = true;
+        } else {
+            LatLng startLatLong = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+            startingOrigin = new BikeBuddyLocation(true, gc, startLatLong, mMap);
             startingLocationNeeded = false;
         }
     }
 
 
     //redraws all the markers and polyline onto map
-    public void updateMap(){
-        if(startingOrigin!=null)
+    public void updateMap() {
+        if (startingOrigin != null)
             startingOrigin.createMarker();
-        if(theDestination!=null)
+        if (theDestination != null)
             theDestination.createMarker();
-        if(routeStarted)
+        if (routeStarted)
             jsonRoutes.getDirections(startingOrigin.coordinate, theDestination.coordinate);
     }
-    public void onMarkerDragStart(Marker marker) {    }
-    public void onMarkerDrag(Marker marker) {    }
+
+    public void onMarkerDragStart(Marker marker) {
+    }
+
+    public void onMarkerDrag(Marker marker) {
+    }
 
     public BikeBuddyLocation getStartingOrigin() {
         return startingOrigin;

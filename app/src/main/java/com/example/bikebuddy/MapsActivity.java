@@ -164,6 +164,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         initFetchWeather();
         initWeatherFunctions();
         initFetchNearbyPlace();
+        initPlaceFunctions();
 
         HashMap<String, Drawable> weatherIcons = new HashMap<String, Drawable>();
 
@@ -511,6 +512,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap.clear();
         updateMap();
+    }
+
+    public void initPlaceFunctions() {
+        this.placeFunctions = new PlaceFunction(this, this.mMap);
     }
 
     public void initWeatherFunctions() {

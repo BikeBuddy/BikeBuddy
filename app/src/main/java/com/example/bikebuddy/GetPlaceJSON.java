@@ -79,12 +79,17 @@ class GetPlaceJSON extends AsyncTask<String, Void, String> {
         double lon = location_obj.getDouble("lng");
 
       // ma.placeFunctions.addLocationsPlace(lat, lon);//adds place Icon
-      //  ma.placeFunctions.addLocationsPlace(lat,lon);
-        //Toast toast = Toast.makeText(ma, Double.toString(lat) , Toast.LENGTH_LONG);
-        Toast toast = Toast.makeText(ma, item0 , Toast.LENGTH_LONG);
+       ma.placeFunctions.addLocationsPlace(lat,lon);
+       //ma.placeFunctions.garyTest();
+     //  gary();
+        //Toast toast = Toast.makeText(ma, Double.toString(results.length()) , Toast.LENGTH_LONG);
+//        Toast toast = Toast.makeText(ma, item0 , Toast.LENGTH_LONG);
+//        toast.show();
+    }
+    public void gary(){
+        Toast toast = Toast.makeText(ma, "from getplacejson gary" , Toast.LENGTH_LONG);
         toast.show();
     }
-
     //in this method we are fetching the json string
     @Override
     protected String doInBackground(String... strings) {

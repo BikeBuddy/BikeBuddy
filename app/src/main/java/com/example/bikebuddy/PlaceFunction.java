@@ -17,8 +17,9 @@ import java.util.ArrayList;
         import android.graphics.Bitmap;
         import android.graphics.drawable.BitmapDrawable;
         import android.graphics.drawable.Drawable;
+import android.widget.Toast;
 
-        import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap;
         import com.google.android.gms.maps.model.BitmapDescriptorFactory;
         import com.google.android.gms.maps.model.LatLng;
         import com.google.android.gms.maps.model.Marker;
@@ -45,7 +46,10 @@ public class PlaceFunction {
         this.googleMap = googleMap;
 
     }
-
+    public void garyTest(){
+        Toast toast = Toast.makeText(mapsActivity, "from place function test" , Toast.LENGTH_LONG);
+        toast.show();
+    }
     /*
     This method takes an iconName and returns the corresponding Bitmap
     */
@@ -95,7 +99,7 @@ public class PlaceFunction {
         //LatLng latLng = new LatLng(lat, lon);
         String gas = "@drawable/gasStation.png";
         //store the markers so when toggling the showWeather button it shows and hide the weather
-       marker = googleMap.addMarker(new MarkerOptions().position(latLng).title("gas station").snippet("000")
+       marker = googleMap.addMarker(new MarkerOptions().position(latLng).title("gary creates gas station").snippet("000")
                .icon(BitmapDescriptorFactory.fromBitmap(generateIcon())));
        markerArray.add(marker);
         //googleMap.addMarker(new MarkerOptions().position(latLng).title(description)

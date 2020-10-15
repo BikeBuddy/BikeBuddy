@@ -16,7 +16,9 @@ public class FetchNearbyPlace {
         //String st = "https://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lon+"&APPID=d2222fc373d644fa109aea09a4046a3c";
         //String st = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=1500&type=restaurant&keyword=cruise&key=AIzaSyBKjjjLBTAk_0vWHH2S4yzgDvQKDWGu2-w";
         //String st = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+lat+","+lon+"&radius=1500&type=restaurant&keyword=cruise&key=AIzaSyBKjjjLBTAk_0vWHH2S4yzgDvQKDWGu2-w";
-        String st = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=gas%20of%20station&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=AIzaSyBKjjjLBTAk_0vWHH2S4yzgDvQKDWGu2-w";
+        //String st = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=gas%20of%20station&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=AIzaSyBKjjjLBTAk_0vWHH2S4yzgDvQKDWGu2-w";
+        //String st = "https://maps.googleapis.com/maps/api/place/textsearch/xml?query=restaurants+in+Sydney&key=AIzaSyBKjjjLBTAk_0vWHH2S4yzgDvQKDWGu2-w";
+         String st = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=gas+station&key=AIzaSyBKjjjLBTAk_0vWHH2S4yzgDvQKDWGu2-w";
         // gj.execute(st); //error trying to run multiple executes, so have to create new getJSON each time
         new GetPlaceJSON(mapsActivity).execute(st);
     }

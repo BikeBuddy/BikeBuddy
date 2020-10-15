@@ -46,10 +46,7 @@ public class PlaceFunction {
         this.googleMap = googleMap;
 
     }
-    public void garyTest(){
-        Toast toast = Toast.makeText(mapsActivity, "from place function test" , Toast.LENGTH_LONG);
-        toast.show();
-    }
+
     /*
     This method takes an iconName and returns the corresponding Bitmap
     */

@@ -62,8 +62,31 @@ class GetPlaceJSON extends AsyncTask<String, Void, String> {
     }
 
     private void addPlace(String jsonString) throws JSONException {
+        JSONObject obj = new JSONObject(jsonString);
+        JSONArray results = obj.getJSONArray("results");
+        System.out.print(results);
+        String item0 = results.getString(0);
+        JSONObject insideItem0 = new JSONObject(item0);
+        //String business_status_s = insideItem0.getString("place_id");
+        String geometry = insideItem0.getString("geometry");
+        String formattedAddress = insideItem0.getString("formatted_address");
+
+        JSONObject geometry1  = new JSONObject(geometry);
+        //get lat , lng
+        String location = geometry1.getString("location");
+        JSONObject location_obj = new JSONObject(location);
+
+        String item1 = results.getString(1);
+        JSONObject insideItem1 = new JSONObject(item1);
+        //String business_status_s = insideItem0.getString("place_id");
+        String geometryONE = insideItem1.getString("geometry");
+        JSONObject geometry2  = new JSONObject(geometryONE);
+        //get lat , lng
+        String location1 = geometry2.getString("location");
+        JSONObject location_obj1 = new JSONObject(location1);
+
 //        JSONObject obj = new JSONObject(jsonString);
-//        JSONArray results = obj.getJSONArray("results");
+//        JSONArray results = obj.getJSONArray("candidates");
 //        System.out.print(results);
 //        String item0 = results.getString(0);
 //        JSONObject insideItem0 = new JSONObject(item0);
@@ -74,34 +97,29 @@ class GetPlaceJSON extends AsyncTask<String, Void, String> {
 //        String location = geometry1.getString("location");
 //        JSONObject location_obj = new JSONObject(location);
 
-        JSONObject obj = new JSONObject(jsonString);
-        JSONArray results = obj.getJSONArray("candidates");
-        System.out.print(results);
-        String item0 = results.getString(0);
-        JSONObject insideItem0 = new JSONObject(item0);
-        //String business_status_s = insideItem0.getString("place_id");
-        String geometry = insideItem0.getString("geometry");
-        JSONObject geometry1  = new JSONObject(geometry);
-        //get lat , lng
-        String location = geometry1.getString("location");
-        JSONObject location_obj = new JSONObject(location);
-
         //extract lat, lng
         double lat = location_obj.getDouble("lat");
         double lon = location_obj.getDouble("lng");
 
+        //extract lat, lng
+        double lat1 = location_obj1.getDouble("lat");
+        double lon1 = location_obj1.getDouble("lng");
       // ma.placeFunctions.addLocationsPlace(lat, lon);//adds place Icon
-       ma.placeFunctions.addLocationsPlace(lat,lon);
-       //ma.placeFunctions.garyTest();
-     //  gary();
-        //Toast toast = Toast.makeText(ma, Double.toString(results.length()) , Toast.LENGTH_LONG);
-        Toast toast = Toast.makeText(ma, item0 , Toast.LENGTH_LONG);
+//       ma.placeFunctions.addLocationsPlace(-36,174);
+//        ma.placeFunctions.addLocationsPlace(-36.8,174);
+//        ma.placeFunctions.addLocationsPlace(-36.8858214,174.8028608);
+//        ma.placeFunctions.addLocationsPlace(-36.887636,174.818723);
+//        ma.placeFunctions.addLocationsPlace(-36.8766438,174.8253584);
+        ma.placeFunctions.addLocationsPlace(lat,lon);
+        ma.placeFunctions.addLocationsPlace(lat1,lon1);
+
+        //Toast toast = Toast.makeText(ma, Double.toString(results.lengt174.818723h()) , Toast.LENGTH_LONG);
+       // Toast toast = Toast.makeText(ma, Integer.toString(results.length()) , Toast.LENGTH_LONG);
+        //Toast toast = Toast.makeText(ma, Double.toString(lat1) , Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(ma, formattedAddress , Toast.LENGTH_LONG);
         toast.show();
     }
-    public void gary(){
-        Toast toast = Toast.makeText(ma, "from getplacejson gary" , Toast.LENGTH_LONG);
-        toast.show();
-    }
+
     //in this method we are fetching the json string
     @Override
     protected String doInBackground(String... strings) {

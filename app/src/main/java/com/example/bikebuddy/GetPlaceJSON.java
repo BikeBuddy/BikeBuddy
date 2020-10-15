@@ -62,8 +62,20 @@ class GetPlaceJSON extends AsyncTask<String, Void, String> {
     }
 
     private void addPlace(String jsonString) throws JSONException {
+//        JSONObject obj = new JSONObject(jsonString);
+//        JSONArray results = obj.getJSONArray("results");
+//        System.out.print(results);
+//        String item0 = results.getString(0);
+//        JSONObject insideItem0 = new JSONObject(item0);
+//        //String business_status_s = insideItem0.getString("place_id");
+//        String geometry = insideItem0.getString("geometry");
+//        JSONObject geometry1  = new JSONObject(geometry);
+//        //get lat , lng
+//        String location = geometry1.getString("location");
+//        JSONObject location_obj = new JSONObject(location);
+
         JSONObject obj = new JSONObject(jsonString);
-        JSONArray results = obj.getJSONArray("results");
+        JSONArray results = obj.getJSONArray("candidates");
         System.out.print(results);
         String item0 = results.getString(0);
         JSONObject insideItem0 = new JSONObject(item0);
@@ -83,8 +95,8 @@ class GetPlaceJSON extends AsyncTask<String, Void, String> {
        //ma.placeFunctions.garyTest();
      //  gary();
         //Toast toast = Toast.makeText(ma, Double.toString(results.length()) , Toast.LENGTH_LONG);
-//        Toast toast = Toast.makeText(ma, item0 , Toast.LENGTH_LONG);
-//        toast.show();
+        Toast toast = Toast.makeText(ma, item0 , Toast.LENGTH_LONG);
+        toast.show();
     }
     public void gary(){
         Toast toast = Toast.makeText(ma, "from getplacejson gary" , Toast.LENGTH_LONG);

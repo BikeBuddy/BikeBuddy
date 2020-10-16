@@ -8,7 +8,6 @@
     xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-
     <!-- Side Menu Thingy -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
@@ -38,8 +37,8 @@
                 android:background="@drawable/gray_border"
                 android:text="Clear Markers"
                 android:onClick="sideMenuClear"
-
                 />
+          
             <!-- weather toggle button -->
             <ImageButton
                 android:id="@+id/side_menu_weather"
@@ -81,16 +80,15 @@
                 android:background="@drawable/gray_border"
                 android:onClick="toggleFuelInfo"
                 />
+          
         </RelativeLayout>
     </com.google.android.material.navigation.NavigationView>
 
     <!-- All renderable elements must fall within this relativelayout      -->
     <!-- keep map fragment at bottom of list so map stays below everything -->
     <RelativeLayout
-
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         android:orientation="vertical"
         android:id="@+id/mainLayout">
 

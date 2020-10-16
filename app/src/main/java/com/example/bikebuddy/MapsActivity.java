@@ -36,6 +36,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -160,7 +161,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
         // add listener for weather toggle button within the side menu
-        final Button sideWeatherButton = (Button) findViewById(R.id.side_menu_weather);
+        final ImageButton sideWeatherButton = (ImageButton) findViewById(R.id.side_menu_weather);
         sideWeatherButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 weatherFunctions.toggleWeather();
@@ -280,12 +281,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
           if(routeButt.getVisibility() == View.INVISIBLE)
         {
             routeButt.setVisibility(View.VISIBLE);
-
         }
         else
         {
             routeButt.setVisibility(View.INVISIBLE);
-       }
+        }
     }
 
     public void initRoute(View view) {
@@ -625,5 +625,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    public void toggleFuelInfo(View view) {
+        if(view.getId() == R.id.side_menu_fuel || view.getId() == R.id.fuel_close)
+        {
+            View fuelInf = findViewById(R.id.fuel_info_window);
+            if(fuelInf.getVisibility() == View.INVISIBLE)
+            {
+                fuelInf.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                fuelInf.setVisibility(View.INVISIBLE);
+            }
+        }
+    }
+
+    public void toggleStations(View view) {
+        if(view.getId() == R.id.fuel_toggle_stations)
+        {
+            /**
+             * to do: toggle gas station visibility
+             */
+        }
+    }
 }
 

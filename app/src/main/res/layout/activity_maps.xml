@@ -23,46 +23,63 @@
         <RelativeLayout
             android:id="@+id/side_menu_footer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="200dp"
             android:layout_gravity="bottom">
 
-            <!-- weather toggle button -->
-            <Button
-                android:id="@+id/side_menu_weather"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="15dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/gray_border"
-                android:text="Toggle Weather"
-                android:onClick="toggleWeather"
-            />
-
-            <!-- map toggle button -->
-            <Button
-                android:id="@+id/side_menu_map"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="125dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/gray_border"
-                android:text="Map Style"
-                android:onClick="sideMenuMapStyle"
-                />
-
-            <!-- clear markers button -->
+            <!-- Clear Markers Button -->
             <Button
                 android:id="@+id/side_menu_clear"
-                android:layout_width="100dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="235dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginLeft="13dp"
+                android:layout_marginBottom="80dp"
+                android:layout_alignParentBottom="true"
                 android:background="@drawable/gray_border"
                 android:text="Clear Markers"
                 android:onClick="sideMenuClear"
+
+                />
+            <!-- weather toggle button -->
+            <ImageButton
+                android:id="@+id/side_menu_weather"
+                android:src="@drawable/ic_cloud"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/gray_border"
+                android:onClick="toggleWeather"
+                />
+
+            <!-- map toggle button -->
+            <ImageButton
+                android:id="@+id/side_menu_map"
+                android:src="@drawable/ic_map"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="125dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/gray_border"
+                android:onClick="sideMenuMapStyle"
+                />
+
+            <!-- fuel info button -->
+            <ImageButton
+                android:id="@+id/side_menu_fuel"
+                android:src="@drawable/ic_fuel"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="235dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/gray_border"
+                android:onClick="toggleFuelInfo"
                 />
         </RelativeLayout>
     </com.google.android.material.navigation.NavigationView>
@@ -150,6 +167,44 @@
             android:onClick="toggleWeather"
             android:text="Show Weather"/>
 
+
+        <!-- Fuel info window -->
+        <RelativeLayout
+            android:id="@+id/fuel_info_window"
+            android:layout_width="250dp"
+            android:layout_height="300dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="60dp"
+            android:layout_marginRight="20dp"
+            android:elevation="10dp"
+            android:background="@drawable/white_border"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+
+
+            <!-- Put fuel stuff here -->
+
+            <Button
+                android:id="@+id/fuel_toggle_stations"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="40dp"
+                android:text="Toggle Stations"
+                />
+
+            <ImageButton
+                android:id="@+id/fuel_close"
+                android:src="@drawable/ic_cross"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:onClick="toggleFuelInfo"
+                />
+
+        </RelativeLayout>
 
 
         <!-- the map fragment -->

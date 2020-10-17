@@ -59,7 +59,6 @@ class GetJSON extends AsyncTask<String, Void, String> {
         JSONArray weather = obj.getJSONArray("weather");
         JSONObject weather0 = weather.getJSONObject(0);
 
-
         JSONObject coord = obj.getJSONObject("coord");
 
         double lon = coord.getDouble("lon");

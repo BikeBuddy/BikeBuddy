@@ -108,7 +108,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        tripManager = new TripManager(this, gc);
+        tripManager = new TripManager(this);
 
         routeButton = (Button) findViewById(R.id.route_button);
 
@@ -163,8 +163,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //action listener for draggable markers
         mMap.setOnMarkerDragListener(this);
-
-        //ActionListener for long press --PK
 
     }
     /**

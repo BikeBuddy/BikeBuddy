@@ -1,6 +1,5 @@
 package com.example.bikebuddy;
 
-import android.location.Geocoder;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -12,44 +11,32 @@ import com.google.android.gms.maps.model.Marker;
 
 import java.util.ArrayList;
 
-import static java.lang.Thread.sleep;
+
 
 public class TripManager {
     private JSONRoutes jsonRoutes;// send requests and show routes on map with this object--PK
-    private Geocoder gc;//used to obtain the address of a location based on the lat long coordinates
     private MapsActivity mapsActivity;
     // Locations for route planning/generating
     private BikeBuddyLocation startingOrigin;
     private BikeBuddyLocation theDestination;
-    // Boolean for telling route initialization the user has no location
-    Boolean startingLocationNeeded = false;
-    boolean routeStarted = false;//flag determined if a poly line between start and destination markers is drawn or not after map has been cleared
- //   private Button  addMarkerButton;
-    private Button  removeMarkerButton;
-    private Integer clickedMarker;
 
+    Boolean startingLocationNeeded = false; // Boolean for telling route initialization the user has no location
+    boolean routeStarted = false;//flag determined if a poly line between start and destination markers is drawn or not after map has been cleared
+
+    private Button  removeMarkerButton;
+    private Integer clickedMarker;//This value will be the tag value of the clicked marker
     // init data for autocomplete to store
     private LatLng autoCompleteLatLng;
     private GoogleMap mMap;
     private ArrayList<BikeBuddyLocation> locations;
 
-    public TripManager(MapsActivity activity, Geocoder gc){
+    public TripManager(MapsActivity activity){
         this.mapsActivity = activity;
-        this.gc = gc;
         locations = new ArrayList<>();
         initMarkerButtons();
     }
 
     public void initMarkerButtons(){
-//        addMarkerButton = (Button) mapsActivity.findViewById(R.id.addLegButton);
-//        addMarkerButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if(clickedMarker != null){
-//                    showMarkerButtons(false);
-//                }
-//            }
-//        });
         removeMarkerButton = (Button) mapsActivity.findViewById(R.id.undoMarkerButton);
         removeMarkerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,40 +53,26 @@ public class TripManager {
     public void setUpMapObjects(GoogleMap googleMap){
         this.mMap = googleMap;
         setJSONRoutes(mapsActivity.getResources().getString(R.string.google_maps_key), mMap);
+        AsyncGeoCoder.setKey(mapsActivity.getResources().getString(R.string.google_maps_key));
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             public void onMapLongClick(LatLng latLng) {
                 setAutoLatLang(latLng);
                 mMap.clear();
                 updateMap();
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-//                Integer markerID = getMarkerIDByLatLong(latLng);
-//                Toast.makeText(mapsActivity.getApplicationContext(),"tag "+ markerID.toString(),Toast.LENGTH_LONG );
-//                setFocusedMarker(markerID);
-//                //MarkerID will have a null value, if a weather marker is clicked
-//                //The bounds for markerID are so that the option to remove or add legs only appears for legs and not the start or destination
-//                if(markerID!=null && markerID >0 && markerID < getLocations().size()-1){
-//                    showMarkerButtons(true);
-//                }
-
-                //  else if(tripManager.getStartingOrigin()==null){
-                //       tripManager.showMarkerButtons(false);
-                //  }
             }
         });
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
+                marker.showInfoWindow();
+                if(mMap.getCameraPosition().equals(marker.getPosition()))
+                    mMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
                 updateMarkerTags();
                 Integer markerTag = (Integer) marker.getTag();
                 if(markerTag != null){
                     setFocusedMarker(markerTag);
-                    try {
-                        sleep(5);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                     showMarkerButtons(true);
                     return true;
                 }
@@ -119,20 +92,15 @@ public class TripManager {
             public void onCameraMove() {
                 showMarkerButtons(false);
             }
-
         });
     }
 
 
     public void showMarkerButtons(boolean show){
-        if(show){
-      //      addMarkerButton.setVisibility(View.VISIBLE);
+        if(show)
             removeMarkerButton.setVisibility(View.VISIBLE);
-        }else{
-    //        addMarkerButton.setVisibility(View.INVISIBLE);
+        else
             removeMarkerButton.setVisibility(View.INVISIBLE);
-        }
-
     }
 
     public void setJSONRoutes(String key, GoogleMap mMap){
@@ -146,15 +114,15 @@ public class TripManager {
     public void setAutoLatLang(LatLng latLang){
         autoCompleteLatLng = latLang;
         if(startingOrigin==null){
-            setStartingOrigin(new BikeBuddyLocation(true,gc,latLang, mMap));
+            setStartingOrigin(new BikeBuddyLocation(true,latLang, mMap));
             startingOrigin.createMarker();
             startingLocationNeeded = false;
         }else if(theDestination==null){
-            setDestination(theDestination = new BikeBuddyLocation(false,gc,latLang, mMap));
+            setDestination(theDestination = new BikeBuddyLocation(false,latLang, mMap));
             theDestination.setAsDestination();
             theDestination.createMarker();
         }else{//once both origin and destination has been set, all input LatLng will be used to update the destination
-            BikeBuddyLocation leg = new BikeBuddyLocation(false,gc, latLang ,mMap);
+            BikeBuddyLocation leg = new BikeBuddyLocation(false, latLang ,mMap);
             if(locations.size() < 3)
                 addLeg(leg, 1);
             else
@@ -192,7 +160,7 @@ public class TripManager {
         ArrayList<LatLng> latLngLocations = new ArrayList<>();//list will be used by jsonRoutes to send a request to google directions
         for(BikeBuddyLocation location: locations){//updates/redraws all the location markers on map
             location.update();
-            latLngLocations.add(location.coordinate);
+            latLngLocations.add(location.getCoordinate());
         }
         if(locations.size()>1 && routeStarted){
             jsonRoutes.setLocations(latLngLocations);
@@ -206,7 +174,7 @@ public class TripManager {
             startingLocationNeeded =true;
         }else{
             LatLng startLatLong = new LatLng(mapsActivity.lastKnownLocation.getLatitude(),mapsActivity.lastKnownLocation.getLongitude());
-            startingOrigin = new BikeBuddyLocation(true,gc, startLatLong, mMap);
+            startingOrigin = new BikeBuddyLocation(true, startLatLong, mMap);
             startingLocationNeeded = false;
         }
     }
@@ -221,7 +189,6 @@ public class TripManager {
     public void setStartingOrigin(BikeBuddyLocation startingOrigin){
         locations.add(0, startingOrigin);
         this.startingOrigin = startingOrigin;
-        jsonRoutes.setStart(startingOrigin.coordinate);
     }
 
     //last index is replaced by input BikeBikeBuddyLocation, it does NOT add to the list
@@ -229,12 +196,10 @@ public class TripManager {
         locations.add(destination);
         theDestination = destination;
         theDestination.setAsDestination();
-        jsonRoutes.setDestination(destination.coordinate);
     }
 
     public void addLeg(BikeBuddyLocation leg, int legNumber){
         locations.add(legNumber, leg);
-        jsonRoutes.addLeg(leg.coordinate, legNumber);
     }
 
     public void updateMarkerTags(){
@@ -244,10 +209,10 @@ public class TripManager {
     }
     public void removeLeg(int leg){
         boolean removeDestination = false;
+        boolean removeOrigin = false;
         if(locations.get(leg).isDestination())//if user wants to remove destination
             removeDestination = true;
-        boolean removeOrigin = false;
-        if(locations.get(leg).isOrigin())
+        else if(locations.get(leg).isOrigin())
             removeOrigin = true;
         if(leg >= 0 && leg < locations.size()){
             locations.get(leg).setInvisible();//setting the marker invisible before removing from array, else it still appears on map
@@ -286,10 +251,10 @@ public class TripManager {
         return locations;
     }
 
-    public int getMarkerIDByLatLong(LatLng latLng){
+    public int getMarkerIDByLatLong(LatLng latLng){//Marker ID also corrosponds to its Index position in BikeBuddyLocation ArrayList
         updateMarkerTags();
         for(BikeBuddyLocation location: locations){
-            if(location.coordinate.equals(latLng)){
+            if(location.getCoordinate().equals(latLng)){
                 return (Integer) location.marker.getTag();
             }
         }

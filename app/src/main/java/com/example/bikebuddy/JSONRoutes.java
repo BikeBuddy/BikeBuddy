@@ -2,6 +2,8 @@ package com.example.bikebuddy;
 
 
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
@@ -20,6 +22,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 //@Author PK
 public class JSONRoutes {
@@ -42,29 +45,34 @@ public class JSONRoutes {
         String responseStatus = recievedJsonDirections.getString("status");
        // String responseStatus = status.getString("value");
         if(responseStatus.equals("OK")) {
-            JSONArray jsonRoutes = recievedJsonDirections.getJSONArray("routes");
-            JSONObject jsonRoute = jsonRoutes.getJSONObject(0);
-            JSONObject jsonPolyline = jsonRoute.getJSONObject("overview_polyline");
-            JSONArray jsonLegs = jsonRoute.getJSONArray("legs");
-            JSONObject jsonLeg = jsonLegs.getJSONObject(0);
-            JSONObject jsonDistance = jsonLeg.getJSONObject("distance");
-            JSONObject jsonDuration = jsonLeg.getJSONObject("duration");
-            newTrip = new Trip();
-            newTrip.distance = jsonDistance.getInt("value");
-            newTrip.duration = jsonDuration.getInt("value");
-            newTrip.startLocation = locations.get(0);
-            newTrip.endLocation = locations.get(locations.size() - 1);
-            newTrip.start = jsonLeg.getString("start_address");
-            newTrip.end = jsonLeg.getString("end_address");
-            newTrip.encodedPolyLine = jsonPolyline.getString("points");
-            newTrip.decodePolyLine();
-            return newTrip;
+             return parseDirectionsToTrip(recievedJsonDirections);
         }
         //else if google directions is unable to find a route for the specified locations
         else if(responseStatus.equals("NOT_FOUND") || responseStatus.equals("ZERO_RESULTS")) {
             Toast.makeText(mapsActivity.getApplicationContext(), "A route can not be generated from the locations you have chosen", Toast.LENGTH_LONG);
         }
         return null;
+    }
+
+    //Parses JSON Object to a Trip class
+    public Trip parseDirectionsToTrip(JSONObject recievedJsonDirections) throws JSONException {
+        JSONArray jsonRoutes = recievedJsonDirections.getJSONArray("routes");
+        JSONObject jsonRoute = jsonRoutes.getJSONObject(0);
+        JSONObject jsonPolyline = jsonRoute.getJSONObject("overview_polyline");
+        JSONArray jsonLegs = jsonRoute.getJSONArray("legs");
+        JSONObject jsonLeg = jsonLegs.getJSONObject(0);
+        JSONObject jsonDistance = jsonLeg.getJSONObject("distance");
+        JSONObject jsonDuration = jsonLeg.getJSONObject("duration");
+        newTrip = new Trip();
+        newTrip.distance = jsonDistance.getInt("value");
+        newTrip.duration = jsonDuration.getInt("value");
+        newTrip.startLocation = locations.get(0);
+        newTrip.endLocation = locations.get(locations.size() - 1);
+        newTrip.start = jsonLeg.getString("start_address");
+        newTrip.end = jsonLeg.getString("end_address");
+        newTrip.encodedPolyLine = jsonPolyline.getString("points");
+        newTrip.decodePolyLine();
+        return newTrip;
     }
 
     //shows the polyline(route) of a trip onto the map
@@ -77,7 +85,7 @@ public class JSONRoutes {
         LatLng midPoint = aTrip.points.get(aTrip.points.size() / 2);
         mMap.addMarker(new MarkerOptions().position(midPoint)
                 .snippet(aTrip.getTripDuration())
-                .title(aTrip.getTripDistance()).icon(null)
+                .title(aTrip.getTripDistance()).icon(null).flat(true)
         ).showInfoWindow();//BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)
 
     }
@@ -117,7 +125,6 @@ public class JSONRoutes {
                 }
                 startAndEnd += waypoint;
             }
-
         }
         String jsonRequestURL = apiUrl1 + startAndEnd + apiUrl2;
         getDirectionsResponse(jsonRequestURL);
@@ -143,6 +150,7 @@ public class JSONRoutes {
             @Override
             protected String doInBackground(Void... voids) {
                 try {
+
                     URL url = new URL(jsonRequestURL);
                     HttpURLConnection con = (HttpURLConnection) url.openConnection();
                     StringBuilder sb = new StringBuilder();
@@ -177,21 +185,6 @@ public class JSONRoutes {
         return locations.get(locations.size()-1);
     }
 
-    public void setStart(LatLng start){
-        if(locations.isEmpty()){
-            locations.add(start);
-        }else{
-            locations.set(0, start);
-        }
-    }
-
-    public void setDestination(LatLng destination){
-        locations.add(locations.size(), destination);
-    }
-
-    public void addLeg(LatLng leg, int legNum){
-        locations.add(legNum-1, leg);
-    }
 
     public void setLocations(ArrayList<LatLng> locations){
         this.locations = locations;

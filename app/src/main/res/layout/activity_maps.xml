@@ -88,10 +88,10 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="165dp"
         android:layout_marginLeft="165dp"
-        android:layout_marginTop="245dp"
+        android:layout_marginTop="226dp"
         android:layout_marginEnd="166dp"
         android:layout_marginRight="166dp"
-        android:layout_marginBottom="438dp"
+        android:layout_marginBottom="458dp"
         android:text="Remove"
         android:textSize="11sp"
         android:visibility="invisible" />

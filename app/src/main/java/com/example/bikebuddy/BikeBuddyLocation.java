@@ -16,13 +16,12 @@ import java.io.IOException;
  */
 public class BikeBuddyLocation {
 
-    LatLng coordinate;//the lat long of the location
+    private LatLng coordinate;//the lat long of the location
     Marker marker;
     GoogleMap mMap;//reference to the map
-    Address address; //address of the location ie local details such as city name
+    private String address; //address of the location ie local details such as city name
     private boolean isOrigin;//marker will be different depending if its the start or destination
     private boolean isDestination;
-    Geocoder gc; //used to obtain the address from the coordinate
     private boolean isVisible;
 
     public boolean isOrigin() {
@@ -41,9 +40,8 @@ public class BikeBuddyLocation {
         isDestination = destination;
     }
 
-    public BikeBuddyLocation(boolean isOrigin, Geocoder gc, LatLng autoCompleteLatLang, GoogleMap mMap){
+    public BikeBuddyLocation(boolean isOrigin, LatLng autoCompleteLatLang, GoogleMap mMap){
         this.isOrigin = isOrigin;
-        this.gc = gc;
         this.mMap = mMap;
         coordinate= autoCompleteLatLang;
         isDestination = false;
@@ -62,21 +60,17 @@ public class BikeBuddyLocation {
             this.marker.setTitle("Destination");
         }else{
             this.marker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
-            this.marker.setTitle("Leg");
-            this.marker.setSnippet("sdkfjsd \n asd");
-
+            this.marker.setTitle("via: ");
         }
+        new AsyncGeoCoder(this).execute();
         this.marker.setVisible(isVisible);
-        this.marker.showInfoWindow();
-
-//        try {// The snippet will include the city name if the geo coder recieves atleast once response from the places api
-////            address= gc.getFromLocation(coordinate.latitude ,coordinate.longitude,1).get(0);
-//            if(address!= null)
-//                this.marker.setSnippet(address.getLocality() );
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
     }
+
+    public void updateSnippet(){
+        if(address != null)
+            this.marker.setSnippet(address);
+    }
+
 
     //either from long pressing the map, or using the auto complete search. An already existing destination/origin will be updated via this function.
     public void setCoordinate(LatLng coordinate){
@@ -106,4 +100,14 @@ public class BikeBuddyLocation {
         this.isVisible = false;
     }
 
+    public LatLng getCoordinate(){
+        return this.coordinate;
+    }
+
+    public synchronized void setAddress(String address){
+        this.address = address;
+    }
+    public String getAddress(){
+        return this.address;
+    }
 }

@@ -208,6 +208,37 @@
                 android:title="@string/max_range" />
 
             <TextView
+                android:id="@+id/textTitleTripDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textFuelUsed"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="272dp"
+                android:layout_marginRight="272dp"
+                android:layout_marginBottom="-60dp"
+                android:text="@string/trip_distance_km"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/textTripDistance"
+                android:layout_width="106dp"
+                android:layout_height="49dp"
+                android:layout_below="@id/textFuelUsed"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginEnd="172dp"
+                android:layout_marginRight="172dp"
+                android:layout_marginBottom="432dp"
+                android:ems="10"
+                android:hint="@string/Fuel_Used"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                android:textSize="12sp"
+                android:title="@string/trip_distance" />
+
+            <TextView
                 android:id="@+id/textTitleMaxRange"
                 android:layout_width="115dp"
                 android:layout_height="32dp"

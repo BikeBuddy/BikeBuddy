@@ -2,38 +2,35 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:map="http://schemas.android.com/apk/res-auto">
 
-    <item android:title="Route Info"
-        android:id="@+id/route_info">
+    <item
+        android:id="@+id/route_info"
+        android:title="Route Info">
         <menu>
-            <item android:title="Distance: "
-                android:id="@+id/distance"/>
-
-            <item android:title="Duration: "
-                android:id="@+id/duration"/>
-
+            <item
+                android:id="@+id/distance"
+                android:title="Distance: " />
+            <item
+                android:id="@+id/duration"
+                android:title="Duration: " />
         </menu>
     </item>
 
-    <item android:title="Markers"
-        android:id="@+id/marker_list">
+    <item
+        android:id="@+id/marker_list"
+        android:title="Markers">
         <menu>
             <item
-                android:title="Marker 1"
                 android:id="@+id/marker_1"
                 android:icon="@drawable/ic_marker"
-                />
+                android:title="Marker 1" />
             <item
-                android:title="Marker 2"
                 android:id="@+id/marker_2"
                 android:icon="@drawable/ic_marker"
-                />
+                android:title="Marker 2" />
             <item
-                android:title="Marker 3"
                 android:id="@+id/marker_3"
                 android:icon="@drawable/ic_marker"
-                />
+                android:title="Marker 3" />
         </menu>
     </item>
-
-
 </menu>

@@ -1,27 +1,5 @@
 package com.example.bikebuddy;
 
-import androidx.annotation.NonNull;
-
-import android.app.Activity;
-import android.content.Context;
-
-import android.location.Address;
-import android.location.Geocoder;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.SubMenu;
-import android.view.inputmethod.InputMethodManager;
-
-import com.google.android.gms.common.api.Status;
-
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentActivity;
-
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -30,6 +8,9 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -40,6 +21,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.common.api.Status;
@@ -59,18 +41,12 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
-import java.util.Locale;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.internal.NavigationMenuItemView;
-import com.google.android.material.navigation.NavigationView;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener {
 
@@ -558,16 +534,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return theDestination;
     }
 
-    public void initSideMenu()
-    {
+    public void initSideMenu() {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
     }
 
     // side menu button listener
     public void openSideMenu(View view) {
-        if(view.getId() == R.id.side_menu_button)
-        {
+        if (view.getId() == R.id.side_menu_button) {
             // set side menu as active and clickable
             drawerLayout.openDrawer(Gravity.LEFT);
             navigationView.bringToFront();
@@ -576,12 +550,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    public void updateSideMenu()
-    {
+    public void updateSideMenu() {
         // update route information
         Menu navMenu = navigationView.getMenu();
-        navMenu.findItem(R.id.duration).setTitle("Duration: "+"20 minutes");
-        navMenu.findItem(R.id.distance).setTitle("Distance: "+"12km");
+        if (jsonRoutes.tmpTrip != null) {// if there is a trip planned, pulls and displays the distance and duration to the side menu
+            navMenu.findItem(R.id.duration).setTitle("Duration: " + jsonRoutes.tmpTrip.getTripDuration());
+            navMenu.findItem(R.id.distance).setTitle("Distance: " + jsonRoutes.tmpTrip.getTripDistance());
+        } else { //if no trip, show default text output.
+            navMenu.findItem(R.id.duration).setTitle("Duration: " + "0 Minutes");
+            navMenu.findItem(R.id.distance).setTitle("Distance: " + "0 Kilometers");
+        }
 
         SubMenu markerList = navMenu.findItem(R.id.marker_list).getSubMenu();
         markerList.clear();
@@ -599,8 +577,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void sideMenuClear(View view) {
-        if(view.getId() == R.id.side_menu_clear)
-        {
+        if (view.getId() == R.id.side_menu_clear) {
             /**
              * still needs to actually delete markers, currently just clears for current draw
              */
@@ -610,12 +587,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void sideMenuMapStyle(View view) {
-        if(view.getId() == R.id.side_menu_map) {
+        if (view.getId() == R.id.side_menu_map) {
             // change to next map type
             int mapType = mMap.getMapType() + 1;
             // reset back to type 1 if end of types reached
-            if(mapType > 4)
-            {
+            if (mapType > 4) {
                 mapType = 1;
             }
             mMap.setMapType(mapType);
@@ -623,11 +599,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void toggleFuelInfo(View view) {
-        if(view.getId() == R.id.side_menu_fuel || view.getId() == R.id.fuel_close)
-        {
+        if (view.getId() == R.id.side_menu_fuel || view.getId() == R.id.fuel_close) {
             View fuelInf = findViewById(R.id.fuel_info_window);
-            if(fuelInf.getVisibility() == View.INVISIBLE)
-            {
+            if (fuelInf.getVisibility() == View.INVISIBLE) {
                 fuelInf.setVisibility(View.VISIBLE);
             } else {
                 fuelInf.setVisibility(View.INVISIBLE);
@@ -636,8 +610,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void toggleStations(View view) {
-        if(view.getId() == R.id.fuel_toggle_stations)
-        {
+        if (view.getId() == R.id.fuel_toggle_stations) {
             /**
              * to do: toggle gas station visibility
              */

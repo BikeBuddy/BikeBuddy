@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Bike Buddy</string>
 
-    <string name="title_activity_maps">Map</string>
+
     <string name="textview">TextView</string>
     <string name="buttonIncrease">+</string>
     <string name="buttonDecrease">-</string>

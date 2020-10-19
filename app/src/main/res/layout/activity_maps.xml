@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- All renderable elements must fall within this relativelayout      -->
-<!-- keep map fragment at bottom of list so map stays below everything -->
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:id="@+id/mainLayout">
-
+    android:layout_height="match_parent">
 
     <!-- Side Menu Thingy -->
     <com.google.android.material.navigation.NavigationView
@@ -68,27 +63,49 @@
                 android:onClick="sideMenuMapStyle"
                 android:src="@drawable/ic_map" />
 
+            <!-- fuel info button -->
+            <ImageButton
+                android:id="@+id/side_menu_fuel"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="235dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/gray_border"
+                android:onClick="toggleFuelInfo"
+                android:src="@drawable/ic_fuel" />
 
-    <!-- Search Bar -->
+        </RelativeLayout>
+    </com.google.android.material.navigation.NavigationView>
+
+    <!-- All renderable elements must fall within this relativelayout      -->
+    <!-- keep map fragment at bottom of list so map stays below everything -->
     <RelativeLayout
-        android:id="@+id/relLayout1"
-        android:layout_width="300dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:elevation="10dp"
-        android:background="@drawable/white_border"
-        android:orientation="horizontal">
+        android:id="@+id/mainLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <!-- autocomplete fragment -->
-        <fragment
-            android:id="@+id/autocomplete_fragment"
+        <!-- header bar, containing side menu button and search bar -->
+        <RelativeLayout
+            android:id="@+id/top_menu_bar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-            />
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="60dp"
+            android:elevation="10dp"
+            android:orientation="horizontal">
 
+            <!-- Side Menu Toggle Button -->
+            <Button
+                android:id="@+id/side_menu_button"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/white_border"
+                android:drawableBottom="@drawable/ic_info"
+                android:onClick="openSideMenu" />
 
             <!-- Search Bar -->
             <RelativeLayout
@@ -298,37 +315,78 @@
                 android:text="@string/calculated_maximum_range_km"
                 android:textSize="12sp" />
 
+            <TextView
+                android:id="@+id/textTitleFuelUsed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="39dp"
+                android:layout_marginEnd="272dp"
+                android:layout_marginRight="272dp"
+                android:text="@string/fuel_used_litres"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/textFuelUsed"
+                android:layout_width="106dp"
+                android:layout_height="49dp"
+                android:layout_below="@id/textTitleFuelUsed"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="172dp"
+                android:layout_marginRight="172dp"
+                android:ems="10"
+                android:hint="@string/Fuel_Used"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                android:textSize="12sp"
+                android:title="@string/fuel_used"
+                tools:layout_editor_absoluteY="59dp" />
+
+            <TextView
+                android:id="@+id/textTitleFuelTankSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/fuel_toggle_stations"
+                android:layout_marginStart="116dp"
+                android:layout_marginLeft="116dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:text="@string/fuel_tank_size_litres"
+                android:textSize="12sp"
+                tools:layout_editor_absoluteY="39dp" />
+
+            <EditText
+                android:id="@+id/textFuelTankSize"
+                android:layout_width="106dp"
+                android:layout_height="49dp"
+                android:layout_below="@id/textTitleFuelTankSize"
+                android:layout_marginStart="116dp"
+                android:layout_marginLeft="116dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="31dp"
+                android:layout_marginRight="31dp"
+                android:ems="10"
+                android:hint="@string/Fuel_Used"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                android:textSize="12sp"
+                android:title="@string/fuel_tank_size"
+                tools:layout_editor_absoluteY="59dp" />
+        </RelativeLayout>
 
 
-
-    <!-- the map fragment -->
-
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".MapsActivity" />
-
-    <Button
-        android:id="@+id/undoMarkerButton"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="165dp"
-        android:layout_marginLeft="165dp"
-        android:layout_marginTop="226dp"
-        android:layout_marginEnd="166dp"
-        android:layout_marginRight="166dp"
-        android:layout_marginBottom="458dp"
-        android:text="Remove"
-        android:textSize="9sp"
-        android:visibility="invisible" />
+        <!-- the map fragment -->
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".MapsActivity" />
 
 
-</RelativeLayout>
+    </RelativeLayout>
+
+</androidx.drawerlayout.widget.DrawerLayout>

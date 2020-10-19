@@ -7,14 +7,14 @@ import java.util.ArrayList;
 //Route object, encapsulates details regarding the trip/route recieved from google directions API
 //@author PK
 public class Trip {
-    protected Integer distance;
-    protected Integer duration;
-    protected String start;
-    protected String end;
-    protected LatLng startLocation;
-    protected LatLng endLocation;
-    protected String encodedPolyLine;
-    protected ArrayList<LatLng> points;// the LatLng coordinates throughout the route
+    Integer distance;
+    Integer duration;
+    LatLng startLocation;
+    String start;
+    String end;
+    LatLng endLocation;
+    String encodedPolyLine;
+    ArrayList<LatLng> points;// the LatLng coordinates throughout the route
 
     public String getTripDistance(){
         String tripDistance = "Distance: ";
@@ -45,8 +45,8 @@ public class Trip {
         int durationMins = getDurationInMinutes();
         String tripDuration ="Duration: ";
         if(durationMins>60){
+            int minutes = (60 % durationMins);
             int hours = (durationMins/60);
-            int minutes = durationMins - (hours*60);
             tripDuration += hours + "h "+ minutes + "mins";
         }else{
             tripDuration += durationMins  + "mins";

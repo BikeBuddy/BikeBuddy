@@ -98,7 +98,7 @@ public class DateTimeFunctions {
         if (offsetHours < 120)
             offsetHours +=3;
         updateDateTime();
-        mapsActivity.createLocationsList();
+        //mapsActivity.createLocationsList();
         mapsActivity.getLocationsWeather();
 
     }
@@ -109,7 +109,7 @@ public class DateTimeFunctions {
         if (offsetHours > 0)
             offsetHours -= 3;
         updateDateTime();
-        mapsActivity.createLocationsList();
+     //   mapsActivity.createLocationsList();
         mapsActivity.getLocationsWeather();
 
     }
@@ -119,7 +119,7 @@ public class DateTimeFunctions {
         // updateDateTime();
         offsetHours =0;
         updateDateTime();
-        mapsActivity.createLocationsList();
+     //   mapsActivity.createLocationsList();
         mapsActivity.getLocationsWeather();
 
     }

@@ -93,7 +93,7 @@
         android:layout_marginRight="166dp"
         android:layout_marginBottom="458dp"
         android:text="Remove"
-        android:textSize="11sp"
+        android:textSize="9sp"
         android:visibility="invisible" />
 
 

@@ -149,13 +149,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         // set onClick listener for "Show Weather" button to show/hide markers on the map when pressed
-        final Button button = (Button) findViewById(R.id.button1);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                weatherFunctions.toggleWeather();
-                System.out.print("hello");
-            }
-        });
+//        final Button button = (Button) findViewById(R.id.button1);
+//        button.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                weatherFunctions.toggleWeather();
+//                System.out.print("hello");
+//            }
+//        });
 
         // add listener for weather toggle button within the side menu
         final ImageButton sideWeatherButton = (ImageButton) findViewById(R.id.side_menu_weather);
@@ -591,6 +591,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Handler handler = new Handler();
         this.dateTimeFunctions = new DateTimeFunctions(this,handler, currentDateTimeDisplay, weatherDateTimeDisplay);
        // this.dateTimeFunctions = new DateTimeFunctions(this, mMap, handler, currentDateTimeDisplay);
+        currentDateTimeDisplay.bringToFront();
+        weatherDateTimeDisplay.bringToFront();
     }
 
     public void dateTimeFunctionsPlusHour(View view) {

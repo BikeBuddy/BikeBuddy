@@ -10,7 +10,7 @@
     <!-- Side Menu Thingy -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
-        android:layout_width="match_parent"
+        android:layout_width="500dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
@@ -143,20 +143,86 @@
             android:text="Start Route"
             android:visibility="invisible" />
 
-        <!-- Show Weather Button -->
-        <Button
-            android:id="@+id/button1"
-            android:layout_width="110dp"
-            android:layout_height="30dp"
+<!--        &lt;!&ndash; Show Weather Button &ndash;&gt;-->
+<!--        <Button-->
+<!--            android:id="@+id/button1"-->
+<!--            android:layout_width="110dp"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:layout_alignParentStart="true"-->
+<!--            android:layout_alignParentLeft="true"-->
+<!--            android:layout_alignParentBottom="true"-->
+<!--            android:layout_marginStart="150dp"-->
+<!--            android:layout_marginLeft="150dp"-->
+<!--            android:layout_marginBottom="10dp"-->
+<!--            android:background="@drawable/white_border"-->
+<!--            android:onClick="toggleWeather"-->
+<!--            android:text="Show Weather" />-->
+
+        <TextView
+            android:id="@+id/currentDateTimeDisplay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="150dp"
-            android:layout_marginLeft="150dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/white_border"
-            android:onClick="toggleWeather"
-            android:text="Show Weather" />
+            android:layout_alignParentTop="true"
+            android:textColor="@color/quantum_black_text"
+            android:textSize="20sp"
+            android:text="clock"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="100dp" />
+
+        <TextView
+            android:id="@+id/weatherDateTimeDisplay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:textColor="@color/quantum_black_text"
+            android:textSize="20sp"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="150dp" />
+
+<!--    <TextClock-->
+<!--        android:id="@+id/textClock"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:textSize="20sp"-->
+<!--        android:layout_alignParentStart="true"-->
+<!--        android:layout_alignParentTop="true"-->
+<!--        android:layout_marginStart="121dp"-->
+<!--        android:layout_marginTop="203dp"-->
+<!--        android:format12Hour="dd/MM hh:mm:ss a" />-->
+
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="100dp"
+            android:layout_marginTop="200dp"
+            android:onClick="dateTimeFunctionsPlusHour"
+            android:text="@string/buttonIncrease" />
+
+        <Button
+            android:id="@+id/button5"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="200dp"
+            android:layout_marginTop="200dp"
+            android:onClick="dateTimeFunctionsMinusHour"
+            android:text="@string/buttonDecrease" />
+        <Button
+            android:id="@+id/button6"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="300dp"
+            android:layout_marginTop="200dp"
+            android:onClick="dateTimeFunctionsResetHour"
+            android:text="@string/buttonReset" />
 
 
         <!-- Fuel info window -->
@@ -172,71 +238,6 @@
             android:elevation="10dp"
             android:orientation="horizontal"
             android:visibility="visible">
-
-    <TextView
-        android:id="@+id/currentDateTimeDisplay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:textColor="@color/quantum_black_text"
-        android:textSize="20sp"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="100dp" />
-
-    <TextView
-        android:id="@+id/weatherDateTimeDisplay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:textColor="@color/quantum_black_text"
-        android:textSize="20sp"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="150dp" />
-
-<!--    <TextClock-->
-<!--        android:id="@+id/textClock"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:textSize="20sp"-->
-<!--        android:layout_alignParentStart="true"-->
-<!--        android:layout_alignParentTop="true"-->
-<!--        android:layout_marginStart="121dp"-->
-<!--        android:layout_marginTop="203dp"-->
-<!--        android:format12Hour="dd/MM hh:mm:ss a" />-->
-
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="200dp"
-        android:onClick="dateTimeFunctionsPlusHour"
-        android:text="@string/buttonIncrease" />
-
-    <Button
-        android:id="@+id/button5"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="200dp"
-        android:layout_marginTop="200dp"
-        android:onClick="dateTimeFunctionsMinusHour"
-        android:text="@string/buttonDecrease" />
-    <Button
-        android:id="@+id/button6"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="300dp"
-        android:layout_marginTop="200dp"
-        android:onClick="dateTimeFunctionsResetHour"
-        android:text="@string/buttonReset" />
 
 
             <!-- Put fuel stuff here -->

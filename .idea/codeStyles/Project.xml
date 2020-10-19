@@ -1,5 +1,6 @@
 <component name="ProjectCodeStyleConfiguration">
   <code_scheme name="Project" version="173">
+
     <JetCodeStyleSettings>
       <option name="PACKAGES_TO_USE_STAR_IMPORTS">
         <value>
@@ -9,6 +10,7 @@
         </value>
       </option>
     </JetCodeStyleSettings>
+
     <codeStyleSettings language="XML">
       <indentOptions>
         <option name="CONTINUATION_INDENT_SIZE" value="4" />

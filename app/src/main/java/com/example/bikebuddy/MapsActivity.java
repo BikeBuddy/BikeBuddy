@@ -113,13 +113,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         routeButton = (Button) findViewById(R.id.route_button);
 
         // set onClick listener for "Show Weather" button to show/hide markers on the map when pressed
-        final Button button = (Button) findViewById(R.id.button1);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                weatherFunctions.toggleWeather();
-                System.out.print("hello");
-            }
-        });
+//        final Button button = (Button) findViewById(R.id.button1);
+//        button.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                weatherFunctions.toggleWeather();
+//                System.out.print("hello");
+//            }
+//        });
 
     }
 
@@ -388,8 +388,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //            tripManager.getTheDestination().createMarker();
         tripManager.updateMap();
     }
+
     public void initRoute(View view) {
         tripManager.showRoute();
+
     }
 
     //Gets 20 locations which are within view in the camera
@@ -430,10 +432,138 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         this.fetchWeather = new FetchWeather(this);
     }
 
+
     public void onMarkerDragStart(Marker marker) {    }
     public void onMarkerDrag(Marker marker) {    }
     public Button getRouteButton(){
         return routeButton;
+
+
+
+
+
+
+    // Weather Date/Time stuff
+    public void initDateTimeFunctions() {
+        //date time display stuff
+        currentDateTimeDisplay = findViewById(R.id.currentDateTimeDisplay);
+        TextView weatherDateTimeDisplay = findViewById(R.id.weatherDateTimeDisplay);
+        Handler handler = new Handler();
+        this.dateTimeFunctions = new DateTimeFunctions(this,handler, currentDateTimeDisplay, weatherDateTimeDisplay);
+       // this.dateTimeFunctions = new DateTimeFunctions(this, mMap, handler, currentDateTimeDisplay);
+        currentDateTimeDisplay.bringToFront();
+        weatherDateTimeDisplay.bringToFront();
+    }
+
+    public void dateTimeFunctionsPlusHour(View view) {
+        dateTimeFunctions.addHour();
+    }
+    public void dateTimeFunctionsMinusHour(View view) {
+        dateTimeFunctions.minusHour();
+    }
+    public void dateTimeFunctionsResetHour(View view) {
+        dateTimeFunctions.resetHour();
+    }
+
+
+    public void initMapStyle() {
+        try {
+            // Customise the styling of the base map using a JSON object defined
+            // in a raw resource file.
+            boolean success = mMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                            this, R.raw.style_json));
+            if (!success) {
+                Log.e("MapsActivityRaw", "Style parsing failed.");
+            }
+        } catch (Resources.NotFoundException e) {
+            Log.e("MapsActivityRaw", "Can't find style.", e);
+        }
+    }
+
+
+    public void initSideMenu() {
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+    }
+
+    // side menu button listener
+    public void openSideMenu(View view) {
+        if (view.getId() == R.id.side_menu_button) {
+            // set side menu as active and clickable
+            drawerLayout.openDrawer(Gravity.LEFT);
+            navigationView.bringToFront();
+
+            updateSideMenu();
+        }
+    }
+
+    public void updateSideMenu() {
+        // update route information
+        Menu navMenu = navigationView.getMenu();
+        if (jsonRoutes.tmpTrip != null) {// if there is a trip planned, pulls and displays the distance and duration to the side menu
+            navMenu.findItem(R.id.duration).setTitle(jsonRoutes.tmpTrip.getTripDuration());
+            navMenu.findItem(R.id.distance).setTitle(jsonRoutes.tmpTrip.getTripDistance());
+        } else { //if no trip, show default text output.
+            navMenu.findItem(R.id.duration).setTitle("Duration: " + "0 Minutes");
+            navMenu.findItem(R.id.distance).setTitle("Distance: " + "0 Kilometers");
+        }
+
+        SubMenu markerList = navMenu.findItem(R.id.marker_list).getSubMenu();
+        markerList.clear();
+        // update marker list with current markers
+        /**
+         *  Currently hard coded in 3 empty markers.
+         *  Once access to marker array, loop through and create entry for each marker.
+         */
+        markerList.add("Marker 1");
+        markerList.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker));
+        markerList.add("Marker 2");
+        markerList.getItem(1).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker));
+        markerList.add("Marker 3");
+        markerList.getItem(2).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker));
+    }
+
+    public void sideMenuClear(View view) {
+        if (view.getId() == R.id.side_menu_clear) {
+            /**
+             * still needs to actually delete markers, currently just clears for current draw
+             */
+            mMap.clear();
+            updateSideMenu();
+        }
+    }
+
+    public void sideMenuMapStyle(View view) {
+        if (view.getId() == R.id.side_menu_map) {
+            // change to next map type
+            int mapType = mMap.getMapType() + 1;
+            // reset back to type 1 if end of types reached
+            if (mapType > 4) {
+                mapType = 1;
+            }
+            mMap.setMapType(mapType);
+        }
+    }
+
+    public void toggleFuelInfo(View view) {
+        if (view.getId() == R.id.side_menu_fuel || view.getId() == R.id.fuel_close) {
+            View fuelInf = findViewById(R.id.fuel_info_window);
+            if (fuelInf.getVisibility() == View.INVISIBLE) {
+                fuelInf.setVisibility(View.VISIBLE);
+            } else {
+                fuelInf.setVisibility(View.INVISIBLE);
+            }
+        }
+    }
+
+    public void toggleStations(View view) {
+        if (view.getId() == R.id.fuel_toggle_stations) {
+            /**
+             * to do: toggle gas station visibility
+             */
+        }
+
     }
 
 }

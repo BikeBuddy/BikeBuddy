@@ -3,18 +3,16 @@ package com.example.bikebuddy;
 
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.widget.Toast;
-
-import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -24,7 +22,7 @@ import java.net.URL;
 public class JSONRoutes {
     String key;
     GoogleMap mMap;//class has reference to the main map fragment
-
+    Trip tmpTrip; // The current trip
     public JSONRoutes(String key, GoogleMap mMap){
         this.key = key;
         this.mMap = mMap;
@@ -50,6 +48,7 @@ public class JSONRoutes {
         newTrip.end = jsonLeg.getString("end_address");
         newTrip.encodedPolyLine = jsonPolyline.getString("points");
         newTrip.decodePolyLine();
+        tmpTrip = newTrip;
         return newTrip;
     }
 

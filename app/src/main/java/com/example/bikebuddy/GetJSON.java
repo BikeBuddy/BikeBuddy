@@ -13,11 +13,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
 
 class GetJSON extends AsyncTask<String, Void, String> {
   //  String returnThisString;
@@ -53,128 +48,14 @@ class GetJSON extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String jsonString) {
         try {
             addWeather(jsonString);
-
-           // addFutureWeather(jsonString);
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
     private void addWeather(String jsonString) throws JSONException {
-
-        JSONObject obj = new JSONObject(jsonString);
-        if (obj.has("list")) {
-            addFutureWeather(jsonString);
-            System.out.println(("not null"));
-        } else {
-
-
-            JSONArray weather = obj.getJSONArray("weather");
-            JSONObject weather0 = weather.getJSONObject(0);
-
-
-            JSONObject coord = obj.getJSONObject("coord");
-
-            double lon = coord.getDouble("lon");
-            double lat = coord.getDouble("lat");
-
-            String description = weather0.getString("description"); //description eg clear sky
-            String main = weather0.getString("main"); //main eg Clear
-            String iconID = weather0.getString("icon"); //weather icon id
-            System.out.println((iconID));
-
-            ma.weatherFunctions.addLocationsWeather(lat, lon, iconID, description);//adds weather Icon
-        }
-    }
-
-    private void addFutureWeather(String jsonString) throws JSONException {
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM HH:mm:ss");
-        int offsetHours = ma.dateTimeFunctions.offsetHours;
-        Calendar weatherCalendar = Calendar.getInstance();
-        weatherCalendar.add(Calendar.HOUR, offsetHours);
-        long weatherDateTime = weatherCalendar.getTimeInMillis() / 1000; // time in seconds
-
-       // long weatherDateTime = (long) ma.dateTimeFunctions.weatherDateTime;
-        //usae this to determine which icon to display
-
         JSONObject obj = new JSONObject(jsonString);
 
-        JSONArray list = obj.getJSONArray("list");
-       // JSONObject list0 = list.getJSONObject(0);
-        //JSONObject list5 = list.getJSONObject(0);
-        JSONObject listX = list.getJSONObject(0);
-        Long dateTime = null;
-
-
-        for (int i = 0; i < list.length(); i++) {
-            JSONObject listItem = list.getJSONObject(i);
-            Long dt = listItem.getLong("dt");
-            if (weatherDateTime < dt) {
-                listX = listItem;
-                dateTime = dt;
-                // System.out.println(i);
-                break;
-            }
-        }
-
-        JSONArray weather = listX.getJSONArray("weather");
-        JSONObject weather0 = weather.getJSONObject(0);
-
-        JSONObject city = obj.getJSONObject("city");
-        System.out.println((city));
-
-        //String dt = list0.getString("dt");
-        System.out.println((dateTime));
-        //String dt5 = list5.getString("dt");
-       // System.out.println((dt5));
-       // int dt6 = list5.getInt("dt");
-       // long dt6 = list5.getLong("dt");
-       // System.out.println((dt6)); // in seconds
-      //  System.out.println((dt6*1000));
-
-        Calendar currentCalendar = Calendar.getInstance();
-        currentCalendar.setTimeZone(TimeZone.getTimeZone("Pacific/Auckland"));
-        currentCalendar.setTimeInMillis(dateTime * 1000);
-        //SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM HH:mm:ss");
-        System.out.println(currentCalendar.getTimeInMillis());
-        String currentDateTime = dateFormat.format(currentCalendar.getTime());
-        System.out.println(currentDateTime);
-        System.out.println(weatherDateTime); // divide by 1000
-
-//        System.out.println(ma.getDateTimeFunctions().getWeatherDateTime());
-//        Date date = null;
-//        try {
-//            date = dateFormat.parse(ma.getDateTimeFunctions().getWeatherDateTime());
-//
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        System.out.println(date);
-//        long weatherDate = date.getTime();
-//        System.out.println(weatherDate/1000);
-//        Calendar c = Calendar.getInstance();
-//        c.setTime(dateFormat.parse(ma.dateTimeFunctions.weatherDateTime));
-
-        JSONObject coord = city.getJSONObject("coord");
-        System.out.println((coord));
-
-        double lon = coord.getDouble("lon");
-        double lat = coord.getDouble("lat");
-
-        String description = weather0.getString("description"); //description eg clear sky
-        String main= weather0.getString("main"); //main eg Clear
-        String iconID = weather0.getString("icon"); //weather icon id
-        System.out.println((iconID));
-       // System.out.println((dt));
-
-        ma.weatherFunctions.addLocationsWeather(lat, lon, iconID, description);//adds weather Icon
-
-    }
-    private void addFutureWeatherCount(String jsonString) throws JSONException {
-        JSONObject obj = new JSONObject(jsonString);
-
-        JSONArray list = obj.getJSONArray("list");
         JSONArray weather = obj.getJSONArray("weather");
         JSONObject weather0 = weather.getJSONObject(0);
 
@@ -218,7 +99,7 @@ class GetJSON extends AsyncTask<String, Void, String> {
                 //appending it to string builder
                 sb.append(json + "\n");
             }
-            System.out.println((sb.toString().trim()));
+
             //finally returning the read string
             return sb.toString().trim();
         } catch (Exception e) {

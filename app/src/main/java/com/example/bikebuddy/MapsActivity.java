@@ -1,112 +1,76 @@
 package com.example.bikebuddy;
 
-
 import androidx.annotation.NonNull;
 
-
-
-
-
-import android.content.res.Resources;
 import android.location.Address;
 import android.location.Geocoder;
-import android.os.AsyncTask;
-import android.os.Handler;
-
-
 
 import com.google.android.gms.common.api.Status;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.SubMenu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentActivity;
-
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
-
-
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-
 
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
-import com.google.android.material.navigation.NavigationView;
-
-
-
-
-import java.io.IOException;
-
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener {
-
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback , GoogleMap.OnMarkerDragListener {
 
     private static final String TAG = MapsActivity.class.getSimpleName();
 
     public WeatherFunctions weatherFunctions;
     public FetchWeather fetchWeather;
-    public DateTimeFunctions dateTimeFunctions;
-    //HashMap<String, String> weatherIcons;
+    HashMap<String, String> weatherIcons;
 
     private GoogleMap mMap;
 
     private float zoomLevel = 10.0f;
     private LatLng currentLocation;//current location the camera is centered on
     private List<Address> locationsList;//locations for weather icons
+    private Bitmap smallMarker; //weather icons
 
+    private Geocoder gc;//used to obtain the address of a location based on the lat long coordinates
 
     private TripManager tripManager;
 
     private CameraPosition cameraPosition;
     private FusedLocationProviderClient fusedLocationProviderClient;
 
-
     private Button routeButton;
-
-    private TextView currentDateTimeDisplay;
-
-
 
     // A default location (Auckland, New Zealand) and default zoom to use when location permission is
     // not granted.
@@ -124,18 +88,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String KEY_LOCATION = "location";
 
 
-
-    // side menu things
-    private DrawerLayout drawerLayout;
-    private NavigationView navigationView;
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //    Retrieve location and camera position from saved instance state.
+     //    Retrieve location and camera position from saved instance state.
         if (savedInstanceState != null) {
             lastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
             cameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
@@ -145,17 +102,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Construct a FusedLocationProviderClient.
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        geocoder = new Geocoder(this);
+        gc = new Geocoder(this);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         tripManager = new TripManager(this);
 
-
         routeButton = (Button) findViewById(R.id.route_button);
-
 
         // set onClick listener for "Show Weather" button to show/hide markers on the map when pressed
         final Button button = (Button) findViewById(R.id.button1);
@@ -163,14 +118,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View v) {
                 weatherFunctions.toggleWeather();
                 System.out.print("hello");
-            }
-        });
-
-        // add listener for weather toggle button within the side menu
-        final ImageButton sideWeatherButton = (ImageButton) findViewById(R.id.side_menu_weather);
-        sideWeatherButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                weatherFunctions.toggleWeather();
             }
         });
 
@@ -182,14 +129,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         this.mMap = googleMap;
 
 
-        initMapStyle();
-
-
         initFetchWeather();
         initWeatherFunctions();
-        initDateTimeFunctions();
-      //  weatherDateTimeDisplay = findViewById(R.id.weatherDateTimeDisplay);
-       // timer();
 
         HashMap<String, Drawable> weatherIcons = new HashMap<String, Drawable>();
 
@@ -200,8 +141,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // call initialisations
         initPlaces();
         initAutoComplete();
-        initSideMenu();
-
 
         this.mMap.setOnCameraIdleListener(onCameraIdleListener);
 
@@ -225,9 +164,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //action listener for draggable markers
         mMap.setOnMarkerDragListener(this);
 
-
     }
-
     /**
      * Saves the state of the map when the activity is paused.
      */
@@ -271,7 +208,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // go to found location
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(autoCompleteLatLng));
             }
-
             @Override
             public void onError(@NonNull Status status) {
 
@@ -279,39 +215,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }));
 
     }
-
-
-
     //Toggles the buttons visibility
     public void toggleRouteButton() {
         // make route button visible
-        View routeButt = findViewById(R.id.route_button);
-        if (routeButt.getVisibility() == View.INVISIBLE) {
-            routeButt.setVisibility(View.VISIBLE);
-        } else {
-            routeButt.setVisibility(View.INVISIBLE);
+        if(routeButton.getVisibility() == View.INVISIBLE)
+        {
+            routeButton.setVisibility(View.VISIBLE);
         }
+        else
+        {
+            routeButton.setVisibility(View.INVISIBLE);
+       }
     }
-
-    public void initRoute(View view) {
-        // locations set, show route
-        if (startingOrigin != null || theDestination != null) {
-            try {
-                routeStarted = true; //sets flag so that the polyline for the route will be redrawn if map is cleared
-                mMap.clear();
-                updateMap();//adds polyline and markers onto map
-            } catch (Exception e) {
-                System.err.println(e);
-            }
-        } else if (theDestination == null) {
-            Toast.makeText(this, "Please Select Destination", Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(this, "Please Select Origin", Toast.LENGTH_LONG).show();
-        }
-
-    }
-
-
 
     /**
      * Gets the current location of the device, and positions the map's camera.
@@ -351,7 +266,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
             }
-        } catch (SecurityException e) {
+        } catch (SecurityException e)  {
             Log.e("Exception: %s", e.getMessage(), e);
         }
     }
@@ -414,7 +329,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 lastKnownLocation = null;
                 //getLocationPermission();
             }
-        } catch (SecurityException e) {
+        } catch (SecurityException e)  {
             Log.e("Exception: %s", e.getMessage());
         }
     }
@@ -447,22 +362,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     //when the camera goes idle, new weather icons are drawn on the map
     private GoogleMap.OnCameraIdleListener onCameraIdleListener =
-            new GoogleMap.OnCameraIdleListener() {
-                @Override
-                public void onCameraIdle() {
-                    zoomLevel = mMap.getCameraPosition().zoom;
-                    currentLocation = mMap.getCameraPosition().target;
+        new GoogleMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+                zoomLevel = mMap.getCameraPosition().zoom;
+                currentLocation = mMap.getCameraPosition().target;
 
+                //creates new list of locations based on camera centre position.
+                locationsList = getAddressListFromLatLong(currentLocation.latitude, currentLocation.longitude);
 
-                new getAddressListFromLatLong().execute();
+                getLocationsWeather();
             }
         };
 
 
-
     //updates the snippet, Address etc when start and destination markers are dragged
     public void onMarkerDragEnd(Marker marker) {
-
 //        tripManager.getStartingOrigin().update();
 //        if(tripManager.getTheDestination()!=null ) {
 //            tripManager.getTheDestination().update();
@@ -480,38 +395,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //Gets 20 locations which are within view in the camera
     public  List<Address> getAddressListFromLatLong(double lat, double lng) {
 
-
-    //Gets 20 locations which are within view in the camera
-    class getAddressListFromLatLong extends AsyncTask<Void, Void, List<Address>> {
-
-
-       @Override
-        protected void onPostExecute(List<Address> tempLocationsList) {
-            locationsList = tempLocationsList;
-            getLocationsWeather();
+        Geocoder geocoder = gc;
+        List<Address> addressList = null;
+        try {
+            addressList = geocoder.getFromLocation(lat, lng, 20);
+            // 20 is no of address you want to fetch near by the given lat-long
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
-
-        @Override
-        protected List<Address> doInBackground(Void... voids) {
-
-            try {
-                return geocoder.getFromLocation(currentLocation.latitude, currentLocation.longitude, 20);
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            }
-
-
-        }
+        return addressList;
     }
 
     // Pulls weather data from the weather service api and generates weather icons onto the map
     public void getLocationsWeather() {
-
-        if (locationsList != null ) {
-            for (Address address : locationsList) {
-                fetchWeather.fetch(address.getLatitude(), address.getLongitude());
-
+        if (locationsList != null ){
+        //had to change to iterator in order to delete
+        Iterator<Address> it = locationsList.iterator();
+            while (it.hasNext()) {
+                Address a = it.next();
+                fetchWeather.fetch(a.getLatitude(), a.getLongitude());
+                if(it.hasNext())
+                    it.remove();
             }
         }
         mMap.clear();
@@ -519,157 +423,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void initWeatherFunctions() {
-        this.weatherFunctions = new WeatherFunctions(this, this.mMap);
+       this.weatherFunctions = new WeatherFunctions(this, this.mMap);
     }
 
     public void initFetchWeather() {
         this.fetchWeather = new FetchWeather(this);
     }
 
-
     public void onMarkerDragStart(Marker marker) {    }
     public void onMarkerDrag(Marker marker) {    }
     public Button getRouteButton(){
         return routeButton;
     }
-
-
-    public void onMarkerDragStart(Marker marker) {
-    }
-
-    public void onMarkerDrag(Marker marker) {
-    }
-
-    public BikeBuddyLocation getStartingOrigin() {
-        return startingOrigin;
-    }
-
-    public BikeBuddyLocation getTheDestination() {
-        return theDestination;
-    }
-
-
-
-    // Weather Date/Time stuff
-    public void initDateTimeFunctions() {
-        //date time display stuff
-        currentDateTimeDisplay = findViewById(R.id.currentDateTimeDisplay);
-        TextView weatherDateTimeDisplay = findViewById(R.id.weatherDateTimeDisplay);
-        Handler handler = new Handler();
-        this.dateTimeFunctions = new DateTimeFunctions(this,handler, currentDateTimeDisplay, weatherDateTimeDisplay);
-       // this.dateTimeFunctions = new DateTimeFunctions(this, mMap, handler, currentDateTimeDisplay);
-    }
-
-    public void dateTimeFunctionsPlusHour(View view) {
-        dateTimeFunctions.addHour();
-    }
-    public void dateTimeFunctionsMinusHour(View view) {
-        dateTimeFunctions.minusHour();
-    }
-    public void dateTimeFunctionsResetHour(View view) {
-        dateTimeFunctions.resetHour();
-    }
-
-
-    public void initMapStyle() {
-        try {
-            // Customise the styling of the base map using a JSON object defined
-            // in a raw resource file.
-            boolean success = mMap.setMapStyle(
-                    MapStyleOptions.loadRawResourceStyle(
-                            this, R.raw.style_json));
-            if (!success) {
-                Log.e("MapsActivityRaw", "Style parsing failed.");
-            }
-        } catch (Resources.NotFoundException e) {
-            Log.e("MapsActivityRaw", "Can't find style.", e);
-        }
-    }
-
-
-    public void initSideMenu() {
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-    }
-
-    // side menu button listener
-    public void openSideMenu(View view) {
-        if (view.getId() == R.id.side_menu_button) {
-            // set side menu as active and clickable
-            drawerLayout.openDrawer(Gravity.LEFT);
-            navigationView.bringToFront();
-
-            updateSideMenu();
-        }
-    }
-
-    public void updateSideMenu() {
-        // update route information
-        Menu navMenu = navigationView.getMenu();
-        if (jsonRoutes.tmpTrip != null) {// if there is a trip planned, pulls and displays the distance and duration to the side menu
-            navMenu.findItem(R.id.duration).setTitle(jsonRoutes.tmpTrip.getTripDuration());
-            navMenu.findItem(R.id.distance).setTitle(jsonRoutes.tmpTrip.getTripDistance());
-        } else { //if no trip, show default text output.
-            navMenu.findItem(R.id.duration).setTitle("Duration: " + "0 Minutes");
-            navMenu.findItem(R.id.distance).setTitle("Distance: " + "0 Kilometers");
-        }
-
-        SubMenu markerList = navMenu.findItem(R.id.marker_list).getSubMenu();
-        markerList.clear();
-        // update marker list with current markers
-        /**
-         *  Currently hard coded in 3 empty markers.
-         *  Once access to marker array, loop through and create entry for each marker.
-         */
-        markerList.add("Marker 1");
-        markerList.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker));
-        markerList.add("Marker 2");
-        markerList.getItem(1).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker));
-        markerList.add("Marker 3");
-        markerList.getItem(2).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker));
-    }
-
-    public void sideMenuClear(View view) {
-        if (view.getId() == R.id.side_menu_clear) {
-            /**
-             * still needs to actually delete markers, currently just clears for current draw
-             */
-            mMap.clear();
-            updateSideMenu();
-        }
-    }
-
-    public void sideMenuMapStyle(View view) {
-        if (view.getId() == R.id.side_menu_map) {
-            // change to next map type
-            int mapType = mMap.getMapType() + 1;
-            // reset back to type 1 if end of types reached
-            if (mapType > 4) {
-                mapType = 1;
-            }
-            mMap.setMapType(mapType);
-        }
-    }
-
-    public void toggleFuelInfo(View view) {
-        if (view.getId() == R.id.side_menu_fuel || view.getId() == R.id.fuel_close) {
-            View fuelInf = findViewById(R.id.fuel_info_window);
-            if (fuelInf.getVisibility() == View.INVISIBLE) {
-                fuelInf.setVisibility(View.VISIBLE);
-            } else {
-                fuelInf.setVisibility(View.INVISIBLE);
-            }
-        }
-    }
-
-    public void toggleStations(View view) {
-        if (view.getId() == R.id.fuel_toggle_stations) {
-            /**
-             * to do: toggle gas station visibility
-             */
-        }
-    }
-
 
 }
 

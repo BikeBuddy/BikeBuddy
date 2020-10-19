@@ -309,6 +309,39 @@
                 android:textSize="12sp"
                 android:title="@string/fuel_tank_size"
                 tools:layout_editor_absoluteY="59dp" />
+
+            <TextView
+                android:id="@+id/textTitleKPL"
+                android:layout_width="82dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textTitleFuelTankSize"
+                android:layout_alignStart="@id/textTitleTripDistance"
+                android:layout_alignLeft="@id/textTitleTripDistance"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="103dp"
+                android:layout_marginLeft="103dp"
+                android:layout_marginTop="52dp"
+                android:layout_marginEnd="-5dp"
+                android:layout_marginRight="-5dp"
+                android:text="@string/kilometers_per_litre"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/textKPL"
+                android:layout_width="106dp"
+                android:layout_height="49dp"
+                android:layout_below="@id/textTitleKPL"
+                android:layout_alignStart="@id/textTitleTripDistance"
+                android:layout_alignLeft="@id/textTitleTripDistance"
+                android:layout_marginStart="120dp"
+                android:layout_marginLeft="120dp"
+                android:ems="10"
+                android:hint="@string/Fuel_Used"
+                android:importantForAutofill="no"
+                android:inputType="none"
+                android:textSize="12sp"
+                android:title="@string/kilometers_per_litre" />
         </RelativeLayout>
 
 

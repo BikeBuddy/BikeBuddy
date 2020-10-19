@@ -17,7 +17,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
@@ -61,25 +60,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public WeatherFunctions weatherFunctions;
     public FetchWeather fetchWeather;
     public DateTimeFunctions dateTimeFunctions;
-    HashMap<String, String> weatherIcons;
+    //HashMap<String, String> weatherIcons;
 
     private GoogleMap mMap;
 
     private float zoomLevel = 10.0f;
     private LatLng currentLocation;//current location the camera is centered on
-    static private List<Address> locationsList;//locations for weather icons
-    private Bitmap smallMarker; //weather icons
+    private List<Address> locationsList;//locations for weather icons
 
     // init data for autocomplete to store
     private LatLng autoCompleteLatLng;
 
-    private Geocoder gc;//used to obtain the address of a location based on the lat long coordinates
+    private Geocoder geocoder;//used to obtain the address of a location based on the lat long coordinates
 
     private JSONRoutes jsonRoutes;// send requests and show routes on map with this object--PK
     private CameraPosition cameraPosition;
     private FusedLocationProviderClient fusedLocationProviderClient;
 
-    private TextView weatherDateTimeDisplay;
     private TextView currentDateTimeDisplay;
 
     // A default location (Auckland, New Zealand) and default zoom to use when location permission is
@@ -124,14 +121,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Construct a FusedLocationProviderClient.
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        gc = new Geocoder(this);
+        geocoder = new Geocoder(this);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        gc = new Geocoder(this);
 
         // set onClick listener for "Show Weather" button to show/hide markers on the map when pressed
         final Button button = (Button) findViewById(R.id.button1);
@@ -441,11 +437,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         };
 
-   public void createLocationsList() {
-//        locationsList = getAddressListFromLatLong(currentLocation.latitude, currentLocation.longitude);
- //  getAddressListFromLatLong(currentLocation.latitude, currentLocation.longitude);
-   }
-
 
     //updates the snippet, Address etc when start and destination markers are dragged
     public void onMarkerDragEnd(Marker marker) {
@@ -464,11 +455,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void setAutoCompleteLatLang(LatLng latLang){
         autoCompleteLatLng = latLang;
         if(startingOrigin==null){
-            startingOrigin = new BikeBuddyLocation(true,gc,latLang, mMap);
+            startingOrigin = new BikeBuddyLocation(true, geocoder,latLang, mMap);
             startingOrigin.createMarker();
             startingLocationNeeded = false;
         }else if(theDestination==null){
-            theDestination = new BikeBuddyLocation(false,gc,latLang, mMap);
+            theDestination = new BikeBuddyLocation(false, geocoder,latLang, mMap);
             theDestination.createMarker();
         }else{//once both origin and destination has been set, all input LatLng will be used to update the destination
             theDestination.setCoordinate(latLang);
@@ -483,46 +474,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
        @Override
         protected void onPostExecute(List<Address> tempLocationsList) {
-           //if (locationsList == null) {
-                locationsList = tempLocationsList;
-         //  } else {
-          //      locationsList.addAll(tempLocationsList);
-         //  }
-           //remove address' from front of list until there are only 20 address'
-       //    while (locationsList.size() > 20) {
-        //        locationsList.remove(0);
-       //    }
-
+            locationsList = tempLocationsList;
             getLocationsWeather();
         }
 
         @Override
         protected List<Address> doInBackground(Void... voids) {
 
-            Geocoder geocoder = gc;
             try {
-                //locationsList = geocoder.getFromLocation(currentLocation.latitude, currentLocation.longitude, 20);
-                List<Address> tempLocationsList = geocoder.getFromLocation(currentLocation.latitude, currentLocation.longitude, 20);
-                return tempLocationsList;
+                return geocoder.getFromLocation(currentLocation.latitude, currentLocation.longitude, 20);
             } catch (IOException e) {
                 e.printStackTrace();
                 return null;
             }
-
         }
     }
-
-
 
     // Pulls weather data from the weather service api and generates weather icons onto the map
     public void getLocationsWeather() {
         if (locationsList != null ) {
-            //had to change to iterator in order to delete
             for (Address address : locationsList) {
                 fetchWeather.fetch(address.getLatitude(), address.getLongitude());
             }
         }
-
         mMap.clear();
         updateMap();
     }
@@ -536,15 +510,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-
-
     //sets the starting location to gps location, otherwise sets startingLocationNeeded flag to true
     public void setUpOriginFromLocation(){
         if(lastKnownLocation==null){
             startingLocationNeeded =true;
         }else{
             LatLng startLatLong = new LatLng(lastKnownLocation.getLatitude(),lastKnownLocation.getLongitude());
-            startingOrigin = new BikeBuddyLocation(true,gc, startLatLong, mMap);
+            startingOrigin = new BikeBuddyLocation(true, geocoder, startLatLong, mMap);
             startingLocationNeeded = false;
         }
     }
@@ -575,7 +547,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void initDateTimeFunctions() {
         //date time display stuff
         currentDateTimeDisplay = findViewById(R.id.currentDateTimeDisplay);
-        weatherDateTimeDisplay = findViewById(R.id.weatherDateTimeDisplay);
+        TextView weatherDateTimeDisplay = findViewById(R.id.weatherDateTimeDisplay);
         Handler handler = new Handler();
         this.dateTimeFunctions = new DateTimeFunctions(this,handler, currentDateTimeDisplay, weatherDateTimeDisplay);
        // this.dateTimeFunctions = new DateTimeFunctions(this, mMap, handler, currentDateTimeDisplay);
@@ -592,12 +564,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-
-
-    public DateTimeFunctions getDateTimeFunctions() {
-        return dateTimeFunctions;
-    }
-
     public void initMapStyle() {
         try {
             // Customise the styling of the base map using a JSON object defined
@@ -605,15 +571,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             boolean success = mMap.setMapStyle(
                     MapStyleOptions.loadRawResourceStyle(
                             this, R.raw.style_json));
-
             if (!success) {
                 Log.e("MapsActivityRaw", "Style parsing failed.");
             }
         } catch (Resources.NotFoundException e) {
             Log.e("MapsActivityRaw", "Can't find style.", e);
         }
-
-
     }
 
 }

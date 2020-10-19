@@ -564,8 +564,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // update route information
         Menu navMenu = navigationView.getMenu();
         if (jsonRoutes.tmpTrip != null) {// if there is a trip planned, pulls and displays the distance and duration to the side menu
-            navMenu.findItem(R.id.duration).setTitle("Duration: " + jsonRoutes.tmpTrip.getTripDuration());
-            navMenu.findItem(R.id.distance).setTitle("Distance: " + jsonRoutes.tmpTrip.getTripDistance());
+            navMenu.findItem(R.id.duration).setTitle(jsonRoutes.tmpTrip.getTripDuration());
+            navMenu.findItem(R.id.distance).setTitle(jsonRoutes.tmpTrip.getTripDistance());
         } else { //if no trip, show default text output.
             navMenu.findItem(R.id.duration).setTitle("Duration: " + "0 Minutes");
             navMenu.findItem(R.id.distance).setTitle("Distance: " + "0 Kilometers");

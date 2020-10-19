@@ -40,6 +40,7 @@ public class TripManager {
 
     public void initMarkerButtons(){
         removeMarkerButton = (Button) mapsActivity.findViewById(R.id.undoMarkerButton);
+        removeMarkerButton.bringToFront();
         removeMarkerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

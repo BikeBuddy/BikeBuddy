@@ -136,6 +136,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         routeButton = (Button) findViewById(R.id.route_button);
+
         tripManager = new TripManager(this);
         // set onClick listener for "Show Weather" button to show/hide markers on the map when pressed
 //        final Button button = (Button) findViewById(R.id.button1);

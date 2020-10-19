@@ -149,13 +149,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         // set onClick listener for "Show Weather" button to show/hide markers on the map when pressed
-        final Button button = (Button) findViewById(R.id.button1);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                weatherFunctions.toggleWeather();
-                System.out.print("hello");
-            }
-        });
+//        final Button button = (Button) findViewById(R.id.button1);
+//        button.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                weatherFunctions.toggleWeather();
+//                System.out.print("hello");
+//            }
+//        });
 
         // add listener for weather toggle button within the side menu
         final ImageButton sideWeatherButton = (ImageButton) findViewById(R.id.side_menu_weather);
@@ -483,11 +483,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         autoCompleteLatLng = latLang;
 
         if (startingOrigin == null) {
-            startingOrigin = new BikeBuddyLocation(true, gc, latLang, mMap);
+            startingOrigin = new BikeBuddyLocation(true, geocoder, latLang, mMap);
             startingOrigin.createMarker();
             startingLocationNeeded = false;
         } else if (theDestination == null) {
-            theDestination = new BikeBuddyLocation(false, gc, latLang, mMap);
+            theDestination = new BikeBuddyLocation(false, geocoder, latLang, mMap);
 
             theDestination.createMarker();
         } else {//once both origin and destination has been set, all input LatLng will be used to update the destination
@@ -550,7 +550,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             startingLocationNeeded = true;
         } else {
             LatLng startLatLong = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
-            startingOrigin = new BikeBuddyLocation(true, gc, startLatLong, mMap);
+            startingOrigin = new BikeBuddyLocation(true, geocoder, startLatLong, mMap);
 
             startingLocationNeeded = false;
         }
@@ -591,6 +591,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Handler handler = new Handler();
         this.dateTimeFunctions = new DateTimeFunctions(this,handler, currentDateTimeDisplay, weatherDateTimeDisplay);
        // this.dateTimeFunctions = new DateTimeFunctions(this, mMap, handler, currentDateTimeDisplay);
+        currentDateTimeDisplay.bringToFront();
+        weatherDateTimeDisplay.bringToFront();
     }
 
     public void dateTimeFunctionsPlusHour(View view) {

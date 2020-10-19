@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Bike Buddy</string>
 
-    <string name="title_activity_maps">Map</string>
+
+
     <string name="textview">TextView</string>
     <string name="buttonIncrease">+</string>
     <string name="buttonDecrease">-</string>
@@ -46,5 +47,6 @@
     <string name="calculated_maximum_range_km">Calculated Maximum Range (Km)</string>
     <string name="trip_distance_km">Trip Distance (Km)</string>
     <string name="max_range">Max Range</string>
+
 
 </resources>

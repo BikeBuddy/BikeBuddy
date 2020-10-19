@@ -7,14 +7,14 @@ import java.util.ArrayList;
 //Route object, encapsulates details regarding the trip/route recieved from google directions API
 //@author PK
 public class Trip {
-    Integer distance;
-    Integer duration;
-    LatLng startLocation;
-    String start;
-    String end;
-    LatLng endLocation;
-    String encodedPolyLine;
-    ArrayList<LatLng> points;// the LatLng coordinates throughout the route
+    protected Integer distance;
+    protected Integer duration;
+    protected String start;
+    protected String end;
+    protected LatLng startLocation;
+    protected LatLng endLocation;
+    protected String encodedPolyLine;
+    protected ArrayList<LatLng> points;// the LatLng coordinates throughout the route
 
     public String getTripDistance(){
         String tripDistance = "Distance: ";

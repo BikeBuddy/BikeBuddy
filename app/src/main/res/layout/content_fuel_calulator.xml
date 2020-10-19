@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <EditText
+        android:id="@+id/textMaxRange"
+        android:layout_width="106dp"
+        android:layout_height="49dp"
+        android:ems="10"
+        android:hint="@string/Fuel_Used"
+        android:importantForAutofill="no"
+        android:inputType="none"
+        android:title="@string/max_range"
+        tools:layout_editor_absoluteX="256dp"
+        tools:layout_editor_absoluteY="304dp" />
+
+    <TextView
+        android:id="@+id/textTitleMaxRange"
+        android:layout_width="137dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="236dp"
+        android:layout_marginLeft="236dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:text="@string/calculated_maximum_range_km"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textKPL" />
+
+    <EditText
+        android:id="@+id/textTripDistance"
+        android:layout_width="106dp"
+        android:layout_height="49dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginEnd="172dp"
+        android:layout_marginRight="172dp"
+        android:layout_marginBottom="432dp"
+        android:ems="10"
+        android:hint="@string/Fuel_Used"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        android:title="@string/trip_distance"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.228"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textTitleTripDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="44dp"
+        android:layout_marginEnd="272dp"
+        android:layout_marginRight="272dp"
+        android:layout_marginBottom="4dp"
+        android:text="@string/trip_distance_km"
+        app:layout_constraintBottom_toTopOf="@+id/textTripDistance"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textFuelUsed" />
+
+    <EditText
+        android:id="@+id/textKPL"
+        android:layout_width="106dp"
+        android:layout_height="49dp"
+        android:layout_marginStart="256dp"
+        android:layout_marginLeft="256dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="31dp"
+        android:layout_marginRight="31dp"
+        android:layout_marginBottom="436dp"
+        android:ems="10"
+        android:hint="@string/Fuel_Used"
+        android:importantForAutofill="no"
+        android:inputType="none"
+        android:title="@string/kilometers_per_litre"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textTitleKPL" />
+
+    <TextView
+        android:id="@+id/textTitleFuelTankSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="116dp"
+        android:layout_marginLeft="116dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:text="@string/fuel_tank_size_litres"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textTitleFuelUsed"
+        tools:layout_editor_absoluteY="39dp" />
+
+    <EditText
+        android:id="@+id/textFuelTankSize"
+        android:layout_width="106dp"
+        android:layout_height="49dp"
+        android:layout_marginStart="116dp"
+        android:layout_marginLeft="116dp"
+        android:layout_marginEnd="31dp"
+        android:layout_marginRight="31dp"
+        android:ems="10"
+        android:hint="@string/Fuel_Used"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        android:title="@string/fuel_tank_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/textFuelUsed"
+        tools:layout_editor_absoluteY="59dp" />
+
+    <EditText
+        android:id="@+id/textFuelUsed"
+        android:layout_width="106dp"
+        android:layout_height="49dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginEnd="172dp"
+        android:layout_marginRight="172dp"
+        android:ems="10"
+        android:hint="@string/Fuel_Used"
+        android:importantForAutofill="no"
+        android:inputType="number"
+        android:title="@string/fuel_used"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.228"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="59dp" />
+
+    <TextView
+        android:id="@+id/textTitleFuelUsed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="39dp"
+        android:layout_marginEnd="272dp"
+        android:layout_marginRight="272dp"
+        android:text="@string/fuel_used_litres"
+        app:layout_constraintBottom_toTopOf="@+id/textFuelUsed"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textTitleKPL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="236dp"
+        android:layout_marginLeft="236dp"
+        android:layout_marginTop="46dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:text="@string/kilometers_per_litre"
+        app:layout_constraintBottom_toTopOf="@+id/textKPL"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textFuelTankSize" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

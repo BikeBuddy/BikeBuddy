@@ -169,7 +169,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 weatherFunctions.toggleWeather();
             }
         });
-
+        Button gasButton = (Button) findViewById(R.id.fuel_toggle_stations);
+        gasButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Do something in response to button click
+                Toast toast = Toast.makeText(MapsActivity.this, "gas button clicked" , Toast.LENGTH_LONG);
+                toast.show();
+                System.out.println("gas station button clicked");
+                fetchNearbyPlace.fetch(currentLocation.latitude,currentLocation.longitude);
+            }
+        });
 
     }
 
@@ -469,7 +478,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
-                fetchNearbyPlace.fetch(currentLocation.latitude,currentLocation.longitude);
+                //fetchNearbyPlace.fetch(currentLocation.latitude,currentLocation.longitude);
 
 
                 new getAddressListFromLatLong().execute();
@@ -544,6 +553,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         }
+        //fetchNearbyPlace.fetch(currentLocation.latitude,currentLocation.longitude);
+
 
         mMap.clear();
         updateMap();

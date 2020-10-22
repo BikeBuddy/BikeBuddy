@@ -113,13 +113,13 @@ class GetPlaceJSON extends AsyncTask<String, Void, String> {
         double lon1 = location_obj1.getDouble("lng");
         //add gas station icon to map
 //        ma.placeFunctions.addLocationsPlace(lat,lon);
-        ma.placeFunctions.addLocationsPlace(lat1,lon1);
+        ma.placeFunctions.addLocationsPlace(-36.873400,174.829000);
 
         //Toast toast = Toast.makeText(ma, Double.toString(results.lengt174.818723h()) , Toast.LENGTH_LONG);
        // Toast toast = Toast.makeText(ma, Integer.toString(results.length()) , Toast.LENGTH_LONG);
-        //Toast toast = Toast.makeText(ma, Double.toString(lat1) , Toast.LENGTH_LONG);
-//        Toast toast = Toast.makeText(ma, formattedAddress , Toast.LENGTH_LONG);
-//        toast.show();
+        Toast toast = Toast.makeText(ma, Double.toString(lat1) , Toast.LENGTH_LONG);
+        //Toast toast = Toast.makeText(ma, formattedAddress , Toast.LENGTH_LONG);
+        toast.show();
     }
 
     //in this method we are fetching the json string

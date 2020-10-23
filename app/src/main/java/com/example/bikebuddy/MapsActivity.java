@@ -170,6 +170,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        Button gasButton = (Button) findViewById(R.id.fuel_toggle_stations);
+        gasButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Do something in response to button click
+                Toast toast = Toast.makeText(MapsActivity.this, "gas button clicked" , Toast.LENGTH_LONG);
+                toast.show();
+                System.out.println("gas station button clicked");
+                fetchNearbyPlace.fetch(currentLocation.latitude,currentLocation.longitude);
+            }
+        });
+
 
     }
 

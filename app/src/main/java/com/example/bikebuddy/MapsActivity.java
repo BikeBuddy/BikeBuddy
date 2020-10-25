@@ -142,6 +142,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         routeButton = (Button) findViewById(R.id.route_button);
 
+
         tripManager = new TripManager(this);
         // set onClick listener for "Show Weather" button to show/hide markers on the map when pressed
 //        final Button button = (Button) findViewById(R.id.button1);
@@ -158,6 +159,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         sideWeatherButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 weatherFunctions.toggleWeather();
+                drawerLayout.closeDrawer(Gravity.LEFT);
+            }
+        });
+
+        Button gasButton = (Button) findViewById(R.id.fuel_toggle_stations);
+        gasButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Do something in response to button click
+                Toast toast = Toast.makeText(MapsActivity.this, "gas button clicked" , Toast.LENGTH_LONG);
+                toast.show();
+                System.out.println("gas station button clicked");
+                fetchNearbyPlace.fetch(currentLocation.latitude,currentLocation.longitude);
             }
         });
 
@@ -218,7 +231,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         tripManager.setUpOriginFromLocation();
 
 
-        tripManager.initMarkerButtons();
+
     }
 
     /**
@@ -564,31 +577,46 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void updateSideMenu() {
         // update route information
         Menu navMenu = navigationView.getMenu();
-        if (tripManager.getTripDetails() != null ) {// if there is a trip planned, pulls and displays the distance and duration to the side menu
+  
+        if (tripManager.getLocations().size() > 0) {// if there are locations, pulls and displays the distance and duration to the side menu
+
             navMenu.findItem(R.id.duration).setTitle(tripManager.getTripDetails().getTripDuration());
             navMenu.findItem(R.id.distance).setTitle(tripManager.getTripDetails().getTripDistance());
-        } else { //if no trip, show default text output.
+        } else { //if no locations, show default text output.
             navMenu.findItem(R.id.duration).setTitle("Duration: " + "0 Minutes");
             navMenu.findItem(R.id.distance).setTitle("Distance: " + "0 Kilometers");
         }
         SubMenu markerList = navMenu.findItem(R.id.marker_list).getSubMenu();
         markerList.clear();
+
         // update marker list with current markers
-        /**
-         *  Currently hard coded in 3 empty markers.
-         *  Once access to marker array, loop through and create entry for each marker.
-         */
-        int i = 0;
-        for(BikeBuddyLocation location: tripManager.getLocations()){
-            markerList.add(location.getAddress());
-            markerList.getItem(i++).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker));
+
+        int index = 0;
+        if (tripManager.getLocations().size() > 0)
+        {
+            for(BikeBuddyLocation location : tripManager.getLocations()) {
+                markerList.add(location.getAddress());
+                markerList.getItem(index).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker_white));
+                index++;
+            }
         }
+        else { markerList.add("No Locations Selected"); }
     }
 
     public void sideMenuClear(View view) {
         if (view.getId() == R.id.side_menu_clear) {
 
+            tripManager.routeStarted = false;
+            for(int i = 0; i < tripManager.getLocations().size(); i++)
+            {
+                tripManager.removeLeg(i);
+            }
+            tripManager.getLocations().clear();
+            tripManager.resetOriginAndDestination();
+            tripManager.updateMap();
             updateSideMenu();
+            findViewById(R.id.route_button).setVisibility(view.INVISIBLE);
+            mMap.clear();
         }
     }
 
@@ -602,6 +630,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
             mMap.setMapType(mapType);
         }
+        drawerLayout.closeDrawer(Gravity.LEFT);
     }
 
     public void toggleFuelInfo(View view) {
@@ -613,18 +642,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 fuelInf.setVisibility(View.INVISIBLE);
             }
         }
+        drawerLayout.closeDrawer(Gravity.LEFT);
     }
 
-    public void toggleStations(View view) {
-        if (view.getId() == R.id.fuel_toggle_stations) {
-            /**
-             * to do: toggle gas station visibility
-             */
+    public void toggleWeatherTime(View view) {
+        View weatherTime = findViewById(R.id.weatherDateTimeDisplay);
+        if(weatherTime.getVisibility() == view.INVISIBLE)
+        {
+            weatherTime.setVisibility(View.VISIBLE);
+            findViewById(R.id.currentDateTimeDisplay).setVisibility(View.VISIBLE);
+            findViewById(R.id.weatherDateTimeMinus).setVisibility(View.VISIBLE);
+            findViewById(R.id.weatherDateTimePlus).setVisibility(View.VISIBLE);
+            findViewById(R.id.weatherDateTimeReset).setVisibility(View.VISIBLE);
+        } else {
+            weatherTime.setVisibility(View.INVISIBLE);
+            findViewById(R.id.currentDateTimeDisplay).setVisibility(View.INVISIBLE);
+            findViewById(R.id.weatherDateTimeMinus).setVisibility(View.INVISIBLE);
+            findViewById(R.id.weatherDateTimePlus).setVisibility(View.INVISIBLE);
+            findViewById(R.id.weatherDateTimeReset).setVisibility(View.INVISIBLE);
         }
+        dateTimeFunctions.resetHour();
+        drawerLayout.closeDrawer(Gravity.LEFT);
+    }
+
+    public void toggleDarkMode(View view) {
+        /**
+         * change style for ui
+         */
     }
 
     public Button getRouteButton(){
         return routeButton;
     }
-
 }

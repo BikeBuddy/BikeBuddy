@@ -728,9 +728,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void toggleWeatherTime(View view) {
-        /**
-         *  toggle menu for weather time?
-         */
+        View weatherTime = findViewById(R.id.weatherDateTimeDisplay);
+        if(weatherTime.getVisibility() == view.INVISIBLE)
+        {
+            weatherTime.setVisibility(View.VISIBLE);
+            findViewById(R.id.currentDateTimeDisplay).setVisibility(View.VISIBLE);
+            findViewById(R.id.weatherDateTimeMinus).setVisibility(View.VISIBLE);
+            findViewById(R.id.weatherDateTimePlus).setVisibility(View.VISIBLE);
+            findViewById(R.id.weatherDateTimeReset).setVisibility(View.VISIBLE);
+        } else {
+            weatherTime.setVisibility(View.INVISIBLE);
+            findViewById(R.id.currentDateTimeDisplay).setVisibility(View.INVISIBLE);
+            findViewById(R.id.weatherDateTimeMinus).setVisibility(View.INVISIBLE);
+            findViewById(R.id.weatherDateTimePlus).setVisibility(View.INVISIBLE);
+            findViewById(R.id.weatherDateTimeReset).setVisibility(View.INVISIBLE);
+        }
+        dateTimeFunctions.resetHour();
     }
 
     public void toggleDarkMode(View view) {

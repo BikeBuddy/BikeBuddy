@@ -674,17 +674,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         SubMenu markerList = navMenu.findItem(R.id.marker_list).getSubMenu();
         markerList.clear();
+
         // update marker list with current markers
+        int index = 0;
+        if (jsonRoutes.tmpTrip != null)
+        {
+            markerList.add(jsonRoutes.tmpTrip.start);
+            markerList.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker_white));
+
+            markerList.add(jsonRoutes.tmpTrip.end);
+            markerList.getItem(index+1).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker));
+        }
+        else
+        {
+            markerList.add("No Locations Selected");
+        }
+
         /**
          *  Currently hard coded in 3 empty markers.
          *  Once access to marker array, loop through and create entry for each marker.
          */
-        markerList.add("Marker 1");
-        markerList.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker));
-        markerList.add("Marker 2");
-        markerList.getItem(1).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker));
-        markerList.add("Marker 3");
-        markerList.getItem(2).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker));
+     //   markerList.add("Marker 1");
+     //   markerList.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker_white));
+     //   markerList.add("Marker 2");
+     //   markerList.getItem(1).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker_white));
+     //   markerList.add("Marker 3");
+     //   markerList.getItem(2).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker_white));
     }
 
     public void sideMenuClear(View view) {
@@ -693,6 +708,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
              * still needs to actually delete markers, currently just clears for current draw
              */
             mMap.clear();
+            jsonRoutes.tmpTrip = null;
             updateSideMenu();
         }
     }

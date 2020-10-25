@@ -10,11 +10,13 @@
     <!-- Side Menu Thingy -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
-        android:layout_width="500dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         map:headerLayout="@layout/side_menu_header"
+        android:background="@drawable/night_background"
+        map:itemTextColor="@color/colorWhite"
         map:menu="@menu/side_menu">
 
         <!-- layout to hold buttons at footer of side menu -->
@@ -33,8 +35,9 @@
                 android:layout_marginLeft="13dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginBottom="80dp"
-                android:background="@drawable/gray_border"
+                android:background="@drawable/black_border"
                 android:onClick="sideMenuClear"
+                android:textColor="@color/colorWhite"
                 android:text="Clear Markers" />
 
             <!-- weather toggle button -->
@@ -46,9 +49,9 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginRight="15dp"
                 android:layout_marginBottom="10dp"
-                android:background="@drawable/gray_border"
+                android:background="@drawable/black_border"
                 android:onClick="toggleWeather"
-                android:src="@drawable/ic_cloud" />
+                android:src="@drawable/ic_cloud_white" />
 
             <!-- map toggle button -->
             <ImageButton
@@ -59,9 +62,9 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginRight="125dp"
                 android:layout_marginBottom="10dp"
-                android:background="@drawable/gray_border"
+                android:background="@drawable/black_border"
                 android:onClick="sideMenuMapStyle"
-                android:src="@drawable/ic_map" />
+                android:src="@drawable/ic_map_white" />
 
             <!-- fuel info button -->
             <ImageButton
@@ -72,9 +75,9 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginRight="235dp"
                 android:layout_marginBottom="10dp"
-                android:background="@drawable/gray_border"
+                android:background="@drawable/black_border"
                 android:onClick="toggleFuelInfo"
-                android:src="@drawable/ic_fuel" />
+                android:src="@drawable/ic_fuel_white" />
 
         </RelativeLayout>
     </com.google.android.material.navigation.NavigationView>
@@ -237,7 +240,7 @@
             android:background="@drawable/white_border"
             android:elevation="10dp"
             android:orientation="horizontal"
-            android:visibility="visible">
+            android:visibility="invisible">
 
 
             <!-- Put fuel stuff here -->

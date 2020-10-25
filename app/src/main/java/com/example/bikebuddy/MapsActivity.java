@@ -142,6 +142,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         routeButton = (Button) findViewById(R.id.route_button);
 
+
         tripManager = new TripManager(this);
         // set onClick listener for "Show Weather" button to show/hide markers on the map when pressed
 //        final Button button = (Button) findViewById(R.id.button1);
@@ -158,6 +159,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         sideWeatherButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 weatherFunctions.toggleWeather();
+                drawerLayout.closeDrawer(Gravity.LEFT);
             }
         });
 
@@ -586,24 +588,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         SubMenu markerList = navMenu.findItem(R.id.marker_list).getSubMenu();
         markerList.clear();
+
         // update marker list with current markers
-        /**
-         *  Currently hard coded in 3 empty markers.
-         *  Once access to marker array, loop through and create entry for each marker.
-         */
-        markerList.add("Marker 1");
-        markerList.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker));
-        markerList.add("Marker 2");
-        markerList.getItem(1).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker));
-        markerList.add("Marker 3");
-        markerList.getItem(2).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker));
+        int index = 0;
+        if (tripManager.getTripDetails() != null)
+        {
+            for(BikeBuddyLocation location : tripManager.getLocations()) {
+                markerList.add(location.getAddress());
+                markerList.getItem(index).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker_white));
+                index++;
+            }
+        }
+        else
+        {
+            markerList.add("No Locations Selected");
+        }
     }
 
     public void sideMenuClear(View view) {
         if (view.getId() == R.id.side_menu_clear) {
-            /**
-             * still needs to actually delete markers, currently just clears for current draw
-             */
             mMap.clear();
             updateSideMenu();
         }
@@ -619,6 +622,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
             mMap.setMapType(mapType);
         }
+        drawerLayout.closeDrawer(Gravity.LEFT);
     }
 
     public void toggleFuelInfo(View view) {
@@ -630,19 +634,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 fuelInf.setVisibility(View.INVISIBLE);
             }
         }
+        drawerLayout.closeDrawer(Gravity.LEFT);
     }
 
-    public void toggleStations(View view) {
-        if (view.getId() == R.id.fuel_toggle_stations) {
-            /**
-             * to do: toggle gas station visibility
-             */
+    public void toggleWeatherTime(View view) {
+        View weatherTime = findViewById(R.id.weatherDateTimeDisplay);
+        if(weatherTime.getVisibility() == view.INVISIBLE)
+        {
+            weatherTime.setVisibility(View.VISIBLE);
+            findViewById(R.id.currentDateTimeDisplay).setVisibility(View.VISIBLE);
+            findViewById(R.id.weatherDateTimeMinus).setVisibility(View.VISIBLE);
+            findViewById(R.id.weatherDateTimePlus).setVisibility(View.VISIBLE);
+            findViewById(R.id.weatherDateTimeReset).setVisibility(View.VISIBLE);
+        } else {
+            weatherTime.setVisibility(View.INVISIBLE);
+            findViewById(R.id.currentDateTimeDisplay).setVisibility(View.INVISIBLE);
+            findViewById(R.id.weatherDateTimeMinus).setVisibility(View.INVISIBLE);
+            findViewById(R.id.weatherDateTimePlus).setVisibility(View.INVISIBLE);
+            findViewById(R.id.weatherDateTimeReset).setVisibility(View.INVISIBLE);
         }
+        dateTimeFunctions.resetHour();
+    }
+
+    public void toggleDarkMode(View view) {
+        /**
+         * change style for ui
+         */
     }
 
     public Button getRouteButton(){
         return routeButton;
     }
-
 }
 

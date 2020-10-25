@@ -3,17 +3,12 @@
     xmlns:map="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/route_info"
-        android:title="Route Info">
-        <menu>
-            <item
-                android:id="@+id/distance"
-                android:title="Distance: " />
-            <item
-                android:id="@+id/duration"
-                android:title="Duration: " />
-        </menu>
-    </item>
+        android:id="@+id/distance"
+        android:title="Distance: " />
+
+    <item
+        android:id="@+id/duration"
+        android:title="Duration: " />
 
     <item
         android:id="@+id/marker_list"

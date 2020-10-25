@@ -142,6 +142,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         routeButton = (Button) findViewById(R.id.route_button);
 
+
         tripManager = new TripManager(this);
         // set onClick listener for "Show Weather" button to show/hide markers on the map when pressed
 //        final Button button = (Button) findViewById(R.id.button1);
@@ -590,14 +591,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // update marker list with current markers
         int index = 0;
-        if (jsonRoutes.tmpTrip != null)
+        if (tripManager.getTripDetails() != null)
         {
-            markerList.add(jsonRoutes.tmpTrip.start);
+            markerList.add(tripManager.getTripDetails().start);
             markerList.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker_white));
             /**
              *  Populate markers between start and end once multi-leg trip implemented.
              */
-            markerList.add(jsonRoutes.tmpTrip.end);
+            markerList.add(tripManager.getTripDetails().end);
             markerList.getItem(index+1).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker_white));
         }
         else
@@ -609,7 +610,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void sideMenuClear(View view) {
         if (view.getId() == R.id.side_menu_clear) {
             mMap.clear();
-            jsonRoutes.tmpTrip = null;
             updateSideMenu();
         }
     }

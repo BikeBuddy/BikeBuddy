@@ -218,7 +218,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         tripManager.setUpOriginFromLocation();
 
 
-
+        tripManager.initMarkerButtons();
     }
 
     /**
@@ -564,14 +564,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void updateSideMenu() {
         // update route information
         Menu navMenu = navigationView.getMenu();
-        if (tripManager.getTripDetails() != null) {// if there is a trip planned, pulls and displays the distance and duration to the side menu
+        if (tripManager.getTripDetails() != null ) {// if there is a trip planned, pulls and displays the distance and duration to the side menu
             navMenu.findItem(R.id.duration).setTitle(tripManager.getTripDetails().getTripDuration());
             navMenu.findItem(R.id.distance).setTitle(tripManager.getTripDetails().getTripDistance());
         } else { //if no trip, show default text output.
             navMenu.findItem(R.id.duration).setTitle("Duration: " + "0 Minutes");
             navMenu.findItem(R.id.distance).setTitle("Distance: " + "0 Kilometers");
         }
-
         SubMenu markerList = navMenu.findItem(R.id.marker_list).getSubMenu();
         markerList.clear();
         // update marker list with current markers
@@ -588,10 +587,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void sideMenuClear(View view) {
         if (view.getId() == R.id.side_menu_clear) {
-            /**
-             * still needs to actually delete markers, currently just clears for current draw
-             */
-            mMap.clear();
+
+            int numLocations = tripManager.getLocations().size();
+            for(int i= 0; i<numLocations; i++){
+                tripManager.removeLeg(0);
+            }
             updateSideMenu();
         }
     }

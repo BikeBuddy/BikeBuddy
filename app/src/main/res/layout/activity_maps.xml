@@ -377,21 +377,22 @@
                 android:title="@string/fuel_tank_size"
                 tools:layout_editor_absoluteY="59dp" />
 
-            <Button
-                android:id="@+id/undoMarkerButton"
-                android:layout_width="80sp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="163dp"
-                android:layout_marginLeft="163dp"
-                android:layout_marginTop="226sp"
-                android:layout_marginEnd="168dp"
-                android:layout_marginRight="168dp"
-                android:layout_marginBottom="377dp"
-                android:text="Remove"
-                android:textSize="9sp"
-                android:visibility="invisible" />
+
         </RelativeLayout>
 
+        <Button
+            android:id="@+id/undoMarkerButton"
+            android:layout_width="80sp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="163dp"
+            android:layout_marginLeft="163dp"
+            android:layout_marginTop="226sp"
+            android:layout_marginEnd="168dp"
+            android:layout_marginRight="168dp"
+            android:layout_marginBottom="377dp"
+            android:text="Remove"
+            android:textSize="9sp"
+            android:visibility="invisible" />
 
         <!-- the map fragment -->
         <fragment

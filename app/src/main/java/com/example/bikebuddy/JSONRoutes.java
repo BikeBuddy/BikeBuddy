@@ -86,7 +86,7 @@ public class JSONRoutes {
         mMap.addMarker(new MarkerOptions().position(midPoint)
                 .snippet(aTrip.getTripDuration())
                 .title(aTrip.getTripDistance()).icon(null).flat(true)
-        ).showInfoWindow();//BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)
+        ).showInfoWindow();
 
     }
 
@@ -106,7 +106,7 @@ public class JSONRoutes {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        //   Toast.makeText(mapsActivity, jsonString, Toast.LENGTH_LONG).show();
+
     }
 
     //takes in two LatLong locations, sends a request to google maps, parses the repsonse to a Trip and shows it on the map

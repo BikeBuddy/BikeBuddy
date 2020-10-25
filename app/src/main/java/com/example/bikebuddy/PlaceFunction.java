@@ -47,6 +47,10 @@ public class PlaceFunction {
 
     }
 
+    public ArrayList<Marker> getMarkerArray(){
+        return this.markerArray;
+    }
+
     /*
     This method takes an iconName and returns the corresponding Bitmap
     */

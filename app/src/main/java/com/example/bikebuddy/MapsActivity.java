@@ -696,9 +696,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void sideMenuClear(View view) {
         if (view.getId() == R.id.side_menu_clear) {
-            /**
-             * still needs to actually delete markers, currently just clears for current draw
-             */
             mMap.clear();
             jsonRoutes.tmpTrip = null;
             updateSideMenu();

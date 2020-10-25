@@ -231,6 +231,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         tripManager.setUpOriginFromLocation();
 
 
+
     }
 
     /**
@@ -569,7 +570,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // set side menu as active and clickable
             drawerLayout.openDrawer(Gravity.LEFT);
             navigationView.bringToFront();
-
             updateSideMenu();
         }
     }
@@ -577,18 +577,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void updateSideMenu() {
         // update route information
         Menu navMenu = navigationView.getMenu();
+  
         if (tripManager.getLocations().size() > 0) {// if there are locations, pulls and displays the distance and duration to the side menu
+
             navMenu.findItem(R.id.duration).setTitle(tripManager.getTripDetails().getTripDuration());
             navMenu.findItem(R.id.distance).setTitle(tripManager.getTripDetails().getTripDistance());
         } else { //if no locations, show default text output.
             navMenu.findItem(R.id.duration).setTitle("Duration: " + "0 Minutes");
             navMenu.findItem(R.id.distance).setTitle("Distance: " + "0 Kilometers");
         }
-
         SubMenu markerList = navMenu.findItem(R.id.marker_list).getSubMenu();
         markerList.clear();
 
         // update marker list with current markers
+
         int index = 0;
         if (tripManager.getLocations().size() > 0)
         {
@@ -603,6 +605,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void sideMenuClear(View view) {
         if (view.getId() == R.id.side_menu_clear) {
+
             tripManager.routeStarted = false;
             for(int i = 0; i < tripManager.getLocations().size(); i++)
             {
@@ -672,4 +675,3 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return routeButton;
     }
 }
-

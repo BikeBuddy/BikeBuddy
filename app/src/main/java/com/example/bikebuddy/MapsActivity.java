@@ -593,13 +593,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         int index = 0;
         if (tripManager.getTripDetails() != null)
         {
-            markerList.add(tripManager.getTripDetails().start);
-            markerList.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker_white));
-            /**
-             *  Populate markers between start and end once multi-leg trip implemented.
-             */
-            markerList.add(tripManager.getTripDetails().end);
-            markerList.getItem(index+1).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker_white));
+            for(BikeBuddyLocation location : tripManager.getLocations()) {
+                markerList.add(location.getAddress());
+                markerList.getItem(index).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker_white));
+                index++;
+            }
         }
         else
         {

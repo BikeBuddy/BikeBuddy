@@ -588,10 +588,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void sideMenuClear(View view) {
         if (view.getId() == R.id.side_menu_clear) {
 
-            int numLocations = tripManager.getLocations().size();
-            for(int i= 0; i<numLocations; i++){
-                tripManager.removeLeg(0);
-            }
             updateSideMenu();
         }
     }
@@ -632,4 +628,3 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 }
-

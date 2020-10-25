@@ -167,6 +167,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         sideWeatherButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 weatherFunctions.toggleWeather();
+                drawerLayout.closeDrawer(Gravity.LEFT);
             }
         });
 
@@ -681,25 +682,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         {
             markerList.add(jsonRoutes.tmpTrip.start);
             markerList.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker_white));
-
+            /**
+             *  Populate markers between start and end once multi-leg trip implemented.
+             */
             markerList.add(jsonRoutes.tmpTrip.end);
-            markerList.getItem(index+1).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker));
+            markerList.getItem(index+1).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker_white));
         }
         else
         {
             markerList.add("No Locations Selected");
         }
-
-        /**
-         *  Currently hard coded in 3 empty markers.
-         *  Once access to marker array, loop through and create entry for each marker.
-         */
-     //   markerList.add("Marker 1");
-     //   markerList.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker_white));
-     //   markerList.add("Marker 2");
-     //   markerList.getItem(1).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker_white));
-     //   markerList.add("Marker 3");
-     //   markerList.getItem(2).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker_white));
     }
 
     public void sideMenuClear(View view) {
@@ -723,6 +715,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
             mMap.setMapType(mapType);
         }
+        drawerLayout.closeDrawer(Gravity.LEFT);
     }
 
     public void toggleFuelInfo(View view) {
@@ -734,6 +727,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 fuelInf.setVisibility(View.INVISIBLE);
             }
         }
+        drawerLayout.closeDrawer(Gravity.LEFT);
     }
 
     public void toggleStations(View view) {

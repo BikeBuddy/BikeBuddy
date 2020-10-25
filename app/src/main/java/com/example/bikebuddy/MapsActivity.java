@@ -730,21 +730,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         drawerLayout.closeDrawer(Gravity.LEFT);
     }
 
-    public void toggleStations(View view) {
-        if (view.getId() == R.id.fuel_toggle_stations) {
-            /**
-             * to do: toggle gas station visibility
-             */
-        }
-    }
-
     public void toggleWeatherTime(View view) {
-
-
+        /**
+         *  toggle menu for weather time?
+         */
     }
 
     public void toggleDarkMode(View view) {
-
+        /**
+         * change style for ui
+         */
     }
 }
 

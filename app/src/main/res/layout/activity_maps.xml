@@ -173,22 +173,7 @@
             android:text="Start Route"
             android:visibility="invisible" />
 
-<!--        &lt;!&ndash; Show Weather Button &ndash;&gt;-->
-<!--        <Button-->
-<!--            android:id="@+id/button1"-->
-<!--            android:layout_width="110dp"-->
-<!--            android:layout_height="30dp"-->
-<!--            android:layout_alignParentStart="true"-->
-<!--            android:layout_alignParentLeft="true"-->
-<!--            android:layout_alignParentBottom="true"-->
-<!--            android:layout_marginStart="150dp"-->
-<!--            android:layout_marginLeft="150dp"-->
-<!--            android:layout_marginBottom="10dp"-->
-<!--            android:background="@drawable/white_border"-->
-<!--            android:onClick="toggleWeather"-->
-<!--            android:text="Show Weather" />-->
-
-
+        <!-- Weather Time Display -->
         <TextView
             android:id="@+id/currentDateTimeDisplay"
             android:layout_width="wrap_content"
@@ -199,7 +184,8 @@
             android:textSize="20sp"
             android:text="clock"
             android:layout_marginStart="50dp"
-            android:layout_marginTop="100dp" />
+            android:layout_marginTop="100dp"
+            android:visibility="invisible"/>
 
         <TextView
             android:id="@+id/weatherDateTimeDisplay"
@@ -210,49 +196,49 @@
             android:textColor="@color/quantum_black_text"
             android:textSize="20sp"
             android:layout_marginStart="50dp"
-            android:layout_marginTop="150dp" />
+            android:layout_marginTop="150dp"
+            android:visibility="invisible"/>
 
-<!--    <TextClock-->
-<!--        android:id="@+id/textClock"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:textSize="20sp"-->
-<!--        android:layout_alignParentStart="true"-->
-<!--        android:layout_alignParentTop="true"-->
-<!--        android:layout_marginStart="121dp"-->
-<!--        android:layout_marginTop="203dp"-->
-<!--        android:format12Hour="dd/MM hh:mm:ss a" />-->
 
         <Button
             android:id="@+id/weatherDateTimePlus"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/white_border"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginStart="100dp"
             android:layout_marginTop="200dp"
             android:onClick="dateTimeFunctionsPlusHour"
+            android:visibility="invisible"
+            android:textSize="20sp"
             android:text="@string/buttonIncrease" />
 
         <Button
             android:id="@+id/weatherDateTimeMinus"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/white_border"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="200dp"
+            android:layout_marginStart="170dp"
             android:layout_marginTop="200dp"
             android:onClick="dateTimeFunctionsMinusHour"
+            android:visibility="invisible"
+            android:textSize="20sp"
             android:text="@string/buttonDecrease" />
         <Button
             android:id="@+id/weatherDateTimeReset"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/white_border"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="300dp"
+            android:layout_marginStart="240dp"
             android:layout_marginTop="200dp"
             android:onClick="dateTimeFunctionsResetHour"
+            android:visibility="invisible"
+            android:textSize="20sp"
             android:text="@string/buttonReset" />
 
 

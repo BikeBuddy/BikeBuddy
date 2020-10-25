@@ -231,7 +231,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         tripManager.setUpOriginFromLocation();
 
 
-
     }
 
     /**
@@ -578,10 +577,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void updateSideMenu() {
         // update route information
         Menu navMenu = navigationView.getMenu();
-        if (tripManager.getTripDetails() != null) {// if there is a trip planned, pulls and displays the distance and duration to the side menu
+        if (tripManager.getLocations().size() > 0) {// if there are locations, pulls and displays the distance and duration to the side menu
             navMenu.findItem(R.id.duration).setTitle(tripManager.getTripDetails().getTripDuration());
             navMenu.findItem(R.id.distance).setTitle(tripManager.getTripDetails().getTripDistance());
-        } else { //if no trip, show default text output.
+        } else { //if no locations, show default text output.
             navMenu.findItem(R.id.duration).setTitle("Duration: " + "0 Minutes");
             navMenu.findItem(R.id.distance).setTitle("Distance: " + "0 Kilometers");
         }
@@ -591,7 +590,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // update marker list with current markers
         int index = 0;
-        if (tripManager.getTripDetails() != null)
+        if (tripManager.getLocations().size() > 0)
         {
             for(BikeBuddyLocation location : tripManager.getLocations()) {
                 markerList.add(location.getAddress());
@@ -599,16 +598,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 index++;
             }
         }
-        else
-        {
-            markerList.add("No Locations Selected");
-        }
+        else { markerList.add("No Locations Selected"); }
     }
 
     public void sideMenuClear(View view) {
         if (view.getId() == R.id.side_menu_clear) {
-            mMap.clear();
+            tripManager.routeStarted = false;
+            for(int i = 0; i < tripManager.getLocations().size(); i++)
+            {
+                tripManager.removeLeg(i);
+            }
+            tripManager.getLocations().clear();
+            tripManager.resetOriginAndDestination();
+            tripManager.updateMap();
             updateSideMenu();
+            findViewById(R.id.route_button).setVisibility(view.INVISIBLE);
+            mMap.clear();
         }
     }
 
@@ -654,6 +659,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             findViewById(R.id.weatherDateTimeReset).setVisibility(View.INVISIBLE);
         }
         dateTimeFunctions.resetHour();
+        drawerLayout.closeDrawer(Gravity.LEFT);
     }
 
     public void toggleDarkMode(View view) {

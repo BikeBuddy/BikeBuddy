@@ -24,7 +24,7 @@
         <RelativeLayout
             android:id="@+id/side_menu_footer"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="300dp"
             android:layout_gravity="bottom">
 
             <!-- Clear Markers Button -->
@@ -35,17 +35,43 @@
                 android:layout_alignParentBottom="true"
                 android:layout_marginLeft="13dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginBottom="80dp"
+                android:layout_marginBottom="175dp"
                 android:background="@drawable/black_border"
                 android:onClick="sideMenuClear"
                 android:textColor="@color/colorWhite"
                 android:text="Clear Markers" />
 
+            <!-- fuel info Button -->
+            <ImageButton
+                android:id="@+id/side_menu_fuel"
+                android:layout_width="150dp"
+                android:layout_height="75dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="92dp"
+                android:background="@drawable/black_border"
+                android:onClick="toggleFuelInfo"
+                android:src="@drawable/ic_fuel_white"/>
+
+            <!-- Weather Time Button -->
+            <ImageButton
+                android:id="@+id/side_menu_time"
+                android:layout_width="150dp"
+                android:layout_height="75dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="185dp"
+                android:layout_marginBottom="92dp"
+                android:background="@drawable/black_border"
+                android:onClick="toggleWeatherTime"
+                android:src="@drawable/ic_clock_white" />
+
             <!-- weather toggle button -->
             <ImageButton
                 android:id="@+id/side_menu_weather"
                 android:layout_width="100dp"
-                android:layout_height="wrap_content"
+                android:layout_height="75dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
                 android:layout_marginRight="15dp"
@@ -58,7 +84,7 @@
             <ImageButton
                 android:id="@+id/side_menu_map"
                 android:layout_width="100dp"
-                android:layout_height="wrap_content"
+                android:layout_height="75dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
                 android:layout_marginRight="125dp"
@@ -67,18 +93,18 @@
                 android:onClick="sideMenuMapStyle"
                 android:src="@drawable/ic_map_white" />
 
-            <!-- fuel info button -->
+            <!-- dark mode button -->
             <ImageButton
-                android:id="@+id/side_menu_fuel"
+                android:id="@+id/side_menu_darkMode"
                 android:layout_width="100dp"
-                android:layout_height="wrap_content"
+                android:layout_height="75dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
                 android:layout_marginRight="235dp"
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/black_border"
-                android:onClick="toggleFuelInfo"
-                android:src="@drawable/ic_fuel_white" />
+                android:onClick="toggleDarkMode"
+                android:src="@drawable/ic_sun_white" />
 
         </RelativeLayout>
     </com.google.android.material.navigation.NavigationView>

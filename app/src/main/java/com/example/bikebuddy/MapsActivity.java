@@ -738,5 +738,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    public void toggleWeatherTime(View view) {
+
+
+    }
+
+    public void toggleDarkMode(View view) {
+
+    }
 }
 

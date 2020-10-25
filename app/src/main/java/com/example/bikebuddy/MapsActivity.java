@@ -533,7 +533,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // set side menu as active and clickable
             drawerLayout.openDrawer(Gravity.LEFT);
             navigationView.bringToFront();
-
             updateSideMenu();
         }
     }
@@ -556,12 +555,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
          *  Currently hard coded in 3 empty markers.
          *  Once access to marker array, loop through and create entry for each marker.
          */
-        markerList.add("Marker 1");
-        markerList.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker));
-        markerList.add("Marker 2");
-        markerList.getItem(1).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker));
-        markerList.add("Marker 3");
-        markerList.getItem(2).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker));
+        int i = 0;
+        for(BikeBuddyLocation location: tripManager.getLocations()){
+            markerList.add(location.getAddress());
+            markerList.getItem(i++).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker));
+        }
     }
 
     public void sideMenuClear(View view) {

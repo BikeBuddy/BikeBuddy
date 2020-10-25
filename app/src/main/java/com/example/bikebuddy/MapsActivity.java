@@ -75,8 +75,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public WeatherFunctions weatherFunctions;
     public FetchWeather fetchWeather;
+
+    public FetchNearbyPlace fetchNearbyPlace;
+    HashMap<String, String> weatherIcons;
+    public PlaceFunction placeFunctions;
+
     public DateTimeFunctions dateTimeFunctions;
-    //HashMap<String, String> weatherIcons;
+
 
     private GoogleMap mMap;
 
@@ -156,6 +161,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+
     }
 
 
@@ -167,9 +173,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         initFetchWeather();
         initWeatherFunctions();
+
+        initFetchNearbyPlace();
+        initPlaceFunctions();
+
         initDateTimeFunctions();
-      //  weatherDateTimeDisplay = findViewById(R.id.weatherDateTimeDisplay);
-       // timer();
+
 
         HashMap<String, Drawable> weatherIcons = new HashMap<String, Drawable>();
 
@@ -208,7 +217,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //sets origin to gps location
         tripManager.setUpOriginFromLocation();
 
-        //getLocationsWeather();
+
 
     }
 
@@ -424,7 +433,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     currentLocation = mMap.getCameraPosition().target;
 
 
+
+                fetchNearbyPlace.fetch(currentLocation.latitude,currentLocation.longitude);
+
+
                 new getAddressListFromLatLong().execute();
+
             }
         };
 
@@ -462,8 +476,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 fetchWeather.fetch(address.getLatitude(), address.getLongitude());
             }
         }
+
         mMap.clear();
         tripManager.updateMap();
+    }
+
+    public void initPlaceFunctions() {
+        this.placeFunctions = new PlaceFunction(this, this.mMap);
     }
 
     public void initWeatherFunctions() {
@@ -472,6 +491,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void initFetchWeather() {
         this.fetchWeather = new FetchWeather(this);
+    }
+
+
+    public void initFetchNearbyPlace(){
+        this.fetchNearbyPlace = new FetchNearbyPlace(this);
     }
 
     //sets the starting location to gps location, otherwise sets startingLocationNeeded flag to true

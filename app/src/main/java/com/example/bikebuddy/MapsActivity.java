@@ -118,6 +118,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
 
+    boolean darkModeActive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,6 +204,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         initPlaces();
         initAutoComplete();
         initSideMenu();
+
+        darkModeActive = true;
 
         //start background thread for updating adressList
        // new getAddressListFromLatLong().execute();
@@ -666,9 +669,48 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void toggleDarkMode(View view) {
-        /**
-         * change style for ui
-         */
+        darkModeActive = !darkModeActive;
+     //   Resources.Theme theme  = this.getTheme();
+        if(darkModeActive) {
+            // dark mode
+     //       theme.applyStyle(R.style.DarkModeStyle, true);
+            findViewById(R.id.nav_view).setBackground(ContextCompat.getDrawable(this, R.drawable.night_background));
+            findViewById(R.id.side_menu_clear).setBackground(ContextCompat.getDrawable(this, R.drawable.black_border));
+            findViewById(R.id.side_menu_fuel).setBackground(ContextCompat.getDrawable(this, R.drawable.black_border));
+            findViewById(R.id.side_menu_weather).setBackground(ContextCompat.getDrawable(this, R.drawable.black_border));
+            findViewById(R.id.side_menu_darkMode).setBackground(ContextCompat.getDrawable(this, R.drawable.black_border));
+            findViewById(R.id.side_menu_map).setBackground(ContextCompat.getDrawable(this, R.drawable.black_border));
+            findViewById(R.id.side_menu_time).setBackground(ContextCompat.getDrawable(this, R.drawable.black_border));
+
+            // change marker colors
+            SubMenu markerList = navigationView.getMenu().findItem(R.id.marker_list).getSubMenu();
+            for(int i = 0 ; i < markerList.size(); i++)
+            {
+                markerList.getItem(i).setIcon(R.drawable.ic_marker_white);
+            }
+
+        } else {
+            // light mode
+     //       theme.applyStyle(R.style.LightModeStyle, true);
+            findViewById(R.id.nav_view).setBackground(ContextCompat.getDrawable(this, R.drawable.light_background));
+            findViewById(R.id.side_menu_clear).setBackground(ContextCompat.getDrawable(this, R.drawable.gray_border));
+            findViewById(R.id.side_menu_fuel).setBackground(ContextCompat.getDrawable(this, R.drawable.gray_border));
+            findViewById(R.id.side_menu_weather).setBackground(ContextCompat.getDrawable(this, R.drawable.gray_border));
+            findViewById(R.id.side_menu_darkMode).setBackground(ContextCompat.getDrawable(this, R.drawable.gray_border));
+            findViewById(R.id.side_menu_map).setBackground(ContextCompat.getDrawable(this, R.drawable.gray_border));
+            findViewById(R.id.side_menu_time).setBackground(ContextCompat.getDrawable(this, R.drawable.gray_border));
+
+            // change marker colors
+            SubMenu markerList = navigationView.getMenu().findItem(R.id.marker_list).getSubMenu();
+            for(int i = 0 ; i < markerList.size(); i++)
+            {
+                markerList.getItem(i).setIcon(R.drawable.ic_marker);
+            }
+        }
+
+
+
+        // light mode
     }
 
     public Button getRouteButton(){

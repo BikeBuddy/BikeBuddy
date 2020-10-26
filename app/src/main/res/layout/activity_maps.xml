@@ -15,9 +15,8 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         android:background="@drawable/night_background"
-        android:theme="@style/NavigationViewStyle"
+        android:theme="@style/DarkModeStyle"
         map:headerLayout="@layout/side_menu_header"
-        map:itemIconTint="@color/colorWhite"
         map:menu="@menu/side_menu">
 
         <!-- layout to hold buttons at footer of side menu -->

@@ -158,16 +158,14 @@
         <!-- Route Button -->
         <Button
             android:id="@+id/route_button"
-            android:layout_width="110dp"
+            android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="150dp"
-            android:layout_marginLeft="150dp"
+            android:paddingHorizontal="10dp"
             android:layout_marginBottom="45dp"
-            android:layout_weight="1"
             android:background="@drawable/white_border"
+            android:textSize="16dp"
             android:onClick="initRoute"
             android:text="Start Route"
             android:visibility="invisible" />
@@ -245,168 +243,163 @@
         <RelativeLayout
             android:id="@+id/fuel_info_window"
             android:layout_width="250dp"
-            android:layout_height="300dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
             android:layout_marginTop="60dp"
             android:layout_marginRight="20dp"
-            android:background="@drawable/white_border"
+            android:background="@drawable/grey_border"
             android:elevation="10dp"
             android:orientation="horizontal"
             android:visibility="invisible">
 
 
-            <!-- Put fuel stuff here -->
-
+            <!-- Fuel Window Buttons -->
             <Button
-                android:id="@+id/fuel_toggle_stations"
-                android:layout_width="wrap_content"
+                android:id="@+id/fuel_display_stations"
+                android:layout_width="190dp"
                 android:layout_height="40dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="40dp"
-                android:text="Toggle Stations" />
+                android:layout_marginRight="50dp"
+                android:layout_marginTop="5dp"
+                android:backgroundTint="@color/colorBlack"
+                android:textColor="@color/colorWhite"
+                android:text="Display Stations" />
 
             <ImageButton
                 android:id="@+id/fuel_close"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:layout_marginTop="5dp"
                 android:layout_alignParentRight="true"
-                android:contentDescription="TODO"
+                android:layout_marginRight="10dp"
                 android:onClick="toggleFuelInfo"
+                android:backgroundTint="@color/colorBlack"
+                android:tint="@color/colorWhite"
                 android:src="@drawable/ic_cross" />
 
-            <EditText
-                android:id="@+id/textMaxRange"
-                android:layout_width="61dp"
+            <!-- Fuel Window Info -->
+            <TextView
+                android:id="@+id/textTitleFuelTankSize"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/textTitleMaxRange"
-                android:layout_alignParentBottom="false"
-                android:layout_marginTop="1dp"
-                android:ems="10"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="50dp"
+                android:textColor="@color/colorWhite"
+                android:text="@string/fuel_tank_size_litres"
+                android:textSize="16sp"
+                tools:layout_editor_absoluteY="39dp" />
+
+            <EditText
+                android:id="@+id/textFuelTankSize"
+                android:layout_width="90dp"
+                android:layout_height="50dp"
+                android:layout_below="@id/textTitleFuelTankSize"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="20dp"
                 android:hint="@string/Fuel_Used"
+                android:textColorHint="@color/colorWhite"
                 android:importantForAutofill="no"
-                android:inputType="none"
-                android:textSize="12sp"
-                android:title="@string/max_range" />
+                android:inputType="number"
+                android:textSize="16sp"
+                android:textColor="@color/colorWhite"
+                android:title="@string/fuel_tank_size" />
+
+            <TextView
+                android:id="@+id/textTitleFuelUsed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textFuelTankSize"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/colorWhite"
+                android:text="@string/fuel_used_litres"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/textFuelUsed"
+                android:layout_width="90dp"
+                android:layout_height="50dp"
+                android:layout_below="@id/textTitleFuelUsed"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="20dp"
+                android:hint="@string/Fuel_Used"
+                android:textColorHint="@color/colorWhite"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                android:textSize="16sp"
+                android:textColor="@color/colorWhite"
+                android:title="@string/fuel_used" />
 
             <TextView
                 android:id="@+id/textTitleTripDistance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/textFuelUsed"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginEnd="272dp"
-                android:layout_marginRight="272dp"
-                android:layout_marginBottom="-60dp"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/colorWhite"
                 android:text="@string/trip_distance_km"
-                android:textSize="12sp" />
+                android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/textTripDistance"
-                android:layout_width="106dp"
-                android:layout_height="49dp"
-                android:layout_below="@id/textFuelUsed"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginEnd="172dp"
-                android:layout_marginRight="172dp"
-                android:layout_marginBottom="432dp"
-                android:ems="10"
+                android:layout_width="90dp"
+                android:layout_height="50dp"
+                android:layout_below="@id/textTitleTripDistance"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="20dp"
                 android:hint="@string/Fuel_Used"
+                android:textColorHint="@color/colorWhite"
                 android:importantForAutofill="no"
                 android:inputType="number"
-                android:textSize="12sp"
+                android:textSize="16sp"
+                android:textColor="@color/colorWhite"
                 android:title="@string/trip_distance" />
 
             <TextView
                 android:id="@+id/textTitleMaxRange"
-                android:layout_width="115dp"
-                android:layout_height="32dp"
-                android:layout_below="@id/fuel_toggle_stations"
-                android:layout_marginTop="116dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textTripDistance"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="20dp"
+                android:textColor="@color/colorWhite"
                 android:text="@string/calculated_maximum_range_km"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/textTitleFuelUsed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="39dp"
-                android:layout_marginEnd="272dp"
-                android:layout_marginRight="272dp"
-                android:text="@string/fuel_used_litres"
-                android:textSize="12sp" />
+                android:textSize="16sp" />
 
             <EditText
-                android:id="@+id/textFuelUsed"
-                android:layout_width="106dp"
-                android:layout_height="49dp"
-                android:layout_below="@id/textTitleFuelUsed"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginEnd="172dp"
-                android:layout_marginRight="172dp"
-                android:ems="10"
+                android:id="@+id/textMaxRange"
+                android:layout_width="90dp"
+                android:layout_height="50dp"
+                android:layout_below="@id/textTitleMaxRange"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginBottom="10dp"
                 android:hint="@string/Fuel_Used"
+                android:textColorHint="@color/colorWhite"
                 android:importantForAutofill="no"
-                android:inputType="number"
-                android:textSize="12sp"
-                android:title="@string/fuel_used"
-                tools:layout_editor_absoluteY="59dp" />
-
-            <TextView
-                android:id="@+id/textTitleFuelTankSize"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/fuel_toggle_stations"
-                android:layout_marginStart="116dp"
-                android:layout_marginLeft="116dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:text="@string/fuel_tank_size_litres"
-                android:textSize="12sp"
-                tools:layout_editor_absoluteY="39dp" />
-
-            <EditText
-                android:id="@+id/textFuelTankSize"
-                android:layout_width="106dp"
-                android:layout_height="49dp"
-                android:layout_below="@id/textTitleFuelTankSize"
-                android:layout_marginStart="116dp"
-                android:layout_marginLeft="116dp"
-                android:layout_marginTop="2dp"
-                android:layout_marginEnd="31dp"
-                android:layout_marginRight="31dp"
-                android:ems="10"
-                android:hint="@string/Fuel_Used"
-                android:importantForAutofill="no"
-                android:inputType="number"
-                android:textSize="12sp"
-                android:title="@string/fuel_tank_size"
-                tools:layout_editor_absoluteY="59dp" />
-
+                android:inputType="none"
+                android:textSize="16sp"
+                android:textColor="@color/colorWhite"
+                android:title="@string/max_range" />
 
         </RelativeLayout>
 
         <Button
             android:id="@+id/undoMarkerButton"
-            android:layout_width="80sp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="163dp"
-            android:layout_marginLeft="163dp"
-            android:layout_marginTop="226sp"
-            android:layout_marginEnd="168dp"
-            android:layout_marginRight="168dp"
-            android:layout_marginBottom="377dp"
-            android:text="Remove"
-            android:textSize="9sp"
+            android:layout_centerInParent="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="160dp"
+            android:paddingHorizontal="10dp"
+            android:background="@drawable/white_border"
+            android:textSize="16dp"
+            android:text="Remove Marker"
             android:visibility="invisible" />
 
         <!-- the map fragment -->

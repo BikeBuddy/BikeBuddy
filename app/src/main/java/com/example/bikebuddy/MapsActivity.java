@@ -160,12 +160,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        Button gasButton = (Button) findViewById(R.id.fuel_toggle_stations);
+        Button gasButton = (Button) findViewById(R.id.fuel_display_stations);
         gasButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Do something in response to button click
-                Toast toast = Toast.makeText(MapsActivity.this, "gas button clicked" , Toast.LENGTH_LONG);
-                toast.show();
                 System.out.println("gas station button clicked");
                 fetchNearbyPlace.fetch(currentLocation.latitude,currentLocation.longitude);
             }
@@ -444,7 +442,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
-                fetchNearbyPlace.fetch(currentLocation.latitude,currentLocation.longitude);
+            //    fetchNearbyPlace.fetch(currentLocation.latitude,currentLocation.longitude);
 
 
                 new getAddressListFromLatLong().execute();
@@ -675,6 +673,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             findViewById(R.id.side_menu_map).setBackground(ContextCompat.getDrawable(this, R.drawable.black_border));
             findViewById(R.id.side_menu_time).setBackground(ContextCompat.getDrawable(this, R.drawable.black_border));
 
+
         } else {
             // light mode
             findViewById(R.id.side_menu_header).setBackgroundColor(Color.parseColor("#515151"));
@@ -685,6 +684,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             findViewById(R.id.side_menu_darkMode).setBackground(ContextCompat.getDrawable(this, R.drawable.grey_border));
             findViewById(R.id.side_menu_map).setBackground(ContextCompat.getDrawable(this, R.drawable.grey_border));
             findViewById(R.id.side_menu_time).setBackground(ContextCompat.getDrawable(this, R.drawable.grey_border));
+
+
         }
         drawerLayout.closeDrawer(Gravity.LEFT);
     }

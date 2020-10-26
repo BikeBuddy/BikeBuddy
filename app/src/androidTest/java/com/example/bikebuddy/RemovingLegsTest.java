@@ -29,14 +29,15 @@ public class RemovingLegsTest {
 
                 tripManager.setAutoLatLang(leg1);
                 tripManager.setAutoLatLang(leg2);
+                //note that leg 3 will be at index 1 in the list, destination always remains at the last index after the additon of a leg
                 tripManager.setAutoLatLang(leg3);
 
                 tripManager.removeLeg(0);
-                //removing the starting origin should set the second leg to stasrting location, set the second leg to destination
+                //removing the starting origin should set the first stop (leg3) to starting location, set the last location in the list to destination(leg2)
                 assertEquals(2,tripManager.getLocations().size());
                 assertFalse(tripManager.startingLocationNeeded);
-                assertEquals(tripManager.getStartingOrigin().getCoordinate(), leg2);
-                assertEquals(tripManager.getTheDestination().getCoordinate(), leg3);
+                assertEquals(tripManager.getStartingOrigin().getCoordinate(), leg3);
+                assertEquals(tripManager.getTheDestination().getCoordinate(), leg2);
             }
         });
     }

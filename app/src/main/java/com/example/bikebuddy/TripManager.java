@@ -11,7 +11,7 @@ import com.google.android.gms.maps.model.Marker;
 
 import java.util.ArrayList;
 
-
+//author- PK
 
 public class TripManager {
     private JSONRoutes jsonRoutes;// send requests and show routes on map with this object--PK
@@ -245,9 +245,11 @@ public class TripManager {
             BikeBuddyLocation lastLocation = locations.get(locations.size()-1);
             BikeBuddyLocation firstLocation  = locations.get(0);
             firstLocation.setAsOrigin();
+         //   setStartingOrigin(firstLocation);
             startingOrigin = firstLocation;
             lastLocation.setAsDestination();
             theDestination = lastLocation;
+          //  setDestination(lastLocation);
         }
     }
 

@@ -1,6 +1,11 @@
 package com.example.bikebuddy;
 
+import android.graphics.Color;
+
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 
@@ -64,6 +69,8 @@ public class Trip {
            thirdQuaterPoint = points.get((int) (points.size()*0.75));
         }
     }
+
+
 
 
     //Decodes the encoded polyline recieved from the google directions API into a list of LatLng values

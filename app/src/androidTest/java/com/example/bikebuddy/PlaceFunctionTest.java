@@ -34,7 +34,7 @@ public class PlaceFunctionTest {
                     Marker marker;
                     ArrayList<Marker> markerArray = new ArrayList<Marker>();
                     //MapsActivity map = new MapsActivity();
-                    GoogleMap googleMap = (com.google.android.gms.maps.GoogleMap) GoogleMap;
+                    GoogleMap googleMap = map.getmMap();
 
                     PlaceFunction place = new PlaceFunction(map, googleMap);
                     //GetAllInter getAll = mock(GetAllInter.class);
@@ -51,7 +51,7 @@ public class PlaceFunctionTest {
 
                     // create a marker
 
-                    LatLng latLng= new LatLng(34, 140);
+                    LatLng latLng= new LatLng(34, 141);
                     marker = googleMap.addMarker(new MarkerOptions().position(latLng).title("gary creates gas station").snippet("000")
                             .icon(BitmapDescriptorFactory.fromBitmap(place.generateIcon())));
                     lat[1] = latLng;
@@ -59,11 +59,6 @@ public class PlaceFunctionTest {
                     assertEquals(lat[0],lat[1]);
                 }
             });
-    //    }//catch (Exception e){
-        // System.out.println(e);
-        // }
-     //  catch (Throwable e){
-        //       throw e;
-    //    }
+
     }
 }

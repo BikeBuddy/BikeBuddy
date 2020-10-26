@@ -245,7 +245,9 @@ public class TripManager {
             BikeBuddyLocation lastLocation = locations.get(locations.size()-1);
             BikeBuddyLocation firstLocation  = locations.get(0);
             firstLocation.setAsOrigin();
+            startingOrigin = firstLocation;
             lastLocation.setAsDestination();
+            theDestination = lastLocation;
         }
     }
 

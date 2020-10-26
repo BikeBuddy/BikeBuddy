@@ -695,6 +695,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         drawerLayout.closeDrawer(Gravity.LEFT);
     }
 
+    public GoogleMap getmMap(){
+        return this.mMap;
+    }
+
+    public TripManager getTripManager() {
+        return tripManager;
+    }
+
     public Button getRouteButton(){
         return routeButton;
     }

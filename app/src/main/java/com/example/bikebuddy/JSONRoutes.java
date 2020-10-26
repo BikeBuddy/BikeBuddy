@@ -1,13 +1,13 @@
 package com.example.bikebuddy;
 
 
+import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.location.Address;
-import android.location.Geocoder;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.widget.Toast;
-
-import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -22,7 +22,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 //@Author PK
 public class JSONRoutes {
@@ -31,13 +30,14 @@ public class JSONRoutes {
     private ArrayList<LatLng> locations;
     protected MapsActivity mapsActivity;
     private Trip newTrip;
+    protected int fuelCuttOffKMs = 50;
+
 
     public JSONRoutes(String key, GoogleMap mMap){
         this.key = key;
         this.mMap = mMap;
         locations = new ArrayList<>();
     }
-
 
     //parses a Json response into a Trip object and returns it
     public Trip parseJsonToDirections(String jsonString)throws JSONException, UnsupportedOperationException{
@@ -46,6 +46,8 @@ public class JSONRoutes {
         // String responseStatus = status.getString("value");
         if(responseStatus.equals("OK")) {
             return parseDirectionsToTrip(recievedJsonDirections);
+        }else if(locations.size()>14){
+            Toast.makeText(mapsActivity, "limit of 14 locations for the free version", Toast.LENGTH_LONG).show();
         }
         //else if google directions is unable to find a route for the specified locations
         else if(responseStatus.equals("NOT_FOUND") || responseStatus.equals("ZERO_RESULTS")) {
@@ -72,24 +74,65 @@ public class JSONRoutes {
         newTrip.end = jsonLeg.getString("end_address");
         newTrip.encodedPolyLine = jsonPolyline.getString("points");
         newTrip.decodePolyLine();
+
+        newTrip.calculatePoints();
         return newTrip;
     }
 
     //shows the polyline(route) of a trip onto the map
     //@param: Trip, the trip to be shown on the map
     public void showTrip(Trip aTrip){
+
         PolylineOptions places = new PolylineOptions();
         for (LatLng point : aTrip.points)
-            places.add(point).width(20f).color(Color.RED);
+            places.add(point).width(20f).color(Color.BLUE);
         mMap.addPolyline(places);
         LatLng midPoint = aTrip.points.get(aTrip.points.size() / 2);
         mMap.addMarker(new MarkerOptions().position(midPoint)
                 .snippet(aTrip.getTripDuration())
-                .title(aTrip.getTripDistance()).icon(null).flat(true)
-        ).showInfoWindow();//BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)
-
+                .title(aTrip.getTripDistance()).icon(BitmapDescriptorFactory.fromBitmap(generateNoIcon())).flat(true)
+        ).showInfoWindow();
+        showFuelTrip();
     }
 
+    //shows polyLine at cut off point where user will run out of fuel
+    public void showFuelTrip(){
+        if(newTrip==null || newTrip.distance ==0)
+            return;
+        int tripDistance = newTrip.distance/1000;
+        if((tripDistance) > fuelCuttOffKMs){
+            double cutOff = (((double)fuelCuttOffKMs)/((double)tripDistance));
+            int cutOffPoint = (int) (cutOff * newTrip.points.size());
+            PolylineOptions places = new PolylineOptions();
+            for(int i=0; i< cutOffPoint; i++ ) {
+                places.add(newTrip.points.get(i)).width(23f).color(Color.RED);
+                if(i== (cutOffPoint-1)){
+                    mMap.addMarker(new MarkerOptions().position(newTrip.points.get(i))
+                            .title("You will have no fuel here").icon(BitmapDescriptorFactory.fromBitmap(generateNoIcon()))).showInfoWindow();
+                }
+            }
+            Toast.makeText(mapsActivity,"cutoff: " + cutOff + " distance:" + tripDistance + " points size"+ newTrip.points.size()+ " cut off point:" +cutOffPoint +" fuelKm:" +fuelCuttOffKMs,Toast.LENGTH_LONG).show();
+            mMap.addPolyline(places);
+        }
+    }
+
+
+
+    public Bitmap generateNoIcon() {
+        String defaultIcon = "@drawable/gas";
+        Drawable drawable;
+        try {
+            int imageResource;
+            imageResource = mapsActivity.getResources().getIdentifier(defaultIcon, null, mapsActivity.getPackageName());
+            drawable = mapsActivity.getResources().getDrawable(imageResource);
+            BitmapDrawable bitmapDrawable=(BitmapDrawable)drawable;
+            Bitmap bitmap=bitmapDrawable.getBitmap();
+            Bitmap weatherIcon = Bitmap.createScaledBitmap(bitmap,1, 1, false);
+            return weatherIcon;
+        } catch (Resources.NotFoundException e) {
+        }
+        return null;
+    }
     public void executeResponse(String jsonString)throws UnsupportedOperationException{
         try {
             if(!hasMultipleLegs()){
@@ -106,7 +149,7 @@ public class JSONRoutes {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        //   Toast.makeText(mapsActivity, jsonString, Toast.LENGTH_LONG).show();
+
     }
 
     //takes in two LatLong locations, sends a request to google maps, parses the repsonse to a Trip and shows it on the map

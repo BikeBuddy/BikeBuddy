@@ -3,7 +3,10 @@ package com.example.bikebuddy;
 
 
 
+import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
@@ -20,6 +23,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.widget.Button;
@@ -118,7 +122,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
 
-    boolean darkModeActive;
+    boolean darkModeActive = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -204,8 +208,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         initPlaces();
         initAutoComplete();
         initSideMenu();
-
-        darkModeActive = true;
 
         //start background thread for updating adressList
        // new getAddressListFromLatLong().execute();
@@ -581,7 +583,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // update route information
         Menu navMenu = navigationView.getMenu();
   
-        if (tripManager.getLocations().size() > 0) {// if there are locations, pulls and displays the distance and duration to the side menu
+        if (tripManager.getTripDetails() != null && tripManager.getLocations().size() > 0) {// if there are locations, pulls and displays the distance and duration to the side menu
 
             navMenu.findItem(R.id.duration).setTitle(tripManager.getTripDetails().getTripDuration());
             navMenu.findItem(R.id.distance).setTitle(tripManager.getTripDetails().getTripDistance());
@@ -599,7 +601,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         {
             for(BikeBuddyLocation location : tripManager.getLocations()) {
                 markerList.add(location.getAddress());
-                markerList.getItem(index).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker_white));
+                if(darkModeActive)
+                    markerList.getItem(index).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker_white));
+                else
+                    markerList.getItem(index).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker));
                 index++;
             }
         }
@@ -670,10 +675,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void toggleDarkMode(View view) {
         darkModeActive = !darkModeActive;
-     //   Resources.Theme theme  = this.getTheme();
         if(darkModeActive) {
             // dark mode
-     //       theme.applyStyle(R.style.DarkModeStyle, true);
+            findViewById(R.id.distance).setBackgroundColor(Color.TRANSPARENT);
             findViewById(R.id.nav_view).setBackground(ContextCompat.getDrawable(this, R.drawable.night_background));
             findViewById(R.id.side_menu_clear).setBackground(ContextCompat.getDrawable(this, R.drawable.black_border));
             findViewById(R.id.side_menu_fuel).setBackground(ContextCompat.getDrawable(this, R.drawable.black_border));
@@ -683,15 +687,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             findViewById(R.id.side_menu_time).setBackground(ContextCompat.getDrawable(this, R.drawable.black_border));
 
             // change marker colors
-            SubMenu markerList = navigationView.getMenu().findItem(R.id.marker_list).getSubMenu();
-            for(int i = 0 ; i < markerList.size(); i++)
+            if(tripManager.getLocations().size() > 0)
             {
-                markerList.getItem(i).setIcon(R.drawable.ic_marker_white);
+                SubMenu markerList = navigationView.getMenu().findItem(R.id.marker_list).getSubMenu();
+                for(int i = 0 ; i < markerList.size(); i++)
+                {
+                    markerList.getItem(i).setIcon(R.drawable.ic_marker);
+                }
             }
 
         } else {
             // light mode
-     //       theme.applyStyle(R.style.LightModeStyle, true);
             findViewById(R.id.nav_view).setBackground(ContextCompat.getDrawable(this, R.drawable.light_background));
             findViewById(R.id.side_menu_clear).setBackground(ContextCompat.getDrawable(this, R.drawable.gray_border));
             findViewById(R.id.side_menu_fuel).setBackground(ContextCompat.getDrawable(this, R.drawable.gray_border));
@@ -701,16 +707,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             findViewById(R.id.side_menu_time).setBackground(ContextCompat.getDrawable(this, R.drawable.gray_border));
 
             // change marker colors
-            SubMenu markerList = navigationView.getMenu().findItem(R.id.marker_list).getSubMenu();
-            for(int i = 0 ; i < markerList.size(); i++)
+            if(tripManager.getLocations().size() > 0)
             {
-                markerList.getItem(i).setIcon(R.drawable.ic_marker);
+                SubMenu markerList = navigationView.getMenu().findItem(R.id.marker_list).getSubMenu();
+                for(int i = 0 ; i < markerList.size(); i++)
+                {
+                    markerList.getItem(i).setIcon(R.drawable.ic_marker);
+                }
             }
+
         }
-
-
-
-        // light mode
     }
 
     public Button getRouteButton(){

@@ -4,7 +4,8 @@
 
     <item
         android:id="@+id/distance"
-        android:title="Distance: " />
+        android:title="Distance: "
+        map:actionViewClass="android.widget.TextView" />
 
     <item
         android:id="@+id/duration"
@@ -14,18 +15,7 @@
         android:id="@+id/marker_list"
         android:title="Markers">
         <menu>
-            <item
-                android:id="@+id/marker_1"
-                android:icon="@drawable/ic_marker_white"
-                android:title="Marker 1" />
-            <item
-                android:id="@+id/marker_2"
-                android:icon="@drawable/ic_marker_white"
-                android:title="Marker 2" />
-            <item
-                android:id="@+id/marker_3"
-                android:icon="@drawable/ic_marker_white"
-                android:title="Marker 3" />
+
         </menu>
     </item>
 </menu>

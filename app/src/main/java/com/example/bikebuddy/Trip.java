@@ -15,6 +15,8 @@ public class Trip {
     protected LatLng endLocation;
     protected String encodedPolyLine;
     protected ArrayList<LatLng> points;// the LatLng coordinates throughout the route
+    protected LatLng firstQuarterPoint;
+    protected LatLng thirdQuaterPoint;
 
     public String getTripDistance(){
         String tripDistance = "Distance: ";
@@ -53,6 +55,16 @@ public class Trip {
         }
         return tripDuration;
     }
+
+    //sets the variables for the point at first quarter and 3rd quarter
+    public void calculatePoints(){
+        int numPoints = points.size();
+        if(numPoints>10) {
+           firstQuarterPoint = points.get((int) (points.size()*0.25));
+           thirdQuaterPoint = points.get((int) (points.size()*0.75));
+        }
+    }
+
 
     //Decodes the encoded polyline recieved from the google directions API into a list of LatLng values
     public void decodePolyLine() {

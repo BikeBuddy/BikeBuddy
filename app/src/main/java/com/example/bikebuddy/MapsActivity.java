@@ -445,8 +445,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     zoomLevel = mMap.getCameraPosition().zoom;
                     currentLocation = mMap.getCameraPosition().target;
 
-
-
                 fetchNearbyPlace.fetch(currentLocation.latitude,currentLocation.longitude);
 
 
@@ -489,7 +487,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 fetchWeather.fetch(address.getLatitude(), address.getLongitude());
             }
         }
-
+        if(tripManager.getTripDetails()!=null){
+           LatLng pointA =  tripManager.getTripDetails().firstQuarterPoint;
+           LatLng pointB = tripManager.getTripDetails().thirdQuaterPoint;
+           fetchWeather.fetch(pointA.latitude,pointA.longitude);
+           fetchWeather.fetch(pointB.latitude, pointB.longitude);
+        }
         mMap.clear();
         tripManager.updateMap();
     }
@@ -577,9 +580,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void updateSideMenu() {
         // update route information
         Menu navMenu = navigationView.getMenu();
-  
-        if (tripManager.getLocations().size() > 0) {// if there are locations, pulls and displays the distance and duration to the side menu
-
+        if (tripManager.getLocations().size() > 0 && tripManager.getTripDetails()!=null) {// if there are locations, pulls and displays the distance and duration to the side menu
             navMenu.findItem(R.id.duration).setTitle(tripManager.getTripDetails().getTripDuration());
             navMenu.findItem(R.id.distance).setTitle(tripManager.getTripDetails().getTripDistance());
         } else { //if no locations, show default text output.

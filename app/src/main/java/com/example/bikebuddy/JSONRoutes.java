@@ -1,13 +1,13 @@
 package com.example.bikebuddy;
 
 
+import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.location.Address;
-import android.location.Geocoder;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.widget.Toast;
-
-import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -22,7 +22,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 //@Author PK
 public class JSONRoutes {
@@ -32,11 +31,14 @@ public class JSONRoutes {
     protected MapsActivity mapsActivity;
     private Trip newTrip;
 
+
+
     public JSONRoutes(String key, GoogleMap mMap){
         this.key = key;
         this.mMap = mMap;
         locations = new ArrayList<>();
     }
+
 
 
     //parses a Json response into a Trip object and returns it
@@ -46,6 +48,8 @@ public class JSONRoutes {
         // String responseStatus = status.getString("value");
         if(responseStatus.equals("OK")) {
             return parseDirectionsToTrip(recievedJsonDirections);
+        }else if(locations.size()>14){
+            Toast.makeText(mapsActivity, "limit of 14 locations for the free version", Toast.LENGTH_LONG).show();
         }
         //else if google directions is unable to find a route for the specified locations
         else if(responseStatus.equals("NOT_FOUND") || responseStatus.equals("ZERO_RESULTS")) {
@@ -72,6 +76,7 @@ public class JSONRoutes {
         newTrip.end = jsonLeg.getString("end_address");
         newTrip.encodedPolyLine = jsonPolyline.getString("points");
         newTrip.decodePolyLine();
+        newTrip.calculatePoints();
         return newTrip;
     }
 
@@ -85,11 +90,26 @@ public class JSONRoutes {
         LatLng midPoint = aTrip.points.get(aTrip.points.size() / 2);
         mMap.addMarker(new MarkerOptions().position(midPoint)
                 .snippet(aTrip.getTripDuration())
-                .title(aTrip.getTripDistance()).icon(null).flat(true)
+                .title(aTrip.getTripDistance()).icon(BitmapDescriptorFactory.fromBitmap(generateNoIcon())).flat(true)
         ).showInfoWindow();
 
     }
 
+    public Bitmap generateNoIcon() {
+        String defaultIcon = "@drawable/gas";
+        Drawable drawable;
+        try {
+            int imageResource;
+            imageResource = mapsActivity.getResources().getIdentifier(defaultIcon, null, mapsActivity.getPackageName());
+            drawable = mapsActivity.getResources().getDrawable(imageResource);
+            BitmapDrawable bitmapDrawable=(BitmapDrawable)drawable;
+            Bitmap bitmap=bitmapDrawable.getBitmap();
+            Bitmap weatherIcon = Bitmap.createScaledBitmap(bitmap,1, 1, false);
+            return weatherIcon;
+        } catch (Resources.NotFoundException e) {
+        }
+        return null;
+    }
     public void executeResponse(String jsonString)throws UnsupportedOperationException{
         try {
             if(!hasMultipleLegs()){

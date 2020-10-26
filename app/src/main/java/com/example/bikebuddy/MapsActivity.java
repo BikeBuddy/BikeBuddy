@@ -675,8 +675,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             findViewById(R.id.side_menu_map).setBackground(ContextCompat.getDrawable(this, R.drawable.black_border));
             findViewById(R.id.side_menu_time).setBackground(ContextCompat.getDrawable(this, R.drawable.black_border));
 
-
-
         } else {
             // light mode
             findViewById(R.id.side_menu_header).setBackgroundColor(Color.parseColor("#515151"));
@@ -687,9 +685,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             findViewById(R.id.side_menu_darkMode).setBackground(ContextCompat.getDrawable(this, R.drawable.grey_border));
             findViewById(R.id.side_menu_map).setBackground(ContextCompat.getDrawable(this, R.drawable.grey_border));
             findViewById(R.id.side_menu_time).setBackground(ContextCompat.getDrawable(this, R.drawable.grey_border));
-
-
         }
+        drawerLayout.closeDrawer(Gravity.LEFT);
     }
 
     public Button getRouteButton(){

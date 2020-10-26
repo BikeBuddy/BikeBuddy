@@ -172,7 +172,6 @@ public class TripManager {
         if(locations.size()>1 && routeStarted){
             jsonRoutes.setLocations(latLngLocations);
             jsonRoutes.getDirections();
-            Toast.makeText(mapsActivity, "if block in update map", Toast.LENGTH_SHORT).show();
         }
     }
     //sets the starting location to gps location, otherwise sets startingLocationNeeded flag to true

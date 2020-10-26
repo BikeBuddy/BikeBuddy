@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- A simple drawable that gives a white box with curved corners -->
+<!-- handy if you want to use as the background for a drawable element -->
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#7E7F81"/>
+        </shape>
+
+    </item>
+
+
+</layer-list>

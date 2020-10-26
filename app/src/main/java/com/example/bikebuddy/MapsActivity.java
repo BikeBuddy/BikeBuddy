@@ -4,6 +4,7 @@ package com.example.bikebuddy;
 
 
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
@@ -34,7 +35,6 @@ import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentActivity;
 
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -62,10 +62,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener {
@@ -118,6 +114,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
 
+    boolean darkModeActive = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,12 +160,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-        Button gasButton = (Button) findViewById(R.id.fuel_toggle_stations);
+        Button gasButton = (Button) findViewById(R.id.fuel_display_stations);
         gasButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Do something in response to button click
-                Toast toast = Toast.makeText(MapsActivity.this, "gas button clicked" , Toast.LENGTH_LONG);
-                toast.show();
                 System.out.println("gas station button clicked");
                 fetchNearbyPlace.fetch(currentLocation.latitude,currentLocation.longitude);
             }
@@ -445,7 +440,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     zoomLevel = mMap.getCameraPosition().zoom;
                     currentLocation = mMap.getCameraPosition().target;
 
-                fetchNearbyPlace.fetch(currentLocation.latitude,currentLocation.longitude);
+
+
+            //    fetchNearbyPlace.fetch(currentLocation.latitude,currentLocation.longitude);
 
 
                 new getAddressListFromLatLong().execute();
@@ -580,7 +577,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void updateSideMenu() {
         // update route information
         Menu navMenu = navigationView.getMenu();
-        if (tripManager.getLocations().size() > 0 && tripManager.getTripDetails()!=null) {// if there are locations, pulls and displays the distance and duration to the side menu
+
+        if (tripManager.getTripDetails() != null && tripManager.getLocations().size() > 0) {// if there are locations, pulls and displays the distance and duration to the side menu
+
             navMenu.findItem(R.id.duration).setTitle(tripManager.getTripDetails().getTripDuration());
             navMenu.findItem(R.id.distance).setTitle(tripManager.getTripDetails().getTripDistance());
         } else { //if no locations, show default text output.
@@ -667,9 +666,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void toggleDarkMode(View view) {
-        /**
-         * change style for ui
-         */
+        darkModeActive = !darkModeActive;
+        if(darkModeActive) {
+            // dark mode
+            findViewById(R.id.side_menu_header).setBackgroundColor(Color.parseColor("#FF1E1E1E"));
+            findViewById(R.id.nav_view).setBackground(ContextCompat.getDrawable(this, R.drawable.night_background));
+            findViewById(R.id.side_menu_clear).setBackground(ContextCompat.getDrawable(this, R.drawable.black_border));
+            findViewById(R.id.side_menu_fuel).setBackground(ContextCompat.getDrawable(this, R.drawable.black_border));
+            findViewById(R.id.side_menu_weather).setBackground(ContextCompat.getDrawable(this, R.drawable.black_border));
+            findViewById(R.id.side_menu_darkMode).setBackground(ContextCompat.getDrawable(this, R.drawable.black_border));
+            findViewById(R.id.side_menu_map).setBackground(ContextCompat.getDrawable(this, R.drawable.black_border));
+            findViewById(R.id.side_menu_time).setBackground(ContextCompat.getDrawable(this, R.drawable.black_border));
+
+
+        } else {
+            // light mode
+            findViewById(R.id.side_menu_header).setBackgroundColor(Color.parseColor("#515151"));
+            findViewById(R.id.nav_view).setBackground(ContextCompat.getDrawable(this, R.drawable.light_background));
+            findViewById(R.id.side_menu_clear).setBackground(ContextCompat.getDrawable(this, R.drawable.grey_border));
+            findViewById(R.id.side_menu_fuel).setBackground(ContextCompat.getDrawable(this, R.drawable.grey_border));
+            findViewById(R.id.side_menu_weather).setBackground(ContextCompat.getDrawable(this, R.drawable.grey_border));
+            findViewById(R.id.side_menu_darkMode).setBackground(ContextCompat.getDrawable(this, R.drawable.grey_border));
+            findViewById(R.id.side_menu_map).setBackground(ContextCompat.getDrawable(this, R.drawable.grey_border));
+            findViewById(R.id.side_menu_time).setBackground(ContextCompat.getDrawable(this, R.drawable.grey_border));
+
+
+        }
+        drawerLayout.closeDrawer(Gravity.LEFT);
     }
 
     public Button getRouteButton(){

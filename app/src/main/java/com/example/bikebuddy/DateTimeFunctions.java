@@ -88,23 +88,18 @@ public class DateTimeFunctions {
     }
 
 
-    //date time display stuff
-//    private TextView dateTimeDisplay;
-//    private Calendar calendar;
-//    private SimpleDateFormat dateFormat;
-//    private String date;
+
+
     //max future weather available is 5 days, 3 hourly
-
-
     public void addHour() {
         if (offsetHours < 120)
-            offsetHours +=1;
+            offsetHours += 3;
         updateDateTime();
         mapsActivity.getLocationsWeather();
     }
     public void minusHour() {
         if (offsetHours > 0)
-            offsetHours -= 1;
+            offsetHours -= 3;
         updateDateTime();
         mapsActivity.getLocationsWeather();
     }

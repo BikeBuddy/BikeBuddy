@@ -163,6 +163,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         this.mMap = googleMap;
 
         initMapStyle();
+
         initFetchWeather();
         initWeatherFunctions();
         initFetchNearbyPlace();
@@ -519,13 +520,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    public void initMapStyle() {
+    public void initMapStyle(boolean lightMode) {
         try {
             // Customise the styling of the base map using a JSON object defined
             // in a raw resource file.
-            boolean success = mMap.setMapStyle(
-                    MapStyleOptions.loadRawResourceStyle(
-                            this, R.raw.style_json));
+            boolean success;
+            if (lightMode) {
+                success = mMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(
+                                this, R.raw.map_style_light_json));
+            } else {
+                success = mMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(
+                                this, R.raw.map_style_dark_json));
+            }
             if (!success) {
                 Log.e("MapsActivityRaw", "Style parsing failed.");
             }
@@ -656,6 +664,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             findViewById(R.id.side_menu_map).setBackground(ContextCompat.getDrawable(this, R.drawable.black_border));
             findViewById(R.id.side_menu_time).setBackground(ContextCompat.getDrawable(this, R.drawable.black_border));
 
+
         } else {
             // light mode
             findViewById(R.id.side_menu_header).setBackgroundColor(Color.parseColor("#515151"));
@@ -666,6 +675,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             findViewById(R.id.side_menu_darkMode).setBackground(ContextCompat.getDrawable(this, R.drawable.grey_border));
             findViewById(R.id.side_menu_map).setBackground(ContextCompat.getDrawable(this, R.drawable.grey_border));
             findViewById(R.id.side_menu_time).setBackground(ContextCompat.getDrawable(this, R.drawable.grey_border));
+
 
         }
         drawerLayout.closeDrawer(Gravity.LEFT);

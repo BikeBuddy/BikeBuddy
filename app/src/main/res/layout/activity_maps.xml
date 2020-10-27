@@ -13,8 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true"
         android:background="@drawable/light_background"
+        android:fitsSystemWindows="true"
         android:theme="@style/DarkModeStyle"
         map:headerLayout="@layout/side_menu_header"
         map:menu="@menu/side_menu">
@@ -37,8 +37,8 @@
                 android:layout_marginBottom="135dp"
                 android:background="@drawable/grey_border"
                 android:onClick="sideMenuClear"
-                android:textColor="@color/colorWhite"
-                android:text="Clear Markers" />
+                android:text="Clear Markers"
+                android:textColor="@color/colorWhite" />
 
             <!-- fuel info Button -->
             <ImageButton
@@ -51,7 +51,7 @@
                 android:layout_marginBottom="72dp"
                 android:background="@drawable/grey_border"
                 android:onClick="toggleFuelInfo"
-                android:src="@drawable/ic_fuel_white"/>
+                android:src="@drawable/ic_fuel_white" />
 
             <!-- Weather Time Button -->
             <ImageButton
@@ -160,14 +160,14 @@
             android:id="@+id/route_button"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:layout_centerInParent="true"
             android:layout_alignParentBottom="true"
-            android:paddingHorizontal="10dp"
+            android:layout_centerInParent="true"
             android:layout_marginBottom="45dp"
             android:background="@drawable/white_border"
-            android:textSize="16dp"
             android:onClick="initRoute"
+            android:paddingHorizontal="10dp"
             android:text="Start Route"
+            android:textSize="16dp"
             android:visibility="invisible" />
 
         <!-- Weather Time Display -->
@@ -177,12 +177,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:textColor="@color/quantum_black_text"
-            android:textSize="20sp"
-            android:text="clock"
             android:layout_marginStart="50dp"
             android:layout_marginTop="100dp"
-            android:visibility="invisible"/>
+            android:text="clock"
+            android:textColor="@color/quantum_black_text"
+            android:textSize="20sp"
+            android:visibility="invisible" />
 
         <TextView
             android:id="@+id/weatherDateTimeDisplay"
@@ -190,53 +190,54 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:textColor="@color/quantum_black_text"
-            android:textSize="20sp"
             android:layout_marginStart="50dp"
             android:layout_marginTop="150dp"
-            android:visibility="invisible"/>
+            android:textColor="@color/quantum_black_text"
+            android:textSize="20sp"
+            android:visibility="invisible" />
 
 
         <Button
             android:id="@+id/weatherDateTimePlus"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/white_border"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginStart="100dp"
             android:layout_marginTop="200dp"
+            android:background="@drawable/white_border"
             android:onClick="dateTimeFunctionsPlusHour"
-            android:visibility="invisible"
+            android:text="@string/buttonIncrease"
             android:textSize="20sp"
-            android:text="@string/buttonIncrease" />
+            android:visibility="invisible" />
 
         <Button
             android:id="@+id/weatherDateTimeMinus"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/white_border"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginStart="170dp"
             android:layout_marginTop="200dp"
+            android:background="@drawable/white_border"
             android:onClick="dateTimeFunctionsMinusHour"
-            android:visibility="invisible"
+            android:text="@string/buttonDecrease"
             android:textSize="20sp"
-            android:text="@string/buttonDecrease" />
+            android:visibility="invisible" />
+
         <Button
             android:id="@+id/weatherDateTimeReset"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/white_border"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginStart="240dp"
             android:layout_marginTop="200dp"
+            android:background="@drawable/white_border"
             android:onClick="dateTimeFunctionsResetHour"
-            android:visibility="invisible"
+            android:text="@string/buttonReset"
             android:textSize="20sp"
-            android:text="@string/buttonReset" />
+            android:visibility="invisible" />
 
 
         <!-- Fuel info window -->
@@ -260,23 +261,23 @@
                 android:layout_width="190dp"
                 android:layout_height="40dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="50dp"
                 android:layout_marginTop="5dp"
+                android:layout_marginRight="50dp"
                 android:backgroundTint="@color/colorBlack"
-                android:textColor="@color/colorWhite"
-                android:text="Display Stations" />
+                android:text="Display Stations"
+                android:textColor="@color/colorWhite" />
 
             <ImageButton
                 android:id="@+id/fuel_close"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
                 android:layout_alignParentRight="true"
+                android:layout_marginTop="5dp"
                 android:layout_marginRight="10dp"
-                android:onClick="toggleFuelInfo"
                 android:backgroundTint="@color/colorBlack"
-                android:tint="@color/colorWhite"
-                android:src="@drawable/ic_cross" />
+                android:onClick="toggleFuelInfo"
+                android:src="@drawable/ic_cross"
+                android:tint="@color/colorWhite" />
 
             <!-- Fuel Window Info -->
             <TextView
@@ -286,8 +287,8 @@
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="50dp"
-                android:textColor="@color/colorWhite"
                 android:text="@string/fuel_tank_size_litres"
+                android:textColor="@color/colorWhite"
                 android:textSize="16sp"
                 tools:layout_editor_absoluteY="39dp" />
 
@@ -299,11 +300,11 @@
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="20dp"
                 android:hint="@string/Fuel_Used"
-                android:textColorHint="@color/colorWhite"
                 android:importantForAutofill="no"
                 android:inputType="number"
-                android:textSize="16sp"
                 android:textColor="@color/colorWhite"
+                android:textColorHint="@color/colorWhite"
+                android:textSize="16sp"
                 android:title="@string/fuel_tank_size" />
 
             <TextView
@@ -314,8 +315,8 @@
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
-                android:textColor="@color/colorWhite"
                 android:text="@string/fuel_used_litres"
+                android:textColor="@color/colorWhite"
                 android:textSize="16sp" />
 
             <EditText
@@ -326,11 +327,11 @@
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="20dp"
                 android:hint="@string/Fuel_Used"
-                android:textColorHint="@color/colorWhite"
                 android:importantForAutofill="no"
                 android:inputType="number"
-                android:textSize="16sp"
                 android:textColor="@color/colorWhite"
+                android:textColorHint="@color/colorWhite"
+                android:textSize="16sp"
                 android:title="@string/fuel_used" />
 
             <TextView
@@ -341,8 +342,8 @@
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
-                android:textColor="@color/colorWhite"
                 android:text="@string/trip_distance_km"
+                android:textColor="@color/colorWhite"
                 android:textSize="16sp" />
 
             <EditText
@@ -353,11 +354,11 @@
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="20dp"
                 android:hint="@string/Fuel_Used"
-                android:textColorHint="@color/colorWhite"
                 android:importantForAutofill="no"
                 android:inputType="number"
-                android:textSize="16sp"
                 android:textColor="@color/colorWhite"
+                android:textColorHint="@color/colorWhite"
+                android:textSize="16sp"
                 android:title="@string/trip_distance" />
 
             <TextView
@@ -367,8 +368,8 @@
                 android:layout_below="@id/textTripDistance"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="20dp"
-                android:textColor="@color/colorWhite"
                 android:text="@string/calculated_maximum_range_km"
+                android:textColor="@color/colorWhite"
                 android:textSize="16sp" />
 
             <EditText
@@ -380,11 +381,11 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginBottom="10dp"
                 android:hint="@string/Fuel_Used"
-                android:textColorHint="@color/colorWhite"
                 android:importantForAutofill="no"
                 android:inputType="none"
-                android:textSize="16sp"
                 android:textColor="@color/colorWhite"
+                android:textColorHint="@color/colorWhite"
+                android:textSize="16sp"
                 android:title="@string/max_range" />
 
         </RelativeLayout>
@@ -393,13 +394,13 @@
             android:id="@+id/undoMarkerButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
             android:layout_marginBottom="160dp"
-            android:paddingHorizontal="10dp"
             android:background="@drawable/white_border"
-            android:textSize="16dp"
+            android:paddingHorizontal="10dp"
             android:text="Remove Marker"
+            android:textSize="16dp"
             android:visibility="invisible" />
 
         <!-- the map fragment -->

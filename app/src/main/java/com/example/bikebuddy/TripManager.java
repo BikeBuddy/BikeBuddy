@@ -278,5 +278,7 @@ public class TripManager {
     public JSONRoutes getJsonRoutes(){
         return this.jsonRoutes;
     }
-
+    public void setMaxFuelRange(int i){
+        
+    }
 }

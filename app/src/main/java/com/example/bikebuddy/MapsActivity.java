@@ -1,20 +1,15 @@
 package com.example.bikebuddy;
 
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
-import android.os.AsyncTask;
-import android.os.Handler;
-
-
-import com.google.android.gms.common.api.Status;
-
-
-import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -24,7 +19,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -32,6 +26,7 @@ import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentActivity;
 
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -42,10 +37,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
@@ -53,9 +46,7 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.navigation.NavigationView;
 
-
 import java.io.IOException;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -89,7 +80,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FusedLocationProviderClient fusedLocationProviderClient;
 
     private TextView currentDateTimeDisplay;
-
+    private TextView maxRange;
     // A default location (Auckland, New Zealand) and default zoom to use when location permission is
     // not granted.
     private final LatLng defaultLocation = new LatLng(-36.8483, 174.7625);
@@ -153,7 +144,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View v) {
                 // Do something in response to button click
                 System.out.println("gas station button clicked");
-                fetchNearbyPlace.fetch(currentLocation.latitude,currentLocation.longitude);
+                fetchNearbyPlace.fetch(currentLocation.latitude, currentLocation.longitude);
             }
         });
     }
@@ -162,7 +153,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         this.mMap = googleMap;
 
-        initMapStyle();
+        initMapStyle(true);
 
         initFetchWeather();
         initWeatherFunctions();
@@ -269,6 +260,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void initRoute(View view) {
+        setMaxRange();
         tripManager.showRoute();
     }
 
@@ -416,12 +408,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     currentLocation = mMap.getCameraPosition().target;
 
                     // only update map drawables if map is moved or zoomed past these amounts
-                    if((zoomLevel - updateZoom) > 1.0f || (zoomLevel - updateZoom) < -1.0f
-                        || currentLocation.latitude  - updateLocation.latitude  >  0.1
-                        || currentLocation.latitude  - updateLocation.latitude  < -0.1
-                        || currentLocation.longitude - updateLocation.longitude >  0.1
-                        || currentLocation.longitude - updateLocation.longitude < -0.1)
-                    {
+                    if ((zoomLevel - updateZoom) > 1.0f || (zoomLevel - updateZoom) < -1.0f
+                            || currentLocation.latitude - updateLocation.latitude > 0.1
+                            || currentLocation.latitude - updateLocation.latitude < -0.1
+                            || currentLocation.longitude - updateLocation.longitude > 0.1
+                            || currentLocation.longitude - updateLocation.longitude < -0.1) {
                         updateZoom = zoomLevel;
                         updateLocation = currentLocation;
 
@@ -429,8 +420,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         idleUpdateTimer = System.nanoTime();
                     }
-            }
-        };
+                }
+            };
 
 
     //updates the snippet, Address etc when start and destination markers are dragged
@@ -441,7 +432,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //Gets 20 locations which are within view in the camera
     class getAddressListFromLatLong extends AsyncTask<Void, Void, List<Address>> {
 
-       @Override
+        @Override
         protected void onPostExecute(List<Address> tempLocationsList) {
             locationsList = tempLocationsList;
             getLocationsWeather();
@@ -461,16 +452,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     // Pulls weather data from the weather service api and generates weather icons onto the map
     public void getLocationsWeather() {
-        if (locationsList != null ) {
+        if (locationsList != null) {
             for (Address address : locationsList) {
                 fetchWeather.fetch(address.getLatitude(), address.getLongitude());
             }
         }
-        if(tripManager.getTripDetails()!=null){
-           LatLng pointA =  tripManager.getTripDetails().firstQuarterPoint;
-           LatLng pointB = tripManager.getTripDetails().thirdQuaterPoint;
-           fetchWeather.fetch(pointA.latitude,pointA.longitude);
-           fetchWeather.fetch(pointB.latitude, pointB.longitude);
+        if (tripManager.getTripDetails() != null) {
+            LatLng pointA = tripManager.getTripDetails().firstQuarterPoint;
+            LatLng pointB = tripManager.getTripDetails().thirdQuaterPoint;
+            fetchWeather.fetch(pointA.latitude, pointA.longitude);
+            fetchWeather.fetch(pointB.latitude, pointB.longitude);
         }
         mMap.clear();
         tripManager.updateMap();
@@ -489,7 +480,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    public void initFetchNearbyPlace(){
+    public void initFetchNearbyPlace() {
         this.fetchNearbyPlace = new FetchNearbyPlace(this);
     }
 
@@ -508,8 +499,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         currentDateTimeDisplay = findViewById(R.id.currentDateTimeDisplay);
         TextView weatherDateTimeDisplay = findViewById(R.id.weatherDateTimeDisplay);
         Handler handler = new Handler();
-        this.dateTimeFunctions = new DateTimeFunctions(this,handler, currentDateTimeDisplay, weatherDateTimeDisplay);
-       // this.dateTimeFunctions = new DateTimeFunctions(this, mMap, handler, currentDateTimeDisplay);
+        this.dateTimeFunctions = new DateTimeFunctions(this, handler, currentDateTimeDisplay, weatherDateTimeDisplay);
+        // this.dateTimeFunctions = new DateTimeFunctions(this, mMap, handler, currentDateTimeDisplay);
         currentDateTimeDisplay.bringToFront();
         weatherDateTimeDisplay.bringToFront();
     }
@@ -517,9 +508,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void dateTimeFunctionsPlusHour(View view) {
         dateTimeFunctions.addHour();
     }
+
     public void dateTimeFunctionsMinusHour(View view) {
         dateTimeFunctions.minusHour();
     }
+
     public void dateTimeFunctionsResetHour(View view) {
         dateTimeFunctions.resetHour();
     }
@@ -580,25 +573,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // update marker list with current markers
         int index = 0;
-        if (tripManager.getLocations().size() > 0)
-        {
-            for(BikeBuddyLocation location : tripManager.getLocations()) {
+        if (tripManager.getLocations().size() > 0) {
+            for (BikeBuddyLocation location : tripManager.getLocations()) {
                 markerList.add(location.getAddress());
                 markerList.getItem(index).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker_white));
-                if(index > 3)
+                if (index > 3)
                     markerList.getItem(index).setVisible(false);
                 index++;
             }
+        } else {
+            markerList.add("No Locations Selected");
         }
-        else { markerList.add("No Locations Selected"); }
     }
 
     public void sideMenuClear(View view) {
         if (view.getId() == R.id.side_menu_clear) {
 
             tripManager.routeStarted = false;
-            for(int i = 0; i < tripManager.getLocations().size(); i++)
-            {
+            for (int i = 0; i < tripManager.getLocations().size(); i++) {
                 tripManager.removeLeg(i);
             }
             tripManager.getLocations().clear();
@@ -638,8 +630,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void toggleWeatherTime(View view) {
         View weatherTime = findViewById(R.id.weatherDateTimeDisplay);
-        if(weatherTime.getVisibility() == view.INVISIBLE)
-        {
+        if (weatherTime.getVisibility() == view.INVISIBLE) {
             weatherTime.setVisibility(View.VISIBLE);
             findViewById(R.id.currentDateTimeDisplay).setVisibility(View.VISIBLE);
             findViewById(R.id.weatherDateTimeMinus).setVisibility(View.VISIBLE);
@@ -658,7 +649,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void toggleDarkMode(View view) {
         darkModeActive = !darkModeActive;
-        if(darkModeActive) {
+        if (darkModeActive) {
             // dark mode
             findViewById(R.id.side_menu_header).setBackgroundColor(Color.parseColor("#FF1E1E1E"));
             findViewById(R.id.nav_view).setBackground(ContextCompat.getDrawable(this, R.drawable.night_background));
@@ -686,7 +677,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         drawerLayout.closeDrawer(Gravity.LEFT);
     }
 
-    public GoogleMap getmMap(){
+    public GoogleMap getmMap() {
         return this.mMap;
     }
 
@@ -694,7 +685,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return tripManager;
     }
 
-    public Button getRouteButton(){
+    public Button getRouteButton() {
         return routeButton;
+    }
+    public void setMaxRange() {
+        TextView maxRange = (TextView) findViewById(R.id.textMaxRange);
+        try {
+            Integer range = Integer.parseInt(maxRange.getText().toString());
+            if (range < 1 || range > 600)
+                throw new NumberFormatException();
+            else
+                tripManager.setMaxFuelRange(range);
+        } catch (NumberFormatException ex) {
+            tripManager.setMaxFuelRange(100);
+        }
     }
 }

@@ -382,7 +382,7 @@
                 android:layout_marginBottom="10dp"
                 android:hint="@string/Fuel_Used"
                 android:importantForAutofill="no"
-                android:inputType="none"
+                android:inputType="numberSigned"
                 android:textColor="@color/colorWhite"
                 android:textColorHint="@color/colorWhite"
                 android:textSize="16sp"

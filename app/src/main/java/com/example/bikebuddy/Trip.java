@@ -1,11 +1,6 @@
 package com.example.bikebuddy;
 
-import android.graphics.Color;
-
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 
@@ -24,55 +19,50 @@ public class Trip {
     protected LatLng thirdQuaterPoint;
     protected LatLng emptyTankLocation;
 
-    public String getTripDistance(){
+    public String getTripDistance() {
         String tripDistance = "Distance: ";
-        if(distance>1000){
-            int KMs = distance/1000;
+        if (distance > 1000) {
+            int KMs = distance / 1000;
             int meters = (distance % 1000);
-            if(KMs<2)
+            if (KMs < 2)
                 tripDistance += KMs + "KM & " + meters + "meters";
-            else{
+            else {
                 tripDistance += KMs + "KM";
             }
-        }else{
+        } else {
             tripDistance += distance + " meters";
         }
         return tripDistance;
     }
 
-    public Integer getDurationInMinutes()
-    {
-        if(duration!=null && duration>0)
-        {
-            return  (duration/60);
+    public Integer getDurationInMinutes() {
+        if (duration != null && duration > 0) {
+            return (duration / 60);
         }
         return null;
     }
 
-    public String getTripDuration(){
+    public String getTripDuration() {
         int durationMins = getDurationInMinutes();
-        String tripDuration ="Duration: ";
-        if(durationMins>60){
-            int hours = (durationMins/60);
-            int minutes = durationMins - (hours*60);
-            tripDuration += hours + "h "+ minutes + "mins";
-        }else{
-            tripDuration += durationMins  + "mins";
+        String tripDuration = "Duration: ";
+        if (durationMins > 60) {
+            int hours = (durationMins / 60);
+            int minutes = durationMins - (hours * 60);
+            tripDuration += hours + "h " + minutes + "mins";
+        } else {
+            tripDuration += durationMins + "mins";
         }
         return tripDuration;
     }
 
     //sets the variables for the point at first quarter and 3rd quarter
-    public void calculatePoints(){
+    public void calculatePoints() {
         int numPoints = points.size();
-        if(numPoints>10) {
-           firstQuarterPoint = points.get((int) (points.size()*0.25));
-           thirdQuaterPoint = points.get((int) (points.size()*0.75));
+        if (numPoints > 10) {
+            firstQuarterPoint = points.get((int) (points.size() * 0.25));
+            thirdQuaterPoint = points.get((int) (points.size() * 0.75));
         }
     }
-
-
-
 
 
     //Decodes the encoded polyline recieved from the google directions API into a list of LatLng values

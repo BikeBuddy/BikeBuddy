@@ -4,8 +4,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.w3c.dom.Text;
-
 /*
  * Author Theo Brown
  */
@@ -28,6 +26,10 @@ public class TripFuelCalculator extends AppCompatActivity {
         TextView fuelTankSize = (TextView) findViewById(R.id.textFuelTankSize);
         TextView avgKML = (TextView) findViewById(R.id.textKPL);
         return (Double.valueOf(String.valueOf(fuelTankSize)) / Double.valueOf(String.valueOf(avgKML)));
+    }
+
+    public TextView getMaxRange() {
+        return (TextView) findViewById(R.id.textMaxRange);
     }
 
     /*

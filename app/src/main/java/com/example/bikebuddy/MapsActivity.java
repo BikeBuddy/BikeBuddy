@@ -177,7 +177,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         this.mMap = googleMap;
 
-        initMapStyle();
+        initMapStyle(true);
 
         initFetchWeather();
         initWeatherFunctions();
@@ -543,13 +543,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    public void initMapStyle() {
+    public void initMapStyle(boolean lightMode) {
         try {
             // Customise the styling of the base map using a JSON object defined
             // in a raw resource file.
-            boolean success = mMap.setMapStyle(
-                    MapStyleOptions.loadRawResourceStyle(
-                            this, R.raw.style_json));
+            boolean success;
+            if (lightMode) {
+                success = mMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(
+                                this, R.raw.map_style_light_json));
+            } else {
+                success = mMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(
+                                this, R.raw.map_style_dark_json));
+            }
             if (!success) {
                 Log.e("MapsActivityRaw", "Style parsing failed.");
             }
@@ -678,6 +685,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             findViewById(R.id.side_menu_map).setBackground(ContextCompat.getDrawable(this, R.drawable.black_border));
             findViewById(R.id.side_menu_time).setBackground(ContextCompat.getDrawable(this, R.drawable.black_border));
 
+            initMapStyle(false);
+
 
         } else {
             // light mode
@@ -690,6 +699,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             findViewById(R.id.side_menu_map).setBackground(ContextCompat.getDrawable(this, R.drawable.grey_border));
             findViewById(R.id.side_menu_time).setBackground(ContextCompat.getDrawable(this, R.drawable.grey_border));
 
+            initMapStyle(true);
 
         }
         drawerLayout.closeDrawer(Gravity.LEFT);

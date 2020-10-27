@@ -24,7 +24,7 @@ Sam Ward,
 Hyuk Woo Kim,
 Aaron Gilbert,
 Theo Brown,
-Gary,
+Gary
 
 #Software
 

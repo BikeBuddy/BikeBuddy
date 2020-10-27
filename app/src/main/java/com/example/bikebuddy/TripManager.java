@@ -271,6 +271,10 @@ public class TripManager {
         return 0;
     }
 
+    public void setMaxFuelRange(int maxKMs){
+        jsonRoutes.setFuelCuttOffKMs(maxKMs);
+    }
+
     public Trip getTripDetails(){
         return jsonRoutes.getTrip();
     }
@@ -278,5 +282,11 @@ public class TripManager {
     public JSONRoutes getJsonRoutes(){
         return this.jsonRoutes;
     }
-
+    public LatLng getFuelCutOffLatLng(){
+        if(getTripDetails()==null || getTripDetails().emptyTankLocation==null){
+            return null;
+        }else{
+            return getTripDetails().emptyTankLocation;
+        }
+    }
 }

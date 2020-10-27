@@ -22,6 +22,7 @@ public class Trip {
     protected ArrayList<LatLng> points;// the LatLng coordinates throughout the route
     protected LatLng firstQuarterPoint;
     protected LatLng thirdQuaterPoint;
+    protected LatLng emptyTankLocation;
 
     public String getTripDistance(){
         String tripDistance = "Distance: ";
@@ -69,6 +70,7 @@ public class Trip {
            thirdQuaterPoint = points.get((int) (points.size()*0.75));
         }
     }
+
 
 
 

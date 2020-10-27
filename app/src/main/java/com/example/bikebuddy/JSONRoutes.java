@@ -30,7 +30,7 @@ public class JSONRoutes {
     private ArrayList<LatLng> locations;
     protected MapsActivity mapsActivity;
     private Trip newTrip;
-    protected int fuelCuttOffKMs = 50;
+    private int fuelCuttOffKMs = 200;
 
 
     public JSONRoutes(String key, GoogleMap mMap){
@@ -74,7 +74,6 @@ public class JSONRoutes {
         newTrip.end = jsonLeg.getString("end_address");
         newTrip.encodedPolyLine = jsonPolyline.getString("points");
         newTrip.decodePolyLine();
-
         newTrip.calculatePoints();
         return newTrip;
     }
@@ -82,37 +81,50 @@ public class JSONRoutes {
     //shows the polyline(route) of a trip onto the map
     //@param: Trip, the trip to be shown on the map
     public void showTrip(Trip aTrip){
-
         PolylineOptions places = new PolylineOptions();
         for (LatLng point : aTrip.points)
-            places.add(point).width(20f).color(Color.BLUE);
+            places.add(point).width(23f).color(Color.BLUE);
         mMap.addPolyline(places);
         LatLng midPoint = aTrip.points.get(aTrip.points.size() / 2);
         mMap.addMarker(new MarkerOptions().position(midPoint)
                 .snippet(aTrip.getTripDuration())
                 .title(aTrip.getTripDistance()).icon(BitmapDescriptorFactory.fromBitmap(generateNoIcon())).flat(true)
         ).showInfoWindow();
-        showFuelTrip();
+    //    showFuelTrip();
     }
 
     //shows polyLine at cut off point where user will run out of fuel
-    public void showFuelTrip(){
+    //will return false if user will not run out of fuel
+    public boolean showFuelTrip(){
         if(newTrip==null || newTrip.distance ==0)
-            return;
+            return false;
         int tripDistance = newTrip.distance/1000;
-        if((tripDistance) > fuelCuttOffKMs){
+        if((tripDistance) > fuelCuttOffKMs){//if user will run out of fuel
             double cutOff = (((double)fuelCuttOffKMs)/((double)tripDistance));
             int cutOffPoint = (int) (cutOff * newTrip.points.size());
             PolylineOptions places = new PolylineOptions();
-            for(int i=0; i< cutOffPoint; i++ ) {
-                places.add(newTrip.points.get(i)).width(23f).color(Color.RED);
-                if(i== (cutOffPoint-1)){
-                    mMap.addMarker(new MarkerOptions().position(newTrip.points.get(i))
-                            .title("You will have no fuel here").icon(BitmapDescriptorFactory.fromBitmap(generateNoIcon()))).showInfoWindow();
-                }
+            newTrip.emptyTankLocation = newTrip.points.get(cutOffPoint);
+            for(int i=0; i<= cutOffPoint; i++ ) {//draws the part of the trip where the user has fuel in blue
+                places.add(newTrip.points.get(i)).width(23f).color(Color.BLUE);
             }
-            Toast.makeText(mapsActivity,"cutoff: " + cutOff + " distance:" + tripDistance + " points size"+ newTrip.points.size()+ " cut off point:" +cutOffPoint +" fuelKm:" +fuelCuttOffKMs,Toast.LENGTH_LONG).show();
             mMap.addPolyline(places);
+            PolylineOptions noFuel = new PolylineOptions();
+            //redraws the part of the trip in red where the user will have no fuel
+            for(int i=cutOffPoint; i< newTrip.points.size(); i++ ) {
+                noFuel.add(newTrip.points.get(i)).width(23f).color(Color.RED);
+            }
+            mMap.addPolyline(noFuel);
+            LatLng midPoint = newTrip.points.get(newTrip.points.size() / 2);
+            mMap.addMarker(new MarkerOptions().position(newTrip.emptyTankLocation)
+                    .title("You will have no fuel here").icon(BitmapDescriptorFactory.fromBitmap(generateNoIcon()))).showInfoWindow();
+            mMap.addMarker(new MarkerOptions().position(midPoint)
+                    .snippet(newTrip.getTripDuration())
+                    .title(newTrip.getTripDistance()).icon(BitmapDescriptorFactory.fromBitmap(generateNoIcon())).flat(true)
+            ).showInfoWindow();
+            //Toast.makeText(mapsActivity,"cutoff: " + cutOff + " distance:" + tripDistance + " points size"+ newTrip.points.size()+ " cut off point:" +cutOffPoint +" fuelKm:" +fuelCuttOffKMs,Toast.LENGTH_LONG).show();
+            return true;
+        }else{
+            return false;
         }
     }
 
@@ -133,23 +145,19 @@ public class JSONRoutes {
         }
         return null;
     }
+
+    //parses the response into a Trip object. Then draws the poly line onto the map
     public void executeResponse(String jsonString)throws UnsupportedOperationException{
         try {
-            if(!hasMultipleLegs()){
-                LatLng start = locations.get(0);
-                LatLng destination = locations.get(1);
-                Trip trip = parseJsonToDirections(jsonString);
-                if(trip != null)
-                    showTrip(trip);
-            }else{
-                Trip trip = parseJsonToDirections(jsonString);
-                if(trip != null)
-                    showTrip(trip);
+            Trip trip = parseJsonToDirections(jsonString);
+            if(trip != null){
+                if(!showFuelTrip()){//if user runs out of fuel red poly line will display where they will have no fuel
+                    showTrip(trip);//if fuel cut off is not met a normal poly line will display
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
     //takes in two LatLong locations, sends a request to google maps, parses the repsonse to a Trip and shows it on the map
@@ -218,6 +226,11 @@ public class JSONRoutes {
         }else{
             return false;
         }
+    }
+
+    public void setFuelCuttOffKMs(int i){
+        if(i>0)
+            this.fuelCuttOffKMs = i;
     }
 
     public LatLng getStartLocation(){

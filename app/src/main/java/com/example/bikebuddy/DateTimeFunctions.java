@@ -39,10 +39,14 @@ public class DateTimeFunctions {
 
     TextView dateTimeDisplay;
 
+    //default constructor for testing
+    public DateTimeFunctions(MapsActivity mapsActivity) {
+        this.mapsActivity = mapsActivity;
+    };
 
 
     //public DateTimeFunctions(MapsActivity mapsActivity, GoogleMap googleMap, Handler handler, TextView currentDateTimeDisplay) {
-   public DateTimeFunctions(MapsActivity mapsActivity, Handler handler, TextView currentDateTimeDisplay, TextView weatherDateTimeDisplay) {
+    public DateTimeFunctions(MapsActivity mapsActivity, Handler handler, TextView currentDateTimeDisplay, TextView weatherDateTimeDisplay) {
         this.mapsActivity = mapsActivity;
        // this.googleMap = googleMap;
         this.handler = handler;
@@ -63,7 +67,7 @@ public class DateTimeFunctions {
 
     }
 
-   public void updateDateTime() {
+    public void updateDateTime() {
         currentCalendar = Calendar.getInstance();
         weatherCalendar = Calendar.getInstance();
         weatherCalendar.add(Calendar.HOUR, offsetHours);
@@ -89,42 +93,28 @@ public class DateTimeFunctions {
 //    private Calendar calendar;
 //    private SimpleDateFormat dateFormat;
 //    private String date;
+    //max future weather available is 5 days, 3 hourly
 
 
     public void addHour() {
-       // weatherCalendar.add(Calendar.HOUR, 1);
-        //updateDateTime();
-        //max future weather available is 5 days, 3 hourly
         if (offsetHours < 120)
-            offsetHours +=3;
+            offsetHours +=1;
         updateDateTime();
-        //mapsActivity.createLocationsList();
         mapsActivity.getLocationsWeather();
-
     }
     public void minusHour() {
-
-       // weatherCalendar.add(Calendar.HOUR, -1);
-       // updateDateTime();
         if (offsetHours > 0)
-            offsetHours -= 3;
+            offsetHours -= 1;
         updateDateTime();
-     //   mapsActivity.createLocationsList();
         mapsActivity.getLocationsWeather();
-
     }
     public void resetHour() {
-
-        // weatherCalendar.add(Calendar.HOUR, -1);
-        // updateDateTime();
-        offsetHours =0;
+        offsetHours = 0;
         updateDateTime();
-     //   mapsActivity.createLocationsList();
         mapsActivity.getLocationsWeather();
-
     }
 
-//Handler mhandler = new Handler();
+
 
     public void initDateTime() {
         new Thread(new Runnable() {

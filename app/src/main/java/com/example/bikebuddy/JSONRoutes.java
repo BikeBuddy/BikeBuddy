@@ -90,7 +90,6 @@ public class JSONRoutes {
                 .snippet(aTrip.getTripDuration())
                 .title(aTrip.getTripDistance()).icon(BitmapDescriptorFactory.fromBitmap(generateNoIcon())).flat(true)
         ).showInfoWindow();
-    //    showFuelTrip();
     }
 
     //shows polyLine at cut off point where user will run out of fuel
@@ -121,7 +120,6 @@ public class JSONRoutes {
                     .snippet(newTrip.getTripDuration())
                     .title(newTrip.getTripDistance()).icon(BitmapDescriptorFactory.fromBitmap(generateNoIcon())).flat(true)
             ).showInfoWindow();
-            //Toast.makeText(mapsActivity,"cutoff: " + cutOff + " distance:" + tripDistance + " points size"+ newTrip.points.size()+ " cut off point:" +cutOffPoint +" fuelKm:" +fuelCuttOffKMs,Toast.LENGTH_LONG).show();
             return true;
         }else{
             return false;

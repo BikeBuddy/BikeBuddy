@@ -22,15 +22,13 @@ public class setUpFromOriginTest {
      */
     @Test
     public void startingLocationSetTest() {
-
         MapsActivity mapsActivity = rule.getActivity();
-        mapsActivity.setUpOriginFromLocation();
-
-        BikeBuddyLocation startingOrigin = mapsActivity.getStartingOrigin();
-        BikeBuddyLocation theDestination = mapsActivity.getTheDestination();
-        if(!mapsActivity.startingLocationNeeded){//if starting location is needed flag is false, the the startingOrigin co ordinates should be the same as the last known location
-            assertTrue(( mapsActivity.lastKnownLocation.getLatitude() == startingOrigin.coordinate.latitude )
-                    && ( mapsActivity.lastKnownLocation.getLongitude() == startingOrigin.coordinate.longitude));
+        mapsActivity.getTripManager().setUpOriginFromLocation();
+        BikeBuddyLocation startingOrigin = mapsActivity.getTripManager().getStartingOrigin();
+        BikeBuddyLocation theDestination = mapsActivity.getTripManager().getTheDestination();
+        if(!mapsActivity.getTripManager().startingLocationNeeded){//if starting location is needed flag is false, the the startingOrigin co ordinates should be the same as the last known location
+            assertTrue(( mapsActivity.lastKnownLocation.getLatitude() == mapsActivity.getTripManager().getStartingOrigin().getCoordinate().latitude )
+                    && ( mapsActivity.lastKnownLocation.getLongitude() == mapsActivity.getTripManager().getStartingOrigin().getCoordinate().longitude));
         }else{
             assertNull(startingOrigin);
         }

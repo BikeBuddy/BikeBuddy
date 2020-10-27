@@ -466,7 +466,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 fetchWeather.fetch(address.getLatitude(), address.getLongitude());
             }
         }
-
+        if(tripManager.getTripDetails()!=null){
+           LatLng pointA =  tripManager.getTripDetails().firstQuarterPoint;
+           LatLng pointB = tripManager.getTripDetails().thirdQuaterPoint;
+           fetchWeather.fetch(pointA.latitude,pointA.longitude);
+           fetchWeather.fetch(pointB.latitude, pointB.longitude);
+        }
         mMap.clear();
         tripManager.updateMap();
     }
@@ -561,7 +566,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void updateSideMenu() {
         // update route information
         Menu navMenu = navigationView.getMenu();
-  
+
         if (tripManager.getTripDetails() != null && tripManager.getLocations().size() > 0) {// if there are locations, pulls and displays the distance and duration to the side menu
 
             navMenu.findItem(R.id.duration).setTitle(tripManager.getTripDetails().getTripDuration());
@@ -679,6 +684,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         }
         drawerLayout.closeDrawer(Gravity.LEFT);
+    }
+
+    public GoogleMap getmMap(){
+        return this.mMap;
+    }
+
+    public TripManager getTripManager() {
+        return tripManager;
     }
 
     public Button getRouteButton(){

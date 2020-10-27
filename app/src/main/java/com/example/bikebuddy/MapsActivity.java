@@ -1,8 +1,5 @@
 package com.example.bikebuddy;
 
-
-
-
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.location.Address;
@@ -63,9 +60,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerDragListener {
-
 
     private static final String TAG = MapsActivity.class.getSimpleName();
 
@@ -78,12 +73,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public DateTimeFunctions dateTimeFunctions;
 
-
     private GoogleMap mMap;
 
     private float zoomLevel = 10.0f;
     private LatLng currentLocation;//current location the camera is centered on
+    private LatLng updateLocation; // location where the map last updated
+    private float updateZoom = 0.0f;
     private List<Address> locationsList;//locations for weather icons
+
+    long idleUpdateTimer = 0; // timer for camera idle updates (when map and markers were last redrawn)
 
     private Geocoder geocoder;//used to obtain the address of a location based on the lat long coordinates
 
@@ -113,8 +111,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // side menu things
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-
     boolean darkModeActive = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,17 +137,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         routeButton = (Button) findViewById(R.id.route_button);
 
-
         tripManager = new TripManager(this);
-        // set onClick listener for "Show Weather" button to show/hide markers on the map when pressed
-//        final Button button = (Button) findViewById(R.id.button1);
-//        button.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                weatherFunctions.toggleWeather();
-//                System.out.print("hello");
-//            }
-//        });
-
 
         // add listener for weather toggle button within the side menu
         final ImageButton sideWeatherButton = (ImageButton) findViewById(R.id.side_menu_weather);
@@ -168,10 +156,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 fetchNearbyPlace.fetch(currentLocation.latitude,currentLocation.longitude);
             }
         });
-
-
     }
-
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -181,12 +166,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         initFetchWeather();
         initWeatherFunctions();
-
         initFetchNearbyPlace();
         initPlaceFunctions();
-
         initDateTimeFunctions();
-
 
         HashMap<String, Drawable> weatherIcons = new HashMap<String, Drawable>();
 
@@ -198,11 +180,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         initPlaces();
         initAutoComplete();
         initSideMenu();
-
-        //start background thread for updating adressList
-       // new getAddressListFromLatLong().execute();
-
-        //getAddressListFromLatLong();
 
         this.mMap.setOnCameraIdleListener(onCameraIdleListener);
 
@@ -224,9 +201,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //sets origin to gps location
         tripManager.setUpOriginFromLocation();
-
-
-
     }
 
     /**
@@ -437,16 +411,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             new GoogleMap.OnCameraIdleListener() {
                 @Override
                 public void onCameraIdle() {
+
                     zoomLevel = mMap.getCameraPosition().zoom;
                     currentLocation = mMap.getCameraPosition().target;
 
+                    // only update map drawables if map is moved or zoomed past these amounts
+                    if((zoomLevel - updateZoom) > 1.0f || (zoomLevel - updateZoom) < -1.0f
+                        || currentLocation.latitude  - updateLocation.latitude  >  0.1
+                        || currentLocation.latitude  - updateLocation.latitude  < -0.1
+                        || currentLocation.longitude - updateLocation.longitude >  0.1
+                        || currentLocation.longitude - updateLocation.longitude < -0.1)
+                    {
+                        updateZoom = zoomLevel;
+                        updateLocation = currentLocation;
 
+                        new getAddressListFromLatLong().execute();
 
-            //    fetchNearbyPlace.fetch(currentLocation.latitude,currentLocation.longitude);
-
-
-                new getAddressListFromLatLong().execute();
-
+                        idleUpdateTimer = System.nanoTime();
+                    }
             }
         };
 
@@ -543,13 +525,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    public void initMapStyle() {
+    public void initMapStyle(boolean lightMode) {
         try {
             // Customise the styling of the base map using a JSON object defined
             // in a raw resource file.
-            boolean success = mMap.setMapStyle(
-                    MapStyleOptions.loadRawResourceStyle(
-                            this, R.raw.style_json));
+            boolean success;
+            if (lightMode) {
+                success = mMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(
+                                this, R.raw.map_style_light_json));
+            } else {
+                success = mMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(
+                                this, R.raw.map_style_dark_json));
+            }
             if (!success) {
                 Log.e("MapsActivityRaw", "Style parsing failed.");
             }
@@ -590,13 +579,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         markerList.clear();
 
         // update marker list with current markers
-
         int index = 0;
         if (tripManager.getLocations().size() > 0)
         {
             for(BikeBuddyLocation location : tripManager.getLocations()) {
                 markerList.add(location.getAddress());
                 markerList.getItem(index).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker_white));
+                if(index > 3)
+                    markerList.getItem(index).setVisible(false);
                 index++;
             }
         }
@@ -618,6 +608,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             findViewById(R.id.route_button).setVisibility(view.INVISIBLE);
             mMap.clear();
         }
+        drawerLayout.closeDrawer(Gravity.LEFT);
     }
 
     public void sideMenuMapStyle(View view) {

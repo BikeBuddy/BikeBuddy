@@ -10,7 +10,7 @@
     <!-- Side Menu Thingy -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
-        android:layout_width="match_parent"
+        android:layout_width="500dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@drawable/light_background"
@@ -32,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_marginLeft="13dp"
+                android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginBottom="135dp"
                 android:background="@drawable/grey_border"
@@ -43,7 +43,7 @@
             <!-- fuel info Button -->
             <ImageButton
                 android:id="@+id/side_menu_fuel"
-                android:layout_width="150dp"
+                android:layout_width="225dp"
                 android:layout_height="55dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
@@ -56,11 +56,11 @@
             <!-- Weather Time Button -->
             <ImageButton
                 android:id="@+id/side_menu_time"
-                android:layout_width="150dp"
+                android:layout_width="225dp"
                 android:layout_height="55dp"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentLeft="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginRight="185dp"
+                android:layout_marginLeft="15dp"
                 android:layout_marginBottom="72dp"
                 android:background="@drawable/grey_border"
                 android:onClick="toggleWeatherTime"
@@ -69,7 +69,7 @@
             <!-- weather toggle button -->
             <ImageButton
                 android:id="@+id/side_menu_weather"
-                android:layout_width="100dp"
+                android:layout_width="150dp"
                 android:layout_height="55dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
@@ -82,11 +82,11 @@
             <!-- map toggle button -->
             <ImageButton
                 android:id="@+id/side_menu_map"
-                android:layout_width="100dp"
+                android:layout_width="150dp"
                 android:layout_height="55dp"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentLeft="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginRight="125dp"
+                android:layout_marginLeft="175dp"
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/grey_border"
                 android:onClick="sideMenuMapStyle"
@@ -95,11 +95,11 @@
             <!-- dark mode button -->
             <ImageButton
                 android:id="@+id/side_menu_darkMode"
-                android:layout_width="100dp"
+                android:layout_width="150dp"
                 android:layout_height="55dp"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentLeft="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginRight="235dp"
+                android:layout_marginLeft="15dp"
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/grey_border"
                 android:onClick="toggleDarkMode"
@@ -363,18 +363,18 @@
 
             <TextView
                 android:id="@+id/textTitleMaxRange"
-                android:layout_width="150dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/fuel_display_stations"
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="20dp"
                 android:text="@string/calculated_maximum_range_km"
                 android:textColor="@color/colorWhite"
-                android:textSize="16sp" />
+                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/textMaxRange"
-                android:layout_width="90dp"
+                android:layout_width="140dp"
                 android:layout_height="50dp"
                 android:layout_below="@id/textTitleMaxRange"
                 android:layout_alignParentLeft="true"
@@ -385,7 +385,7 @@
                 android:inputType="numberSigned"
                 android:textColor="@color/colorWhite"
                 android:textColorHint="@color/colorWhite"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 android:title="@string/max_range" />
 
         </RelativeLayout>
@@ -400,7 +400,7 @@
             android:background="@drawable/white_border"
             android:paddingHorizontal="10dp"
             android:text="Remove Marker"
-            android:textSize="16dp"
+            android:textSize="20sp"
             android:visibility="invisible" />
 
         <!-- the map fragment -->

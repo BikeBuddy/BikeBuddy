@@ -577,8 +577,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             for (BikeBuddyLocation location : tripManager.getLocations()) {
                 markerList.add(location.getAddress());
                 markerList.getItem(index).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_marker_white));
-                if (index > 3)
-                    markerList.getItem(index).setVisible(false);
                 index++;
             }
         } else {

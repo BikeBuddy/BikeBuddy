@@ -20,11 +20,11 @@ Have fun exploring the other great features.
 
 Bike Buddy is developed by a small team of 5 members
 
-Sam Ward
-Hyuk Woo Kim
-Aaron Gilbert
-Theo Brown
-Gary
+Sam Ward,
+Hyuk Woo Kim,
+Aaron Gilbert,
+Theo Brown,
+Gary,
 
 #Software
 

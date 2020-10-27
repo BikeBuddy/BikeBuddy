@@ -688,10 +688,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public Button getRouteButton() {
         return routeButton;
     }
+
+    //Takes the input maximum range from the user and stores it for use.
     public void setMaxRange() {
         TextView maxRange = (TextView) findViewById(R.id.textMaxRange);
         try {
             Integer range = Integer.parseInt(maxRange.getText().toString());
+            //check for invalid inputs.
             if (range < 1 || range > 600)
                 throw new NumberFormatException();
             else

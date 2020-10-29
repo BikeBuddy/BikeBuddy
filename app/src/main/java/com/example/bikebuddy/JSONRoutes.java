@@ -85,7 +85,7 @@ public class JSONRoutes {
     public void showTrip(Trip aTrip) {
         PolylineOptions places = new PolylineOptions();
         for (LatLng point : aTrip.points)
-            places.add(point).width(23f).color(Color.BLUE);
+            places.add(point).width(19f).color(Color.BLUE);
         mMap.addPolyline(places);
         LatLng midPoint = aTrip.points.get(aTrip.points.size() / 2);
         mMap.addMarker(new MarkerOptions().position(midPoint)
@@ -107,13 +107,13 @@ public class JSONRoutes {
             PolylineOptions places = new PolylineOptions();
             newTrip.emptyTankLocation = newTrip.points.get(cutOffPoint);
             for (int i = 0; i <= cutOffPoint; i++) {//draws the part of the trip where the user has fuel in blue
-                places.add(newTrip.points.get(i)).width(23f).color(Color.BLUE);
+                places.add(newTrip.points.get(i)).width(19f).color(Color.BLUE);
             }
             mMap.addPolyline(places);
             PolylineOptions noFuel = new PolylineOptions();
             //redraws the part of the trip in red where the user will have no fuel
             for (int i = cutOffPoint; i < newTrip.points.size(); i++) {
-                noFuel.add(newTrip.points.get(i)).width(23f).color(Color.RED);
+                noFuel.add(newTrip.points.get(i)).width(19f).color(Color.RED);
             }
             mMap.addPolyline(noFuel);
             LatLng midPoint = newTrip.points.get(newTrip.points.size() / 2);

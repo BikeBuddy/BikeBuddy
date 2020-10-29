@@ -1,5 +1,6 @@
 package com.example.bikebuddy;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -7,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -127,7 +129,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         routeButton = (Button) findViewById(R.id.route_button);
-
+        routeButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+              //  String uri = tripManager.getJsonRoutes().uri;
+                String uri =  "https://www.google.co.in/maps/dir/";
+                for(BikeBuddyLocation leg: tripManager.getLocations()){
+                    uri += leg.getCoordinate().latitude +"," + leg.getCoordinate().longitude + "/";
+                }
+                if(tripManager.getLocations().size()>1 && tripManager.routeStarted){
+                    Uri directionsURI = Uri.parse(uri);
+                    Intent googleMaps = new Intent(Intent.ACTION_VIEW, directionsURI);
+                    googleMaps.setPackage("com.google.android.apps.maps");
+                    if(googleMaps.resolveActivity(getPackageManager())!=null){
+                        startActivity(googleMaps);
+                    }
+                }
+                return true;
+            }
+        });
         tripManager = new TripManager(this);
 
         // add listener for weather toggle button within the side menu

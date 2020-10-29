@@ -97,7 +97,7 @@ public class DateTimeFunctions {
 
 
     public void addHour() {
-        if (offsetHours < 120)
+        if (offsetHours < 117)
             offsetHours +=1;
         updateDateTime();
         mapsActivity.getLocationsWeather();

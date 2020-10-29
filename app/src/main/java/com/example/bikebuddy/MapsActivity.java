@@ -409,10 +409,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     // only update map drawables if map is moved or zoomed past these amounts
                     if ((zoomLevel - updateZoom) > 1.0f || (zoomLevel - updateZoom) < -1.0f
-                            || currentLocation.latitude - updateLocation.latitude > 0.1
-                            || currentLocation.latitude - updateLocation.latitude < -0.1
-                            || currentLocation.longitude - updateLocation.longitude > 0.1
-                            || currentLocation.longitude - updateLocation.longitude < -0.1) {
+                            || currentLocation.latitude - updateLocation.latitude > 0.05f
+                            || currentLocation.latitude - updateLocation.latitude < -0.05f
+                            || currentLocation.longitude - updateLocation.longitude > 0.05f
+                            || currentLocation.longitude - updateLocation.longitude < -0.05f) {
                         updateZoom = zoomLevel;
                         updateLocation = currentLocation;
 

@@ -12,8 +12,11 @@ public class FetchNearbyPlace {
 
     //option 1: pass in MapsActivity
     public void fetch(double lat, double lon) {
+
+
         // getResources().getString(R.string.google_maps_key)
-        String st = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=gas+station&key=" + (mapsActivity.getResources().getString(R.string.google_maps_key));
+       // String st = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=gas+station&key=" + (mapsActivity.getResources().getString(R.string.google_maps_key));
+        String stt = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=gas+station&location="+lat+","+lon+"&radius=10000&key=" + (mapsActivity.getResources().getString(R.string.google_maps_key));
 
         //String st = "https://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lon+"&APPID=d2222fc373d644fa109aea09a4046a3c";
         //String st = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=1500&type=restaurant&keyword=cruise&key=";
@@ -22,7 +25,7 @@ public class FetchNearbyPlace {
         //String st = "https://maps.googleapis.com/maps/api/place/textsearch/xml?query=restaurants+in+Sydney&key=";
         //String st = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=gas+station&key=";
         // gj.execute(st); //error trying to run multiple executes, so have to create new getJSON each time
-        new GetPlaceJSON(mapsActivity).execute(st);
+        new GetPlaceJSON(mapsActivity).execute(stt);
     }
 
     //option 2: extend MapsActivity to access it's methods

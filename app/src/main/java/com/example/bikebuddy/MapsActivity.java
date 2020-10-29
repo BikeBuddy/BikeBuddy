@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -127,6 +128,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         routeButton = (Button) findViewById(R.id.route_button);
+        routeButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                return false;
+            }
+        });
 
         tripManager = new TripManager(this);
 
@@ -465,6 +472,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         mMap.clear();
         tripManager.updateMap();
+        mMap.getUiSettings().setMapToolbarEnabled(true);
+      //  Toast.makeText()mMap.getUiSettings().isMapToolbarEnabled();
     }
 
     public void initPlaceFunctions() {

@@ -172,7 +172,12 @@ public class TripManager {
         if (locations.size() > 1 && routeStarted) {
             jsonRoutes.setLocations(latLngLocations);
             jsonRoutes.getDirections();
+            if(getTripDetails()!=null && getTripDetails().emptyTankLocation!=null){
+                mapsActivity.placeFunctions.addLocationsPlace( getTripDetails().emptyTankLocation.latitude,getTripDetails().emptyTankLocation.longitude);
+            }
         }
+
+        mapsActivity.fetchNearbyPlace.fetch(1,1);
     }
 
     //sets the starting location to gps location, otherwise sets startingLocationNeeded flag to true

@@ -1,5 +1,7 @@
 package com.example.bikebuddy;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class FetchNearbyPlace {
 
     //GetJSON gj; //error trying to run multiple executes, so have to create new getJSON each time
@@ -13,8 +15,14 @@ public class FetchNearbyPlace {
     //option 1: pass in MapsActivity
     public void fetch(double lat, double lon) {
         // getResources().getString(R.string.google_maps_key)
-        String st = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=gas+station&key=" + (mapsActivity.getResources().getString(R.string.google_maps_key));
-
+        String st ="";
+        if(mapsActivity.getTripManager().getTripDetails()!=null && mapsActivity.getTripManager().getTripDetails().emptyTankLocation!=null && mapsActivity.getTripManager().routeStarted){
+            LatLng fuel = mapsActivity.getTripManager().getTripDetails().emptyTankLocation;
+            st = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=gas+station&location="+fuel.latitude +"," +fuel.longitude + "&radius=10000&key=" +
+                "" + (mapsActivity.getResources().getString(R.string.google_maps_key));
+        }else {
+            st = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=gas+station&key=" + (mapsActivity.getResources().getString(R.string.google_maps_key));
+        }
         //String st = "https://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lon+"&APPID=d2222fc373d644fa109aea09a4046a3c";
         //String st = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=1500&type=restaurant&keyword=cruise&key=";
         //String st = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+lat+","+lon+"&radius=1500&type=restaurant&keyword=cruise&key=";
@@ -24,6 +32,9 @@ public class FetchNearbyPlace {
         // gj.execute(st); //error trying to run multiple executes, so have to create new getJSON each time
         new GetPlaceJSON(mapsActivity).execute(st);
     }
+
+
+
 
     //option 2: extend MapsActivity to access it's methods
     public String fetch2(double lat, double lon) {

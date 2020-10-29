@@ -55,7 +55,6 @@ public class PlaceFunction {
     This method takes an iconName and returns the corresponding Bitmap
     */
     public Bitmap generateIcon() {
-
        // String drawableIcon = "@drawable/i"+iconName;
         String defaultIcon = "@drawable/gas";
         //custom size of the weather icon
@@ -100,11 +99,10 @@ public class PlaceFunction {
         //LatLng latLng = new LatLng(lat, lon);
         String gas = "@drawable/gasStation.png";
         //store the markers so when toggling the showWeather button it shows and hide the weather
-       marker = googleMap.addMarker(new MarkerOptions().position(latLng).title("gary creates gas station").snippet("000")
+       marker = googleMap.addMarker(new MarkerOptions().position(latLng).zIndex(999).title("gary creates gas station").snippet("000")
                .icon(BitmapDescriptorFactory.fromBitmap(generateIcon())));
        markerArray.add(marker);
         //googleMap.addMarker(new MarkerOptions().position(latLng).title(description)
         //.icon(BitmapDescriptorFactory.fromBitmap(generateIcon(iconId))));
-
     }
 }

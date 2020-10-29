@@ -43,7 +43,7 @@
     <string name="fuel_tank_size">Fuel tank size</string>
     <string name="_0_0">0.0</string>
     <string name="trip_distance">Trip Distance</string>
-    <string name="calculated_maximum_range_km">Calculated Maximum Range (Km)</string>
+    <string name="calculated_maximum_range_km">Range (Km)</string>
     <string name="trip_distance_km">Trip Distance (Km)</string>
     <string name="max_range">Max Range</string>
 

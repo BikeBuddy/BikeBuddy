@@ -658,6 +658,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             findViewById(R.id.side_menu_map).setBackground(ContextCompat.getDrawable(this, R.drawable.black_border));
             findViewById(R.id.side_menu_time).setBackground(ContextCompat.getDrawable(this, R.drawable.black_border));
 
+            TextView currentDateTimeDisplay = findViewById(R.id.currentDateTimeDisplay);
+            currentDateTimeDisplay.setTextColor(getResources().getColor((R.color.colorWhite)));
+            TextView weatherDateTimeDisplay = findViewById(R.id.weatherDateTimeDisplay);
+            weatherDateTimeDisplay.setTextColor(getResources().getColor((R.color.colorWhite)));
+
             initMapStyle(false);
 
         } else {
@@ -670,6 +675,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             findViewById(R.id.side_menu_darkMode).setBackground(ContextCompat.getDrawable(this, R.drawable.grey_border));
             findViewById(R.id.side_menu_map).setBackground(ContextCompat.getDrawable(this, R.drawable.grey_border));
             findViewById(R.id.side_menu_time).setBackground(ContextCompat.getDrawable(this, R.drawable.grey_border));
+
+            TextView currentDateTimeDisplay = findViewById(R.id.currentDateTimeDisplay);
+            currentDateTimeDisplay.setTextColor(getResources().getColor((R.color.colorBlack)));
+            TextView weatherDateTimeDisplay = findViewById(R.id.weatherDateTimeDisplay);
+            weatherDateTimeDisplay.setTextColor(getResources().getColor((R.color.colorBlack)));
 
             initMapStyle(true);
 
